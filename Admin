@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZYNTRIX Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--surface:#0b0e1a;--card:#0f1322;--card2:#131829;
+  --border:#1a2035;--border2:#243050;
+  --blue:#2563eb;--cyan:#06d6f5;--electric:#00e5ff;
+  --text:#eef2ff;--muted:#6b7db3;--hint:#2a3355;
+  --green:#10b981;--red:#ef4444;--amber:#f59e0b;
+  --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+input,select,textarea,button{font-family:var(--font-body)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── LOGIN SCREEN ─────────────────────────────────────────── */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);position:relative;overflow:hidden}
+.login-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(26,32,53,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(26,32,53,.4) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 75%)}
+.login-box{position:relative;z-index:2;width:420px;background:var(--card);border:1px solid var(--border2);padding:48px 40px}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
+.login-hex{width:36px;height:36px;background:var(--blue);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center}
+.login-hex span{font-family:var(--font-mono);font-size:14px;color:#fff;font-weight:500}
+.login-brand{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:2px}
+.login-brand .dot{color:var(--cyan)}
+.login-badge{text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:36px;padding:6px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.login-title{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;text-align:center}
+.login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:32px}
+.form-group{margin-bottom:16px}
+.form-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;font-size:14px;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--blue)}
+.form-input::placeholder{color:var(--hint)}
+.btn-login{width:100%;background:var(--blue);color:#fff;border:none;padding:14px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-login:hover{background:#1d4ed8}
+.login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#f87171;padding:10px 14px;font-size:13px;margin-top:12px;display:none;font-family:var(--font-mono)}
+.setup-note{background:rgba(6,214,245,.06);border:1px solid rgba(6,214,245,.15);padding:14px;margin-top:20px;font-size:12px;color:var(--muted);line-height:1.6}
+.setup-note strong{color:var(--cyan);display:block;margin-bottom:4px;font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.setup-note code{background:rgba(255,255,255,.05);padding:1px 5px;font-family:var(--font-mono);font-size:11px;color:var(--text)}
+
+/* ── MAIN LAYOUT ──────────────────────────────────────────── */
+#adminPanel{display:none;min-height:100vh;background:var(--bg)}
+.admin-layout{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-brand{font-family:var(--font-display);font-size:16px;font-weight:800;letter-spacing:1.5px}
+.sidebar-brand .dot{color:var(--cyan)}
+.sidebar-role{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.sidebar-nav{flex:1;padding:16px 0;overflow-y:auto}
+.nav-section-label{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--hint);padding:8px 20px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;text-decoration:none;border-left:2px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.nav-item.active{color:var(--cyan);background:rgba(6,214,245,.06);border-left-color:var(--cyan)}
+.nav-item i{font-size:16px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--blue);color:#fff;font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:10px}
+.sidebar-user{padding:16px 20px;border-top:1px solid var(--border)}
+.user-info{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.user-avatar{width:32px;height:32px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;font-weight:500;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500}
+.user-email{font-size:11px;color:var(--muted);font-family:var(--font-mono)}
+.btn-logout{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px;font-size:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+/* MAIN CONTENT */
+.main-content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:40}
+.topbar-title{font-family:var(--font-display);font-size:16px;font-weight:700}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 14px;font-size:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:var(--font-mono);letter-spacing:.5px}
+.topbar-btn:hover{border-color:var(--border2);color:var(--text)}
+.topbar-btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.topbar-btn.primary:hover{background:#1d4ed8}
+.content-area{padding:28px;flex:1}
+
+/* ── PAGE SECTIONS ─────────────────────────────────────────── */
+.page{display:none}
+.page.active{display:block}
+
+/* DASHBOARD */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);padding:20px}
+.stat-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-value{font-family:var(--font-display);font-size:28px;font-weight:800;letter-spacing:-1px}
+.stat-change{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px;font-family:var(--font-mono)}
+.stat-up{color:var(--green)}
+.stat-down{color:var(--red)}
+.dashboard-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);padding:20px}
+.card-title{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.card-title a{color:var(--cyan);cursor:pointer;text-decoration:none;font-size:9px}
+.order-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.order-row:last-child{border-bottom:none}
+.order-id{font-family:var(--font-mono);font-size:11px;color:var(--cyan);min-width:90px}
+.order-customer{flex:1;color:var(--muted)}
+.order-amount{font-family:var(--font-mono);font-size:13px;color:var(--text);min-width:80px;text-align:right}
+.status-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.status-pending{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.status-processing{background:rgba(37,99,235,.1);color:var(--cyan);border:1px solid rgba(37,99,235,.2)}
+.status-shipped{background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2)}
+.status-delivered{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.activity-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start;font-size:13px}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{width:28px;height:28px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px}
+.activity-text{flex:1;color:var(--muted);line-height:1.5}
+.activity-text strong{color:var(--text)}
+.activity-time{font-family:var(--font-mono);font-size:10px;color:var(--hint)}
+
+/* PRODUCTS PAGE */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-title{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:-0.5px}
+.search-filter-row{display:flex;gap:10px;margin-bottom:20px}
+.search-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);padding:9px 14px;font-size:13px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--blue)}
+.search-input::placeholder{color:var(--hint)}
+.filter-select{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:9px 14px;font-size:13px;outline:none;cursor:pointer;min-width:140px}
+.products-table{width:100%;border-collapse:collapse;font-size:13px}
+.products-table th{text-align:left;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400}
+.products-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.products-table tr:hover td{background:rgba(255,255,255,.015)}
+.prod-img-thumb{width:40px;height:40px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.prod-name-cell{display:flex;align-items:center;gap:12px}
+.prod-name{font-weight:500;margin-bottom:2px}
+.prod-brand{font-family:var(--font-mono);font-size:10px;color:var(--muted)}
+.prod-price{font-family:var(--font-mono);color:var(--electric)}
+.stock-badge{font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:2px}
+.stock-in{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.stock-low{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.stock-out{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.action-btns{display:flex;gap:6px}
+.action-btn{background:var(--card2);border:1px solid var(--border);color:var(--muted);padding:5px 10px;font-size:11px;cursor:pointer;transition:all .2s;font-family:var(--font-mono)}
+.action-btn:hover{border-color:var(--border2);color:var(--text)}
+.action-btn.danger:hover{border-color:var(--red);color:var(--red)}
+.action-btn.success:hover{border-color:var(--green);color:var(--green)}
+
+/* ADD/EDIT PRODUCT MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-backdrop.open{display:flex}
+.modal-box{background:var(--surface);border:1px solid var(--border2);width:720px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:5}
+.modal-title{font-family:var(--font-display);font-size:18px;font-weight:700}
+.modal-close-btn{background:var(--card);border:1px solid var(--border);width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;transition:all .2s}
+.modal-close-btn:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:24px}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.modal-grid.full{grid-template-columns:1fr}
+.field-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block}
+.field-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 13px;font-size:13px;outline:none;transition:border-color .2s;margin-bottom:16px}
+.field-input:focus{border-color:var(--blue)}
+.field-input::placeholder{color:var(--hint)}
+.field-textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 13px;font-size:13px;outline:none;transition:border-color .2s;resize:vertical;min-height:90px;margin-bottom:16px;font-family:var(--font-body)}
+.field-textarea:focus{border-color:var(--blue)}
+.field-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 13px;font-size:13px;outline:none;cursor:pointer;margin-bottom:16px;appearance:none}
+.upload-zone{border:1px dashed var(--border2);padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;position:relative}
+.upload-zone:hover{border-color:var(--cyan);background:rgba(6,214,245,.03)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:28px;color:var(--muted);margin-bottom:8px}
+.upload-text{font-size:13px;color:var(--muted)}
+.upload-sub{font-size:11px;color:var(--hint);margin-top:4px;font-family:var(--font-mono)}
+.upload-preview{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.preview-img{width:72px;height:72px;object-fit:cover;border:1px solid var(--border);position:relative}
+.preview-placeholder{width:72px;height:72px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--hint)}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--surface)}
+.btn-cancel{background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 20px;font-size:12px;cursor:pointer;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;transition:all .2s}
+.btn-cancel:hover{border-color:var(--border2);color:var(--text)}
+.btn-save{background:var(--blue);color:#fff;border:none;padding:10px 24px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:8px}
+.btn-save:hover{background:#1d4ed8}
+
+/* ORDERS PAGE */
+.orders-table{width:100%;border-collapse:collapse;font-size:13px}
+.orders-table th{text-align:left;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400}
+.orders-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.orders-table tr:hover td{background:rgba(255,255,255,.015)}
+
+/* USERS PAGE */
+.users-table{width:100%;border-collapse:collapse;font-size:13px}
+.users-table th{text-align:left;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400}
+.users-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.users-table tr:hover td{background:rgba(255,255,255,.015)}
+.user-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;font-weight:500;flex-shrink:0}
+
+/* SETTINGS */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.settings-card{background:var(--card);border:1px solid var(--border);padding:24px}
+.settings-title{font-family:var(--font-display);font-size:15px;font-weight:700;margin-bottom:4px}
+.settings-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-label{font-size:13px}
+.toggle-sub{font-size:11px;color:var(--muted)}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border2);border-radius:11px;cursor:pointer;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:var(--blue)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(18px)}
+
+/* TOAST */
+.toast-admin{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:12px 18px;font-size:12px;font-family:var(--font-mono);border-left:3px solid var(--cyan);opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;z-index:9999;letter-spacing:.5px}
+.toast-admin.show{opacity:1;transform:translateY(0)}
+.toast-admin.error{border-left-color:var(--red)}
+.toast-admin.success{border-left-color:var(--green)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state i{font-size:40px;color:var(--hint);margin-bottom:12px;display:block}
+.empty-state h3{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.empty-state p{font-size:13px;line-height:1.6;max-width:340px;margin:0 auto}
+
+/* SUPABASE CONFIG BANNER */
+.config-banner{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);padding:14px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;font-size:13px}
+.config-banner i{color:var(--amber);font-size:18px;flex-shrink:0;margin-top:1px}
+.config-banner-text{color:#fcd34d;line-height:1.6}
+.config-banner-text a{color:var(--cyan);cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-grid-bg"></div>
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-hex"><span>Z</span></div>
+      <div class="login-brand">ZYNTRIX<span class="dot">.</span></div>
+    </div>
+    <div class="login-badge">Admin Control Panel</div>
+    <div class="login-title">Welcome back</div>
+    <p class="login-sub">Sign in with your owner or admin account</p>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" id="loginEmail" placeholder="admin@zyntrix.in">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" onclick="doLogin()" id="loginBtn">
+      <i class="ti ti-lock-open"></i> Sign In to Admin Panel
+    </button>
+    <div class="login-error" id="loginError"></div>
+
+    <div class="setup-note">
+      <strong>⚙ Supabase Setup Required</strong>
+      Replace <code>YOUR_SUPABASE_URL</code> and <code>YOUR_SUPABASE_ANON_KEY</code> in the script below with your actual Supabase project credentials. See the setup guide for instructions.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN PANEL
+════════════════════════════════════════════ -->
+<div id="adminPanel">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="login-hex" style="width:28px;height:28px"><span style="font-size:11px">Z</span></div>
+        <div>
+          <div class="sidebar-brand">ZYNTRIX<span class="dot">.</span></div>
+          <div class="sidebar-role" id="sidebarRole">Owner</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+
+        <div class="nav-section-label">Catalogue</div>
+        <div class="nav-item" onclick="showPage('products',this)"><i class="ti ti-box"></i> Products <span class="nav-badge" id="prodCount">0</span></div>
+        <div class="nav-item" onclick="showPage('categories',this)"><i class="ti ti-category"></i> Categories</div>
+        <div class="nav-item" onclick="showPage('media',this)"><i class="ti ti-photo"></i> Media Library</div>
+
+        <div class="nav-section-label">Commerce</div>
+        <div class="nav-item" onclick="showPage('orders',this)"><i class="ti ti-shopping-cart"></i> Orders <span class="nav-badge" id="orderCount" style="background:var(--amber)">0</span></div>
+        <div class="nav-item" onclick="showPage('delivery',this)"><i class="ti ti-truck"></i> Delivery</div>
+        <div class="nav-item" onclick="showPage('promos',this)"><i class="ti ti-tag"></i> Promo Codes</div>
+
+        <div class="nav-section-label">Users</div>
+        <div class="nav-item" onclick="showPage('users',this)"><i class="ti ti-users"></i> Customers</div>
+        <div class="nav-item" onclick="showPage('partners',this)"><i class="ti ti-building-store"></i> Partners</div>
+
+        <div class="nav-section-label">System</div>
+        <div class="nav-item" onclick="showPage('settings',this)"><i class="ti ti-settings"></i> Settings</div>
+        <div class="nav-item" onclick="window.open('index.html','_blank')"><i class="ti ti-external-link"></i> View Store</div>
+      </nav>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div>
+            <div class="user-name" id="userName">Admin</div>
+            <div class="user-email" id="userEmail">—</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout" style="font-size:14px"></i> Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        <div class="topbar-right">
+          <div class="topbar-btn" onclick="refreshData()"><i class="ti ti-refresh" style="font-size:14px"></i> Refresh</div>
+          <div class="topbar-btn primary" id="topbarAction" onclick="openAddProduct()"><i class="ti ti-plus" style="font-size:14px"></i> Add Product</div>
+        </div>
+      </div>
+
+      <div class="content-area">
+
+        <!-- CONFIG BANNER -->
+        <div class="config-banner" id="configBanner">
+          <i class="ti ti-alert-triangle"></i>
+          <div class="config-banner-text">
+            <strong>Supabase not configured yet.</strong> This panel is running in demo mode with sample data. To connect your real database, add your Supabase URL and API key in the script section. <a onclick="showPage('settings',null)">Go to Settings →</a>
+          </div>
+        </div>
+
+        <!-- ── DASHBOARD ── -->
+        <div class="page active" id="page-dashboard">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-value" id="statRevenue">₹0</div>
+              <div class="stat-change stat-up"><i class="ti ti-trending-up" style="font-size:12px"></i> +12% this month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Orders</div>
+              <div class="stat-value" id="statOrders">0</div>
+              <div class="stat-change stat-up"><i class="ti ti-trending-up" style="font-size:12px"></i> +8 today</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Products</div>
+              <div class="stat-value" id="statProducts">0</div>
+              <div class="stat-change" style="color:var(--muted)">Active listings</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Customers</div>
+              <div class="stat-value" id="statCustomers">0</div>
+              <div class="stat-change stat-up"><i class="ti ti-trending-up" style="font-size:12px"></i> +3 this week</div>
+            </div>
+          </div>
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-title">Recent Orders <a onclick="showPage('orders',null)">View all →</a></div>
+              <div id="recentOrders">
+                <div class="order-row"><span class="order-id">#ZYN-001</span><span class="order-customer">Rahul K. — ProAir X90</span><span class="order-amount">₹7,499</span><span class="status-badge status-delivered">Delivered</span></div>
+                <div class="order-row"><span class="order-id">#ZYN-002</span><span class="order-customer">Priya S. — VitaWatch Ultra 3</span><span class="order-amount">₹11,999</span><span class="status-badge status-shipped">Shipped</span></div>
+                <div class="order-row"><span class="order-id">#ZYN-003</span><span class="order-customer">Arjun V. — XStrike Vortex</span><span class="order-amount">₹4,799</span><span class="status-badge status-processing">Processing</span></div>
+                <div class="order-row"><span class="order-id">#ZYN-004</span><span class="order-customer">Sneha M. — BassCore TWS</span><span class="order-amount">₹3,299</span><span class="status-badge status-pending">Pending</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Recent Activity</div>
+              <div>
+                <div class="activity-item"><div class="activity-icon"><i class="ti ti-box" style="font-size:13px;color:var(--cyan)"></i></div><div><div class="activity-text"><strong>New order</strong> from Rahul K.</div><div class="activity-time">2 min ago</div></div></div>
+                <div class="activity-item"><div class="activity-icon"><i class="ti ti-user-plus" style="font-size:13px;color:var(--green)"></i></div><div><div class="activity-text"><strong>New customer</strong> registered</div><div class="activity-time">18 min ago</div></div></div>
+                <div class="activity-item"><div class="activity-icon"><i class="ti ti-truck" style="font-size:13px;color:var(--amber)"></i></div><div><div class="activity-text">Order <strong>#ZYN-002</strong> shipped via Delhivery</div><div class="activity-time">1 hr ago</div></div></div>
+                <div class="activity-item"><div class="activity-icon"><i class="ti ti-star" style="font-size:13px;color:#fbbf24"></i></div><div><div class="activity-text"><strong>New review</strong> ★★★★★ on ProAir X90</div><div class="activity-time">3 hrs ago</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PRODUCTS ── -->
+        <div class="page" id="page-products">
+          <div class="page-header">
+            <div class="page-title">Products</div>
+          </div>
+          <div class="search-filter-row">
+            <input class="search-input" type="text" placeholder="Search products..." oninput="filterProds(this.value)" id="prodSearch">
+            <select class="filter-select" onchange="filterProds(document.getElementById('prodSearch').value)">
+              <option>All Categories</option>
+              <option>Audio</option><option>Wearables</option><option>Smart Home</option><option>Gaming</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="products-table">
+              <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── ORDERS ── -->
+        <div class="page" id="page-orders">
+          <div class="page-header"><div class="page-title">Orders</div></div>
+          <div class="search-filter-row">
+            <input class="search-input" type="text" placeholder="Search by order ID or customer...">
+            <select class="filter-select"><option>All Statuses</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option></select>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="orders-table">
+              <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="ordersTableBody">
+                <tr><td><span style="font-family:var(--font-mono);color:var(--cyan)">#ZYN-001</span></td><td>Rahul Khanna<br><span style="font-size:11px;color:var(--muted)">rahul@email.com</span></td><td>ProAir X90 × 1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹7,499</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">25 May 2026</td><td><span class="status-badge status-delivered">Delivered</span></td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn success">Ship</button></div></td></tr>
+                <tr><td><span style="font-family:var(--font-mono);color:var(--cyan)">#ZYN-002</span></td><td>Priya Sharma<br><span style="font-size:11px;color:var(--muted)">priya@email.com</span></td><td>VitaWatch Ultra 3 × 1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹11,999</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">24 May 2026</td><td><span class="status-badge status-shipped">Shipped</span></td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn success">Track</button></div></td></tr>
+                <tr><td><span style="font-family:var(--font-mono);color:var(--cyan)">#ZYN-003</span></td><td>Arjun Verma<br><span style="font-size:11px;color:var(--muted)">arjun@email.com</span></td><td>XStrike Vortex × 1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹4,799</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">24 May 2026</td><td><span class="status-badge status-processing">Processing</span></td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn success">Ship</button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── USERS ── -->
+        <div class="page" id="page-users">
+          <div class="page-header"><div class="page-title">Customers</div></div>
+          <div style="overflow-x:auto">
+            <table class="users-table">
+              <thead><tr><th>Customer</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Joined</th><th>Actions</th></tr></thead>
+              <tbody id="usersTableBody">
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="user-avatar-sm">RK</div><div>Rahul Khanna</div></div></td><td style="color:var(--muted);font-size:12px">rahul@email.com</td><td style="font-family:var(--font-mono)">3</td><td style="font-family:var(--font-mono);color:var(--electric)">₹24,297</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">10 May 2026</td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn danger">Block</button></div></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="user-avatar-sm" style="background:var(--green)">PS</div><div>Priya Sharma</div></div></td><td style="color:var(--muted);font-size:12px">priya@email.com</td><td style="font-family:var(--font-mono)">1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹11,999</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">12 May 2026</td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn danger">Block</button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── DELIVERY ── -->
+        <div class="page" id="page-delivery">
+          <div class="page-header"><div class="page-title">Delivery Settings</div></div>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <div class="settings-title">Shiprocket Integration</div>
+              <div class="settings-sub">Connect your Shiprocket account for automated pickup and tracking.</div>
+              <label class="field-label">Shiprocket Email</label>
+              <input class="field-input" type="email" placeholder="your@email.com">
+              <label class="field-label">Shiprocket Password</label>
+              <input class="field-input" type="password" placeholder="••••••••">
+              <button class="btn-save" style="width:100%;justify-content:center">Connect Shiprocket</button>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">Pickup Address</div>
+              <div class="settings-sub">Courier will come here to collect orders.</div>
+              <label class="field-label">Full Address</label>
+              <input class="field-input" type="text" placeholder="Flat / House no., Street">
+              <label class="field-label">City & PIN Code</label>
+              <input class="field-input" type="text" placeholder="City — 110001">
+              <label class="field-label">State</label>
+              <input class="field-input" type="text" placeholder="Delhi">
+              <button class="btn-save" style="width:100%;justify-content:center">Save Address</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SETTINGS ── -->
+        <div class="page" id="page-settings">
+          <div class="page-header"><div class="page-title">Settings</div></div>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <div class="settings-title">Supabase Configuration</div>
+              <div class="settings-sub">Connect your database to enable real products, orders, and auth.</div>
+              <label class="field-label">Supabase Project URL</label>
+              <input class="field-input" type="text" id="sbUrl" placeholder="https://xxxx.supabase.co">
+              <label class="field-label">Supabase Anon Key</label>
+              <input class="field-input" type="text" id="sbKey" placeholder="eyJhbGci...">
+              <button class="btn-save" onclick="saveSupabaseConfig()" style="width:100%;justify-content:center"><i class="ti ti-database" style="font-size:14px"></i> Save & Connect</button>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">Store Settings</div>
+              <div class="settings-sub">General configuration for your ZYNTRIX store.</div>
+              <div class="toggle-row"><div><div class="toggle-label">Maintenance Mode</div><div class="toggle-sub">Hides store from customers</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><div class="toggle-label">Allow New Registrations</div><div class="toggle-sub">Customers can sign up</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><div class="toggle-label">COD Enabled</div><div class="toggle-sub">Cash on delivery option</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><div class="toggle-label">Show Out of Stock</div><div class="toggle-sub">Display unavailable items</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">Razorpay Integration</div>
+              <div class="settings-sub">Enable real payments on your store.</div>
+              <label class="field-label">Razorpay Key ID</label>
+              <input class="field-input" type="text" placeholder="rzp_live_xxxx">
+              <label class="field-label">Razorpay Key Secret</label>
+              <input class="field-input" type="password" placeholder="••••••••">
+              <button class="btn-save" style="width:100%;justify-content:center">Save Payment Config</button>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">Admin Account</div>
+              <div class="settings-sub">Update your admin credentials.</div>
+              <label class="field-label">Display Name</label>
+              <input class="field-input" type="text" placeholder="Your Name" id="settingsName">
+              <label class="field-label">New Password</label>
+              <input class="field-input" type="password" placeholder="Leave blank to keep current">
+              <button class="btn-save" style="width:100%;justify-content:center">Update Account</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholder pages -->
+        <div class="page" id="page-categories"><div class="empty-state"><i class="ti ti-category"></i><h3>Categories</h3><p>Manage your product categories. Connect Supabase to enable this feature.</p></div></div>
+        <div class="page" id="page-media"><div class="empty-state"><i class="ti ti-photo"></i><h3>Media Library</h3><p>All uploaded product images and videos. Connect Supabase Storage to enable this.</p></div></div>
+        <div class="page" id="page-promos"><div class="empty-state"><i class="ti ti-tag"></i><h3>Promo Codes</h3><p>Create and manage discount codes. Connect Supabase to enable this feature.</p></div></div>
+        <div class="page" id="page-partners"><div class="empty-state"><i class="ti ti-building-store"></i><h3>Brand Partners</h3><p>Manage your dropship partner brands and their product feeds.</p></div></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT PRODUCT MODAL -->
+<div class="modal-backdrop" id="productModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add New Product</div>
+      <div class="modal-close-btn" onclick="closeProductModal()"><i class="ti ti-x"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div>
+          <label class="field-label">Product Name *</label>
+          <input class="field-input" type="text" id="pName" placeholder="e.g. ProAir X90 Wireless Headphones">
+          <label class="field-label">Brand / Partner *</label>
+          <input class="field-input" type="text" id="pBrand" placeholder="e.g. SoundVibe">
+          <label class="field-label">Category *</label>
+          <select class="field-select" id="pCategory">
+            <option value="">Select category</option>
+            <option>Audio</option><option>Wearables</option><option>Smart Home</option>
+            <option>Gaming</option><option>Smartphones</option><option>Computing</option>
+            <option>Cameras</option><option>Power & Charging</option>
+          </select>
+          <label class="field-label">Sale Price (₹) *</label>
+          <input class="field-input" type="number" id="pPrice" placeholder="7499">
+          <label class="field-label">Original / MRP (₹)</label>
+          <input class="field-input" type="number" id="pOrigPrice" placeholder="12000">
+        </div>
+        <div>
+          <label class="field-label">Stock Quantity *</label>
+          <input class="field-input" type="number" id="pStock" placeholder="50">
+          <label class="field-label">SKU / Product Code</label>
+          <input class="field-input" type="text" id="pSku" placeholder="ZYN-AUDIO-001">
+          <label class="field-label">Status</label>
+          <select class="field-select" id="pStatus">
+            <option value="active">Active — visible on store</option>
+            <option value="draft">Draft — hidden from store</option>
+            <option value="out_of_stock">Out of Stock</option>
+          </select>
+          <label class="field-label">Product Tag</label>
+          <select class="field-select" id="pTag">
+            <option value="">None</option>
+            <option value="New">New</option>
+            <option value="Hot">Hot</option>
+            <option value="Deal">Deal</option>
+            <option value="Featured">Featured</option>
+          </select>
+          <label class="field-label">Commission % (for partners)</label>
+          <input class="field-input" type="number" id="pCommission" placeholder="18">
+        </div>
+      </div>
+      <div class="modal-grid full">
+        <div>
+          <label class="field-label">Short Description</label>
+          <input class="field-input" type="text" id="pShortDesc" placeholder="40hr battery, ANC, premium drivers, foldable design">
+          <label class="field-label">Full Description *</label>
+          <textarea class="field-textarea" id="pDesc" placeholder="Write a detailed product description. Include key features, what's in the box, compatibility, and why customers should buy it..."></textarea>
+          <label class="field-label">Specs (comma separated)</label>
+          <input class="field-input" type="text" id="pSpecs" placeholder="ANC, 40hr Battery, Bluetooth 5.3, Hi-Res Audio, Foldable">
+        </div>
+      </div>
+      <div class="modal-grid full">
+        <div>
+          <label class="field-label">Product Images</label>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" accept="image/*" multiple onchange="handleImageUpload(this)">
+            <div class="upload-icon"><i class="ti ti-cloud-upload" style="font-size:28px;color:var(--muted)"></i></div>
+            <div class="upload-text">Click or drag images here</div>
+            <div class="upload-sub">PNG, JPG, WEBP up to 10MB each · Multiple allowed</div>
+          </div>
+          <div class="upload-preview" id="imagePreview"></div>
+          <label class="field-label">Product Video URL (optional)</label>
+          <input class="field-input" type="text" id="pVideo" placeholder="https://youtube.com/watch?v=... or direct .mp4 URL">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeProductModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProduct()"><i class="ti ti-check" style="font-size:14px"></i> Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-admin" id="adminToast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  SUPABASE CONFIG — Replace these with your values
+//  from supabase.com → Project Settings → API
+// ═══════════════════════════════════════════════════
+var SUPABASE_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
+var SUPABASE_KEY = "sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF";
+var supabase = null;
+var currentUser = null;
+var isDemo = true;
+
+// Demo products for testing before Supabase is connected
+var demoProducts = [
+  { id:1, name:"ProAir X90 Wireless Headphones", brand:"SoundVibe", category:"Audio", price:7499, orig_price:12000, stock:24, status:"active", tag:"Hot", icon:"ti-headphones" },
+  { id:2, name:"VitaWatch Ultra 3 Smartwatch", brand:"VitaTech", category:"Wearables", price:11999, orig_price:18000, stock:12, status:"active", tag:"New", icon:"ti-device-watch" },
+  { id:3, name:"LumiHome Smart Bulb Pack", brand:"LumiHome", category:"Smart Home", price:2499, orig_price:4200, stock:3, status:"active", tag:"Deal", icon:"ti-bulb" },
+  { id:4, name:"BassCore Nano TWS Earbuds", brand:"BassCore", category:"Audio", price:3299, orig_price:5500, stock:0, status:"out_of_stock", tag:"New", icon:"ti-ear" },
+  { id:5, name:"XStrike Vortex Controller", brand:"XStrike", category:"Gaming", price:4799, orig_price:7000, stock:18, status:"active", tag:"Hot", icon:"ti-device-gamepad-2" },
+  { id:6, name:"VigilCam 2K Security Camera", brand:"VigilCam", category:"Smart Home", price:5199, orig_price:8500, stock:7, status:"active", tag:"New", icon:"ti-camera" }
+];
+var products = [...demoProducts];
+var editingProductId = null;
+var uploadedImages = [];
+
+// ── INIT ─────────────────────────────────────────
+window.onload = function() {
+  // Try to init Supabase if keys are configured
+  if (SUPABASE_URL !== "YOUR_SUPABASE_URL" && SUPABASE_KEY !== "YOUR_SUPABASE_ANON_KEY") {
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      isDemo = false;
+      checkSession();
+    } catch(e) {
+      console.warn("Supabase init failed:", e);
+      showDemoMode();
+    }
+  } else {
+    // Demo mode — show demo login hint
+    showDemoMode();
+  }
+};
+
+function showDemoMode() {
+  isDemo = true;
+  document.getElementById("configBanner").style.display = "flex";
+}
+
+function checkSession() {
+  if (!supabase) return;
+  supabase.auth.getSession().then(function(res) {
+    if (res.data && res.data.session) {
+      currentUser = res.data.session.user;
+      showAdminPanel();
+    }
+  });
+}
+
+// ── AUTH ─────────────────────────────────────────
+function doLogin() {
+  var email = document.getElementById("loginEmail").value.trim();
+  var password = document.getElementById("loginPassword").value;
+  var btn = document.getElementById("loginBtn");
+  var err = document.getElementById("loginError");
+  err.style.display = "none";
+
+  if (!email || !password) { showLoginError("Please enter email and password."); return; }
+
+  if (isDemo) {
+    // Demo mode: accept any credentials
+    if (email && password.length >= 4) {
+      currentUser = { email: email, id: "demo-user" };
+      showAdminPanel();
+    } else {
+      showLoginError("Demo mode: enter any email and a password (4+ chars).");
+    }
+    return;
+  }
+
+  btn.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;animation:spin 1s linear infinite"></i> Signing in...';
+  btn.disabled = true;
+
+  supabase.auth.signInWithPassword({ email: email, password: password }).then(function(res) {
+    btn.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+    btn.disabled = false;
+    if (res.error) { showLoginError(res.error.message); return; }
+    currentUser = res.data.user;
+    showAdminPanel();
+  });
+}
+
+function showLoginError(msg) {
+  var err = document.getElementById("loginError");
+  err.textContent = msg;
+  err.style.display = "block";
+}
+
+function doLogout() {
+  if (supabase) supabase.auth.signOut();
+  currentUser = null;
+  document.getElementById("adminPanel").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("loginPassword").value = "";
+}
+
+function showAdminPanel() {
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("adminPanel").style.display = "block";
+  // Set user info
+  var email = currentUser ? currentUser.email : "admin@zyntrix.in";
+  var initial = email.charAt(0).toUpperCase();
+  document.getElementById("userAvatar").textContent = initial;
+  document.getElementById("userName").textContent = email.split("@")[0];
+  document.getElementById("userEmail").textContent = email;
+  if (!isDemo) document.getElementById("configBanner").style.display = "none";
+  loadDashboard();
+  loadProducts();
+}
+
+// ── NAVIGATION ───────────────────────────────────
+function showPage(name, navEl) {
+  document.querySelectorAll(".page").forEach(function(p){ p.classList.remove("active"); });
+  var pg = document.getElementById("page-" + name);
+  if (pg) pg.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(function(n){ n.classList.remove("active"); });
+  if (navEl) navEl.classList.add("active");
+  var titles = { dashboard:"Dashboard", products:"Products", categories:"Categories", media:"Media Library", orders:"Orders", delivery:"Delivery", promos:"Promo Codes", users:"Customers", partners:"Partners", settings:"Settings" };
+  document.getElementById("topbarTitle").textContent = titles[name] || name;
+  var showAdd = name === "products";
+  document.getElementById("topbarAction").style.display = showAdd ? "flex" : "none";
+}
+
+// ── DASHBOARD ────────────────────────────────────
+function loadDashboard() {
+  document.getElementById("statProducts").textContent = products.length;
+  document.getElementById("prodCount").textContent = products.length;
+  document.getElementById("statOrders").textContent = "4";
+  document.getElementById("statCustomers").textContent = "2";
+  document.getElementById("statRevenue").textContent = "₹27,596";
+  document.getElementById("orderCount").textContent = "2";
+}
+
+// ── PRODUCTS ────────────────────────────────────
+function loadProducts() {
+  if (!isDemo && supabase) {
+    supabase.from("products").select("*").order("created_at", { ascending: false }).then(function(res) {
+      if (res.data) { products = res.data; renderProducts(products); }
+      else { renderProducts(demoProducts); }
+    });
+  } else {
+    renderProducts(products);
+  }
+}
+
+function renderProducts(list) {
+  var tbody = document.getElementById("productsTableBody");
+  if (!tbody) return;
+  if (!list || list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i class="ti ti-box"></i><h3>No products yet</h3><p>Click "Add Product" to add your first product.</p></div></td></tr>';
+    return;
+  }
+  var html = "";
+  list.forEach(function(p) {
+    var stockClass = p.stock === 0 ? "stock-out" : p.stock < 5 ? "stock-low" : "stock-in";
+    var stockLabel = p.stock === 0 ? "Out of Stock" : p.stock < 5 ? "Low (" + p.stock + ")" : "In Stock (" + p.stock + ")";
+    var statusClass = p.status === "active" ? "status-delivered" : p.status === "draft" ? "status-pending" : "status-processing";
+    html += '<tr>'
+      + '<td><div class="prod-name-cell"><div class="prod-img-thumb"><i class="ti ' + (p.icon || "ti-box") + '"></i></div><div><div class="prod-name">' + p.name + '</div><div class="prod-brand">' + p.brand + '</div></div></div></td>'
+      + '<td style="color:var(--muted);font-size:12px">' + p.category + '</td>'
+      + '<td><span class="prod-price">₹' + Number(p.price).toLocaleString("en-IN") + '</span><br><span style="font-size:11px;color:var(--hint);text-decoration:line-through">₹' + Number(p.orig_price || p.price).toLocaleString("en-IN") + '</span></td>'
+      + '<td><span class="stock-badge ' + stockClass + '">' + stockLabel + '</span></td>'
+      + '<td><span class="status-badge ' + statusClass + '">' + p.status + '</span></td>'
+      + '<td><div class="action-btns">'
+      + '<button class="action-btn success" onclick="editProduct(' + p.id + ')">Edit</button>'
+      + '<button class="action-btn danger" onclick="deleteProduct(' + p.id + ')">Delete</button>'
+      + '</div></td>'
+      + '</tr>';
+  });
+  tbody.innerHTML = html;
+  document.getElementById("prodCount").textContent = list.length;
+  document.getElementById("statProducts").textContent = list.length;
+}
+
+function filterProds(q) {
+  var filtered = products.filter(function(p) {
+    return !q || p.name.toLowerCase().includes(q.toLowerCase()) || p.brand.toLowerCase().includes(q.toLowerCase());
+  });
+  renderProducts(filtered);
+}
+
+// ── PRODUCT MODAL ────────────────────────────────
+function openAddProduct() {
+  editingProductId = null;
+  document.getElementById("modalTitle").textContent = "Add New Product";
+  ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission"].forEach(function(id) {
+    var el = document.getElementById(id); if(el) el.value = "";
+  });
+  document.getElementById("pCategory").value = "";
+  document.getElementById("pStatus").value = "active";
+  document.getElementById("pTag").value = "";
+  document.getElementById("imagePreview").innerHTML = "";
+  uploadedImages = [];
+  document.getElementById("productModal").classList.add("open");
+}
+
+function editProduct(id) {
+  var p = products.find(function(x){ return x.id === id; });
+  if (!p) return;
+  editingProductId = id;
+  document.getElementById("modalTitle").textContent = "Edit Product";
+  document.getElementById("pName").value = p.name || "";
+  document.getElementById("pBrand").value = p.brand || "";
+  document.getElementById("pCategory").value = p.category || "";
+  document.getElementById("pPrice").value = p.price || "";
+  document.getElementById("pOrigPrice").value = p.orig_price || "";
+  document.getElementById("pStock").value = p.stock || "";
+  document.getElementById("pSku").value = p.sku || "";
+  document.getElementById("pStatus").value = p.status || "active";
+  document.getElementById("pTag").value = p.tag || "";
+  document.getElementById("pShortDesc").value = p.short_desc || "";
+  document.getElementById("pDesc").value = p.desc || "";
+  document.getElementById("pSpecs").value = (p.specs || []).join(", ");
+  document.getElementById("pCommission").value = p.commission || "";
+  document.getElementById("pVideo").value = p.video || "";
+  document.getElementById("imagePreview").innerHTML = "";
+  uploadedImages = [];
+  document.getElementById("productModal").classList.add("open");
+}
+
+function closeProductModal() {
+  document.getElementById("productModal").classList.remove("open");
+}
+
+function handleImageUpload(input) {
+  var preview = document.getElementById("imagePreview");
+  Array.from(input.files).forEach(function(file) {
+    uploadedImages.push(file);
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = document.createElement("img");
+      img.src = e.target.result;
+      img.className = "preview-img";
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function saveProduct() {
+  var name = document.getElementById("pName").value.trim();
+  var brand = document.getElementById("pBrand").value.trim();
+  var price = document.getElementById("pPrice").value;
+  var category = document.getElementById("pCategory").value;
+  if (!name || !brand || !price || !category) { showAdminToast("Please fill in all required fields ✕", "error"); return; }
+
+  var productData = {
+    name: name, brand: brand, category: category,
+    price: Number(price), orig_price: Number(document.getElementById("pOrigPrice").value) || Number(price),
+    stock: Number(document.getElementById("pStock").value) || 0,
+    sku: document.getElementById("pSku").value.trim(),
+    status: document.getElementById("pStatus").value,
+    tag: document.getElementById("pTag").value,
+    short_desc: document.getElementById("pShortDesc").value.trim(),
+    desc: document.getElementById("pDesc").value.trim(),
+    specs: document.getElementById("pSpecs").value.split(",").map(function(s){ return s.trim(); }).filter(Boolean),
+    commission: Number(document.getElementById("pCommission").value) || 0,
+    video: document.getElementById("pVideo").value.trim(),
+    icon: "ti-box"
+  };
+
+  if (!isDemo && supabase) {
+    // Real Supabase save
+    var promise = editingProductId
+      ? supabase.from("products").update(productData).eq("id", editingProductId)
+      : supabase.from("products").insert([productData]);
+    promise.then(function(res) {
+      if (res.error) { showAdminToast("Error: " + res.error.message, "error"); return; }
+      showAdminToast(editingProductId ? "Product updated!" : "Product added!", "success");
+      closeProductModal();
+      loadProducts();
+    });
+  } else {
+    // Demo mode save
+    if (editingProductId) {
+      var idx = products.findIndex(function(p){ return p.id === editingProductId; });
+      if (idx > -1) { products[idx] = Object.assign(products[idx], productData); }
+    } else {
+      productData.id = Date.now();
+      products.unshift(productData);
+    }
+    renderProducts(products);
+    loadDashboard();
+    showAdminToast(editingProductId ? "Product updated! (Demo)" : "Product added! (Demo)", "success");
+    closeProductModal();
+  }
+}
+
+function deleteProduct(id) {
+  if (!confirm("Delete this product? This cannot be undone.")) return;
+  if (!isDemo && supabase) {
+    supabase.from("products").delete().eq("id", id).then(function(res) {
+      if (res.error) { showAdminToast("Error: " + res.error.message, "error"); return; }
+      showAdminToast("Product deleted.", "success");
+      loadProducts();
+    });
+  } else {
+    products = products.filter(function(p){ return p.id !== id; });
+    renderProducts(products);
+    loadDashboard();
+    showAdminToast("Product deleted. (Demo)", "success");
+  }
+}
+
+// ── SUPABASE CONFIG ──────────────────────────────
+function saveSupabaseConfig() {
+  var url = document.getElementById("sbUrl").value.trim();
+  var key = document.getElementById("sbKey").value.trim();
+  if (!url || !key) { showAdminToast("Enter both URL and key ✕", "error"); return; }
+  SUPABASE_URL = url; SUPABASE_KEY = key;
+  try {
+    supabase = window.supabase.createClient(url, key);
+    isDemo = false;
+    document.getElementById("configBanner").style.display = "none";
+    showAdminToast("Supabase connected! ✓", "success");
+    loadProducts();
+  } catch(e) {
+    showAdminToast("Connection failed: " + e.message, "error");
+  }
+}
+
+// ── MISC ─────────────────────────────────────────
+function refreshData() { loadProducts(); loadDashboard(); showAdminToast("Data refreshed ✓", "success"); }
+
+function showAdminToast(msg, type) {
+  var t = document.getElementById("adminToast");
+  if (!t) return;
+  t.textContent = msg;
+  t.className = "toast-admin show" + (type ? " " + type : "");
+  clearTimeout(window._at);
+  window._at = setTimeout(function(){ t.classList.remove("show"); }, 2800);
+}
+
+// Close modal on backdrop click
+document.getElementById("productModal").addEventListener("click", function(e) {
+  if (e.target === this) closeProductModal();
+});
+
+// CSS spin animation for loader
+var style = document.createElement("style");
+style.textContent = "@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}";
+document.head.appendChild(style);
+</script>
+</body>
+</html>
