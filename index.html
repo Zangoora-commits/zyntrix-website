@@ -217,6 +217,69 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 .social-btn:hover{border-color:var(--cyan);color:var(--cyan)}
 
 
+
+/* ===================== FLOATING SOCIAL BAR ===================== */
+.float-social{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:150;display:flex;flex-direction:column;gap:0}
+.float-social-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;cursor:pointer;transition:all .25s;text-decoration:none;position:relative}
+.float-social-btn .fs-label{position:absolute;left:44px;background:var(--card);border:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;border-left:none}
+.float-social-btn:hover .fs-label{opacity:1}
+.float-social-btn:nth-child(1){background:#E1306C}
+.float-social-btn:nth-child(2){background:#1DA1F2}
+.float-social-btn:nth-child(3){background:#0A66C2}
+.float-social-btn:nth-child(4){background:#FF0000}
+.float-social-btn:nth-child(5){background:#25D366}
+.float-social-btn:nth-child(6){background:#000000}
+.float-social-btn:nth-child(7){background:#FF6600}
+.float-social-btn:hover{width:52px}
+
+/* ===================== SOCIAL SECTION ===================== */
+.social-section{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 48px}
+.social-section-inner{max-width:900px;margin:0 auto;text-align:center}
+.social-section-title{font-family:var(--font-display);font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-1px;margin-bottom:12px}
+.social-section-sub{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:48px;font-weight:300}
+.social-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:48px}
+.social-card{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;border:1px solid var(--border);background:var(--surface);cursor:pointer;text-decoration:none;transition:all .25s;gap:12px;position:relative;overflow:hidden}
+.social-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s}
+.social-card:hover::before{opacity:.06}
+.social-card:hover{transform:translateY(-4px);border-color:var(--border2)}
+.social-card-icon{font-size:28px;color:#fff;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.social-card-name{font-family:var(--font-display);font-size:14px;font-weight:700}
+.social-card-handle{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:1px}
+.social-card-followers{font-family:var(--font-mono);font-size:12px;margin-top:4px}
+.social-card-follow{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border:1px solid var(--border2);color:var(--muted);transition:all .2s;margin-top:4px}
+.social-card:hover .social-card-follow{color:var(--cyan);border-color:var(--cyan)}
+
+/* Colour overrides per network */
+.sc-instagram .social-card-icon{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.sc-instagram::before{background:linear-gradient(45deg,#f09433,#bc1888)}
+.sc-instagram .social-card-followers{color:#E1306C}
+.sc-twitter .social-card-icon{background:#1DA1F2}
+.sc-twitter::before{background:#1DA1F2}
+.sc-twitter .social-card-followers{color:#1DA1F2}
+.sc-linkedin .social-card-icon{background:#0A66C2}
+.sc-linkedin::before{background:#0A66C2}
+.sc-linkedin .social-card-followers{color:#0A66C2}
+.sc-youtube .social-card-icon{background:#FF0000}
+.sc-youtube::before{background:#FF0000}
+.sc-youtube .social-card-followers{color:#FF0000}
+.sc-whatsapp .social-card-icon{background:#25D366}
+.sc-whatsapp::before{background:#25D366}
+.sc-whatsapp .social-card-followers{color:#25D366}
+.sc-tiktok .social-card-icon{background:#000}
+.sc-tiktok::before{background:#69C9D0}
+.sc-tiktok .social-card-followers{color:#69C9D0}
+.sc-pinterest .social-card-icon{background:#E60023}
+.sc-pinterest::before{background:#E60023}
+.sc-pinterest .social-card-followers{color:#E60023}
+.sc-threads .social-card-icon{background:#101010}
+.sc-threads::before{background:#101010}
+.sc-threads .social-card-followers{color:#aaa}
+
+.social-bottom-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.social-bottom-btn{display:flex;align-items:center;gap:8px;padding:11px 20px;background:var(--surface);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;transition:all .2s}
+.social-bottom-btn i{font-size:16px}
+.social-bottom-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+
 /* ===================== PRODUCT MODAL ===================== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
 .modal-overlay.open{opacity:1;pointer-events:all}
@@ -394,8 +457,133 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 .hero-cta{animation:fadeUp .7s .3s ease both}
 .hero-stats{animation:fadeUp .7s .4s ease both}
 </style>
+
+<!-- Supabase Connection -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script>
+  var ZYNTRIX_SUPABASE_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
+  var ZYNTRIX_SUPABASE_KEY = "sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF";
+  var db = null;
+  try {
+    db = window.supabase.createClient(ZYNTRIX_SUPABASE_URL, ZYNTRIX_SUPABASE_KEY);
+    console.log("[ZYNTRIX] Supabase connected");
+  } catch(e) {
+    console.warn("[ZYNTRIX] Supabase connection failed:", e);
+  }
+
+  // Load real products from Supabase on page load
+  document.addEventListener("DOMContentLoaded", function() {
+    if (db) loadProductsFromDB();
+  });
+
+  function loadProductsFromDB() {
+    db.from("products")
+      .select("*")
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .then(function(res) {
+        if (res.error) { console.warn("[ZYNTRIX] Could not load products:", res.error.message); return; }
+        if (res.data && res.data.length > 0) {
+          renderStoreProducts(res.data);
+          console.log("[ZYNTRIX] Loaded", res.data.length, "products from database");
+        }
+      });
+  }
+
+  function renderStoreProducts(dbProducts) {
+    var grid = document.getElementById("productsGrid");
+    if (!grid) return;
+
+    // Update PRODUCTS array for modal use
+    PRODUCTS = dbProducts.map(function(p) {
+      return {
+        name: p.name,
+        brand: p.brand,
+        price: p.price,
+        orig: p.orig_price || p.price,
+        icon: p.icon || "ti-box",
+        bg: "#0d1322",
+        tag: p.tag || "",
+        tagClass: p.tag === "Hot" ? "tag-hot" : p.tag === "Deal" ? "tag-deal" : "tag-new",
+        stars: "★★★★★",
+        rating: "New product",
+        desc: p.desc || p.short_desc || "",
+        specs: Array.isArray(p.specs) ? p.specs : (p.specs ? p.specs.split(",").map(function(s){ return s.trim(); }) : []),
+        image_url: p.image_url || null
+      };
+    });
+
+    // Rebuild product grid using data attributes — avoids ALL string escaping issues
+    var html = "";
+    dbProducts.forEach(function(p, idx) {
+      var tagClass = p.tag === "Hot" ? "tag-hot" : p.tag === "Deal" ? "tag-deal" : "tag-new";
+      var icon = p.icon || "ti-box";
+      var imgContent = p.image_url
+        ? '<img src="' + p.image_url + '" style="width:100%;height:100%;object-fit:cover" alt="">'
+        : '<i class="ti ' + icon + ' p-img-icon"></i>';
+      var cat = (p.category || "").toLowerCase().replace(/\s+/g, "-");
+      html += '<div class="product-card db-product" data-cat="' + cat + '" data-idx="' + idx + '">'
+        + '<div class="p-img-wrap" style="background:#0d1322">' + imgContent
+        + (p.tag ? '<span class="p-tag ' + tagClass + '">' + p.tag + '</span>' : '')
+        + '<span class="p-brand">' + p.brand + '</span></div>'
+        + '<div class="p-info">'
+        + '<div class="p-rating"><span class="stars">★★★★★</span><span class="rating-num">New</span></div>'
+        + '<div class="p-name">' + p.name + '</div>'
+        + '<div class="p-desc">' + (p.short_desc || "") + '</div>'
+        + '<div class="p-foot">'
+        + '<div><span class="p-price">₹' + Number(p.price).toLocaleString("en-IN") + '</span>'
+        + (p.orig_price ? '<span class="p-price-orig">₹' + Number(p.orig_price).toLocaleString("en-IN") + '</span>' : '')
+        + '</div>'
+        + '<button class="btn-add db-add-btn" data-idx="' + idx + '"><i class="ti ti-plus" style="font-size:13px"></i> Add</button>'
+        + '</div></div></div>';
+    });
+    grid.innerHTML = html;
+    grid.style.background = "var(--border)";
+
+    // Attach events via JS — no inline onclick needed, no escaping issues
+    document.querySelectorAll(".db-product").forEach(function(card) {
+      card.addEventListener("click", function() {
+        openProduct(parseInt(this.dataset.idx));
+      });
+    });
+    document.querySelectorAll(".db-add-btn").forEach(function(btn) {
+      btn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        var idx = parseInt(this.dataset.idx);
+        var p = PRODUCTS[idx];
+        if (p) addCart(p.name, p.brand, p.price, p.icon || "ti-box");
+      });
+    });
+  }
+</script>
 </head>
 <body>
+
+
+<!-- FLOATING SOCIAL SIDEBAR -->
+<div class="float-social" id="floatSocial">
+  <a class="float-social-btn" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener" title="Instagram">
+    <i class="ti ti-brand-instagram"></i><span class="fs-label">Instagram</span>
+  </a>
+  <a class="float-social-btn" href="https://twitter.com/zyntrix_in" target="_blank" rel="noopener" title="Twitter / X">
+    <i class="ti ti-brand-x"></i><span class="fs-label">Twitter / X</span>
+  </a>
+  <a class="float-social-btn" href="https://linkedin.com/company/zyntrix" target="_blank" rel="noopener" title="LinkedIn">
+    <i class="ti ti-brand-linkedin"></i><span class="fs-label">LinkedIn</span>
+  </a>
+  <a class="float-social-btn" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener" title="YouTube">
+    <i class="ti ti-brand-youtube"></i><span class="fs-label">YouTube</span>
+  </a>
+  <a class="float-social-btn" href="https://wa.me/919999999999" target="_blank" rel="noopener" title="WhatsApp">
+    <i class="ti ti-brand-whatsapp"></i><span class="fs-label">WhatsApp</span>
+  </a>
+  <a class="float-social-btn" href="https://tiktok.com/@zyntrix" target="_blank" rel="noopener" title="TikTok">
+    <i class="ti ti-brand-tiktok"></i><span class="fs-label">TikTok</span>
+  </a>
+  <a class="float-social-btn" href="https://pinterest.com/zyntrix" target="_blank" rel="noopener" title="Pinterest">
+    <i class="ti ti-brand-pinterest"></i><span class="fs-label">Pinterest</span>
+  </a>
+</div>
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
@@ -411,6 +599,7 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
     <li><a href="#categories">Categories</a></li>
     <li><a href="#partners">Partners</a></li>
     <li><a href="#about">About</a></li>
+    <li><a href="#social">Community</a></li>
   </ul>
   <div class="nav-actions">
     <div class="nav-search"><i class="ti ti-search"></i> Search products</div>
@@ -612,6 +801,88 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   </div>
 </section>
 
+
+<!-- SOCIAL MEDIA SECTION -->
+<section class="social-section" id="social">
+  <div class="social-section-inner">
+    <div class="section-eyebrow" style="justify-content:center">Follow ZYNTRIX</div>
+    <div class="social-section-title">Join Our Community</div>
+    <p class="social-section-sub">Stay connected for the latest drops, unboxings, tech reviews, and exclusive deals. Our community gets first access to everything.</p>
+    <div class="social-cards">
+
+      <a class="social-card sc-instagram" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-instagram"></i></div>
+        <div class="social-card-name">Instagram</div>
+        <div class="social-card-handle">@zyntrix.in</div>
+        <div class="social-card-followers">12.4K followers</div>
+        <div class="social-card-follow">Follow</div>
+      </a>
+
+      <a class="social-card sc-twitter" href="https://twitter.com/zyntrix_in" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-x"></i></div>
+        <div class="social-card-name">Twitter / X</div>
+        <div class="social-card-handle">@zyntrix_in</div>
+        <div class="social-card-followers">8.2K followers</div>
+        <div class="social-card-follow">Follow</div>
+      </a>
+
+      <a class="social-card sc-youtube" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-youtube"></i></div>
+        <div class="social-card-name">YouTube</div>
+        <div class="social-card-handle">@zyntrix</div>
+        <div class="social-card-followers">6.1K subscribers</div>
+        <div class="social-card-follow">Subscribe</div>
+      </a>
+
+      <a class="social-card sc-linkedin" href="https://linkedin.com/company/zyntrix" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-linkedin"></i></div>
+        <div class="social-card-name">LinkedIn</div>
+        <div class="social-card-handle">ZYNTRIX Technologies</div>
+        <div class="social-card-followers">3.8K followers</div>
+        <div class="social-card-follow">Connect</div>
+      </a>
+
+      <a class="social-card sc-whatsapp" href="https://wa.me/919999999999" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-whatsapp"></i></div>
+        <div class="social-card-name">WhatsApp</div>
+        <div class="social-card-handle">Business Chat</div>
+        <div class="social-card-followers">Chat with us</div>
+        <div class="social-card-follow">Message</div>
+      </a>
+
+      <a class="social-card sc-tiktok" href="https://tiktok.com/@zyntrix" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-tiktok"></i></div>
+        <div class="social-card-name">TikTok</div>
+        <div class="social-card-handle">@zyntrix</div>
+        <div class="social-card-followers">18.7K followers</div>
+        <div class="social-card-follow">Follow</div>
+      </a>
+
+      <a class="social-card sc-pinterest" href="https://pinterest.com/zyntrix" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-pinterest"></i></div>
+        <div class="social-card-name">Pinterest</div>
+        <div class="social-card-handle">@zyntrix</div>
+        <div class="social-card-followers">4.3K followers</div>
+        <div class="social-card-follow">Follow</div>
+      </a>
+
+      <a class="social-card sc-threads" href="https://threads.net/@zyntrix.in" target="_blank" rel="noopener">
+        <div class="social-card-icon"><i class="ti ti-brand-threads"></i></div>
+        <div class="social-card-name">Threads</div>
+        <div class="social-card-handle">@zyntrix.in</div>
+        <div class="social-card-followers">5.9K followers</div>
+        <div class="social-card-follow">Follow</div>
+      </a>
+
+    </div>
+    <div class="social-bottom-row">
+      <a class="social-bottom-btn" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener"><i class="ti ti-brand-instagram"></i> Latest Unboxings</a>
+      <a class="social-bottom-btn" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener"><i class="ti ti-brand-youtube"></i> Watch Reviews</a>
+      <a class="social-bottom-btn" href="https://wa.me/919999999999" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Get Support</a>
+    </div>
+  </div>
+</section>
+
 <!-- NEWSLETTER -->
 <div class="newsletter">
   <div class="nl-left">
@@ -638,7 +909,14 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   </div>
   <div class="footer-bottom">
     <p class="footer-copy">© 2026 ZYNTRIX Technologies Pvt. Ltd. · GST: 09ABCDE1234F1Z5</p>
-    <div class="socials"><div class="social-btn"><i class="ti ti-brand-instagram"></i></div><div class="social-btn"><i class="ti ti-brand-x"></i></div><div class="social-btn"><i class="ti ti-brand-linkedin"></i></div><div class="social-btn"><i class="ti ti-brand-youtube"></i></div></div>
+    <div class="socials">
+      <a class="social-btn" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener" title="Instagram"><i class="ti ti-brand-instagram"></i></a>
+      <a class="social-btn" href="https://twitter.com/zyntrix_in" target="_blank" rel="noopener" title="Twitter/X"><i class="ti ti-brand-x"></i></a>
+      <a class="social-btn" href="https://linkedin.com/company/zyntrix" target="_blank" rel="noopener" title="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
+      <a class="social-btn" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener" title="YouTube"><i class="ti ti-brand-youtube"></i></a>
+      <a class="social-btn" href="https://wa.me/919999999999" target="_blank" rel="noopener" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
+      <a class="social-btn" href="https://tiktok.com/@zyntrix" target="_blank" rel="noopener" title="TikTok"><i class="ti ti-brand-tiktok"></i></a>
+    </div>
   </div>
 </footer>
 
@@ -1201,6 +1479,19 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 });
+
+// Hide/show float social bar on scroll direction
+(function(){
+  var lastY=0, bar=document.getElementById('floatSocial');
+  window.addEventListener('scroll',function(){
+    if(!bar) return;
+    var y=window.scrollY;
+    bar.style.opacity = (y < 200) ? '0' : '1';
+    bar.style.pointerEvents = (y < 200) ? 'none' : 'all';
+    lastY=y;
+  });
+})();
+
 </script>
 </body>
 </html>
