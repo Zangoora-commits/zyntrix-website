@@ -6,7 +6,7 @@
 <title>ZYNTRIX Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -466,9 +466,9 @@ input,select,textarea,button{font-family:var(--font-body)}
               <div class="settings-title">Supabase Configuration</div>
               <div class="settings-sub">Connect your database to enable real products, orders, and auth.</div>
               <label class="field-label">Supabase Project URL</label>
-              <input class="field-input" type="text" id="sbUrl" placeholder="https://xxxx.supabase.co">
+              <input class="field-input" type="text" id="sbUrl" placeholder="https://xxxx.supabase.co" value="https://wvzkyubggsckobvcqlgj.supabase.co">
               <label class="field-label">Supabase Anon Key</label>
-              <input class="field-input" type="text" id="sbKey" placeholder="eyJhbGci...">
+              <input class="field-input" type="text" id="sbKey" placeholder="eyJhbGci..." value="sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF">
               <button class="btn-save" onclick="saveSupabaseConfig()" style="width:100%;justify-content:center"><i class="ti ti-database" style="font-size:14px"></i> Save & Connect</button>
             </div>
             <div class="settings-card">
@@ -508,6 +508,18 @@ input,select,textarea,button{font-family:var(--font-body)}
 
       </div>
     </div>
+  </div>
+</div>
+
+
+<!-- CONNECTION ALERT MODAL -->
+<div class="alert-overlay" id="alertOverlay">
+  <div class="alert-box">
+    <div class="alert-icon" id="alertIcon"><i class="ti ti-loader-2" id="alertIconInner"></i></div>
+    <div class="alert-title" id="alertTitle">Connecting...</div>
+    <div class="alert-message" id="alertMessage">Please wait while we connect to your database.</div>
+    <div class="alert-detail" id="alertDetail"></div>
+    <div id="alertActions"></div>
   </div>
 </div>
 
@@ -596,12 +608,21 @@ input,select,textarea,button{font-family:var(--font-body)}
 
 <script>
 // ═══════════════════════════════════════════════════
+//  NULL-SAFE HELPER — prevents cannot read properties of null
+// ═══════════════════════════════════════════════════
+function g(id) {
+  var e = document.getElementById(id);
+  if (!e) { console.warn("[ZYNTRIX] Element not found:", id); return { style:{}, classList:{ add:function(){}, remove:function(){}, toggle:function(){} }, value:"", textContent:"", innerHTML:"" }; }
+  return e;
+}
+
+// ═══════════════════════════════════════════════════
 //  SUPABASE CONFIG — Replace these with your values
 //  from supabase.com → Project Settings → API
 // ═══════════════════════════════════════════════════
 var SUPABASE_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
 var SUPABASE_KEY = "sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF";
-var supabase = null;
+var _sbClient = null; // Our Supabase client instance
 var currentUser = null;
 var isDemo = true;
 
@@ -619,50 +640,97 @@ var editingProductId = null;
 var uploadedImages = [];
 
 // ── INIT ─────────────────────────────────────────
-window.onload = function() {
-  // Try to init Supabase if keys are configured
-  if (SUPABASE_URL !== "YOUR_SUPABASE_URL" && SUPABASE_KEY !== "YOUR_SUPABASE_ANON_KEY") {
+function loadSupabaseSDK(callback) {
+  // Dynamically inject the Supabase SDK and wait for it to fully load
+  // Check if SDK already loaded (window.supabase is the library namespace)
+  if (typeof window.supabase !== "undefined" && typeof window.supabase.createClient === "function") {
+    callback(); return;
+  }
+  var script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";
+  script.onload = function() {
+    // Small delay to ensure the SDK fully initialises after script parse
+    setTimeout(function() {
+      if (typeof window.supabase === "undefined" || typeof window.supabase.createClient !== "function") {
+        console.error("[ZYNTRIX] SDK loaded but createClient not available");
+        showDemoMode(); return;
+      }
+      console.log("[ZYNTRIX] Supabase SDK ready");
+      callback();
+    }, 100);
+  };
+  script.onerror = function() {
+    console.error("[ZYNTRIX] Failed to load Supabase SDK");
+    showAlert("error", "SDK Failed to Load",
+      "Could not load the Supabase library. Please check your internet connection and try refreshing the page.",
+      "CDN: cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+      [{ label:"Refresh Page", action: function(){ window.location.reload(); } },
+       { label:"Continue in Demo Mode", action: function(){ hideAlert(); showDemoMode(); }, secondary: true }]
+    );
+  };
+  document.head.appendChild(script);
+}
+
+function initSupabase() {
+  if (SUPABASE_URL === "YOUR_SUPABASE_URL" || SUPABASE_KEY === "YOUR_SUPABASE_ANON_KEY") {
+    console.warn("[ZYNTRIX] No credentials — running in demo mode");
+    showDemoMode(); return;
+  }
+  loadSupabaseSDK(function() {
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       isDemo = false;
+      console.log("[ZYNTRIX] Supabase connected:", SUPABASE_URL);
       checkSession();
     } catch(e) {
-      console.warn("Supabase init failed:", e);
+      console.error("[ZYNTRIX] Supabase createClient failed:", e.message);
       showDemoMode();
     }
-  } else {
-    // Demo mode — show demo login hint
-    showDemoMode();
-  }
-};
+  });
+}
+
+window.addEventListener("DOMContentLoaded", function() {
+  initSupabase();
+});
 
 function showDemoMode() {
   isDemo = true;
-  document.getElementById("configBanner").style.display = "flex";
+  var b = g("configBanner");
+  if (b) b.style.display = "flex";
 }
 
 function checkSession() {
-  if (!supabase) return;
-  supabase.auth.getSession().then(function(res) {
-    if (res.data && res.data.session) {
-      currentUser = res.data.session.user;
-      showAdminPanel();
+  if (!_sbClient) { showDemoMode(); return; }
+  _sbClient.auth.getSession().then(function(res) {
+    if (res.error) {
+      console.warn("[ZYNTRIX] getSession error:", res.error.message);
+      showDemoMode(); return;
     }
+    if (res.data && res.data.session && res.data.session.user) {
+      currentUser = res.data.session.user;
+      console.log("[ZYNTRIX] Existing session found:", currentUser.email);
+      showAdminPanel();
+    } else {
+      console.log("[ZYNTRIX] No active session — showing login");
+      // No session, stay on login screen — this is normal
+    }
+  }).catch(function(e) {
+    console.warn("[ZYNTRIX] Session check failed:", e);
+    showDemoMode();
   });
 }
 
 // ── AUTH ─────────────────────────────────────────
 function doLogin() {
-  var email = document.getElementById("loginEmail").value.trim();
-  var password = document.getElementById("loginPassword").value;
-  var btn = document.getElementById("loginBtn");
-  var err = document.getElementById("loginError");
+  var email = g("loginEmail").value.trim();
+  var password = g("loginPassword").value;
+  var btn = g("loginBtn");
+  var err = g("loginError");
   err.style.display = "none";
 
   if (!email || !password) { showLoginError("Please enter email and password."); return; }
 
   if (isDemo) {
-    // Demo mode: accept any credentials
     if (email && password.length >= 4) {
       currentUser = { email: email, id: "demo-user" };
       showAdminPanel();
@@ -672,42 +740,70 @@ function doLogin() {
     return;
   }
 
+  // Ensure Supabase client is ready before attempting login
+  if (!_sbClient) {
+    showLoginError("Connecting to database... please wait a moment and try again.");
+    initSupabase();
+    return;
+  }
+
   btn.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;animation:spin 1s linear infinite"></i> Signing in...';
   btn.disabled = true;
 
-  supabase.auth.signInWithPassword({ email: email, password: password }).then(function(res) {
-    btn.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
-    btn.disabled = false;
-    if (res.error) { showLoginError(res.error.message); return; }
-    currentUser = res.data.user;
-    showAdminPanel();
-  });
+  _sbClient.auth.signInWithPassword({ email: email, password: password })
+    .then(function(res) {
+      btn.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+      btn.disabled = false;
+      if (res.error) {
+        console.error("[ZYNTRIX] Login error:", res.error.message);
+        showLoginError(res.error.message);
+        return;
+      }
+      if (!res.data || !res.data.user) {
+        showLoginError("Login failed — no user returned. Check your credentials.");
+        return;
+      }
+      currentUser = res.data.user;
+      console.log("[ZYNTRIX] Logged in as:", currentUser.email);
+      showAdminPanel();
+    })
+    .catch(function(e) {
+      btn.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+      btn.disabled = false;
+      console.error("[ZYNTRIX] Login exception:", e);
+      showLoginError("Connection error: " + e.message);
+    });
 }
 
 function showLoginError(msg) {
-  var err = document.getElementById("loginError");
+  var err = g("loginError");
   err.textContent = msg;
   err.style.display = "block";
 }
 
 function doLogout() {
-  if (supabase) supabase.auth.signOut();
+  if (_sbClient) _sbClient.auth.signOut();
   currentUser = null;
-  document.getElementById("adminPanel").style.display = "none";
-  document.getElementById("loginScreen").style.display = "flex";
-  document.getElementById("loginPassword").value = "";
+  g("adminPanel").style.display = "none";
+  g("loginScreen").style.display = "flex";
+  g("loginPassword").value = "";
 }
 
 function showAdminPanel() {
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("adminPanel").style.display = "block";
-  // Set user info
-  var email = currentUser ? currentUser.email : "admin@zyntrix.in";
+  g("loginScreen").style.display = "none";
+  g("adminPanel").style.display = "block";
+  var email = currentUser ? (currentUser.email || "admin") : "admin@zyntrix.in";
   var initial = email.charAt(0).toUpperCase();
-  document.getElementById("userAvatar").textContent = initial;
-  document.getElementById("userName").textContent = email.split("@")[0];
-  document.getElementById("userEmail").textContent = email;
-  if (!isDemo) document.getElementById("configBanner").style.display = "none";
+  g("userAvatar").textContent = initial;
+  g("userName").textContent = email.split("@")[0];
+  g("userEmail").textContent = email;
+  var banner = g("configBanner");
+  if (banner) banner.style.display = isDemo ? "flex" : "none";
+  // Auto-connect Supabase on login if credentials are set but not yet connected
+  if (!isDemo && !supabase && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
+    console.log("[ZYNTRIX] Auto-connecting Supabase after login...");
+    saveSupabaseConfig();
+  }
   loadDashboard();
   loadProducts();
 }
@@ -720,35 +816,49 @@ function showPage(name, navEl) {
   document.querySelectorAll(".nav-item").forEach(function(n){ n.classList.remove("active"); });
   if (navEl) navEl.classList.add("active");
   var titles = { dashboard:"Dashboard", products:"Products", categories:"Categories", media:"Media Library", orders:"Orders", delivery:"Delivery", promos:"Promo Codes", users:"Customers", partners:"Partners", settings:"Settings" };
-  document.getElementById("topbarTitle").textContent = titles[name] || name;
+  g("topbarTitle").textContent = titles[name] || name;
   var showAdd = name === "products";
-  document.getElementById("topbarAction").style.display = showAdd ? "flex" : "none";
+  g("topbarAction").style.display = showAdd ? "flex" : "none";
 }
 
 // ── DASHBOARD ────────────────────────────────────
 function loadDashboard() {
-  document.getElementById("statProducts").textContent = products.length;
-  document.getElementById("prodCount").textContent = products.length;
-  document.getElementById("statOrders").textContent = "4";
-  document.getElementById("statCustomers").textContent = "2";
-  document.getElementById("statRevenue").textContent = "₹27,596";
-  document.getElementById("orderCount").textContent = "2";
+  g("statProducts").textContent = products.length;
+  g("prodCount").textContent = products.length;
+  g("statOrders").textContent = "4";
+  g("statCustomers").textContent = "2";
+  g("statRevenue").textContent = "₹27,596";
+  g("orderCount").textContent = "2";
 }
 
 // ── PRODUCTS ────────────────────────────────────
 function loadProducts() {
-  if (!isDemo && supabase) {
-    supabase.from("products").select("*").order("created_at", { ascending: false }).then(function(res) {
-      if (res.data) { products = res.data; renderProducts(products); }
-      else { renderProducts(demoProducts); }
-    });
+  if (!isDemo && _sbClient) {
+    _sbClient.from("products").select("*").order("created_at", { ascending: false })
+      .then(function(res) {
+        if (res.error) {
+          console.error("[ZYNTRIX] Load products error:", res.error.message);
+          renderProducts(demoProducts); return;
+        }
+        if (res.data && res.data.length > 0) {
+          products = res.data;
+          console.log("[ZYNTRIX] Loaded", products.length, "products from Supabase");
+          renderProducts(products);
+        } else {
+          console.log("[ZYNTRIX] No products in DB yet — showing demo data");
+          renderProducts(demoProducts);
+        }
+      }).catch(function(e) {
+        console.error("[ZYNTRIX] Load exception:", e);
+        renderProducts(demoProducts);
+      });
   } else {
     renderProducts(products);
   }
 }
 
 function renderProducts(list) {
-  var tbody = document.getElementById("productsTableBody");
+  var tbody = g("productsTableBody");
   if (!tbody) return;
   if (!list || list.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i class="ti ti-box"></i><h3>No products yet</h3><p>Click "Add Product" to add your first product.</p></div></td></tr>';
@@ -772,8 +882,8 @@ function renderProducts(list) {
       + '</tr>';
   });
   tbody.innerHTML = html;
-  document.getElementById("prodCount").textContent = list.length;
-  document.getElementById("statProducts").textContent = list.length;
+  g("prodCount").textContent = list.length;
+  g("statProducts").textContent = list.length;
 }
 
 function filterProds(q) {
@@ -786,48 +896,48 @@ function filterProds(q) {
 // ── PRODUCT MODAL ────────────────────────────────
 function openAddProduct() {
   editingProductId = null;
-  document.getElementById("modalTitle").textContent = "Add New Product";
+  g("modalTitle").textContent = "Add New Product";
   ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission"].forEach(function(id) {
     var el = document.getElementById(id); if(el) el.value = "";
   });
-  document.getElementById("pCategory").value = "";
-  document.getElementById("pStatus").value = "active";
-  document.getElementById("pTag").value = "";
-  document.getElementById("imagePreview").innerHTML = "";
+  g("pCategory").value = "";
+  g("pStatus").value = "active";
+  g("pTag").value = "";
+  g("imagePreview").innerHTML = "";
   uploadedImages = [];
-  document.getElementById("productModal").classList.add("open");
+  g("productModal").classList.add("open");
 }
 
 function editProduct(id) {
   var p = products.find(function(x){ return x.id === id; });
   if (!p) return;
   editingProductId = id;
-  document.getElementById("modalTitle").textContent = "Edit Product";
-  document.getElementById("pName").value = p.name || "";
-  document.getElementById("pBrand").value = p.brand || "";
-  document.getElementById("pCategory").value = p.category || "";
-  document.getElementById("pPrice").value = p.price || "";
-  document.getElementById("pOrigPrice").value = p.orig_price || "";
-  document.getElementById("pStock").value = p.stock || "";
-  document.getElementById("pSku").value = p.sku || "";
-  document.getElementById("pStatus").value = p.status || "active";
-  document.getElementById("pTag").value = p.tag || "";
-  document.getElementById("pShortDesc").value = p.short_desc || "";
-  document.getElementById("pDesc").value = p.desc || "";
-  document.getElementById("pSpecs").value = (p.specs || []).join(", ");
-  document.getElementById("pCommission").value = p.commission || "";
-  document.getElementById("pVideo").value = p.video || "";
-  document.getElementById("imagePreview").innerHTML = "";
+  g("modalTitle").textContent = "Edit Product";
+  g("pName").value = p.name || "";
+  g("pBrand").value = p.brand || "";
+  g("pCategory").value = p.category || "";
+  g("pPrice").value = p.price || "";
+  g("pOrigPrice").value = p.orig_price || "";
+  g("pStock").value = p.stock || "";
+  g("pSku").value = p.sku || "";
+  g("pStatus").value = p.status || "active";
+  g("pTag").value = p.tag || "";
+  g("pShortDesc").value = p.short_desc || "";
+  g("pDesc").value = p.desc || "";
+  g("pSpecs").value = (p.specs || []).join(", ");
+  g("pCommission").value = p.commission || "";
+  g("pVideo").value = p.video || "";
+  g("imagePreview").innerHTML = "";
   uploadedImages = [];
-  document.getElementById("productModal").classList.add("open");
+  g("productModal").classList.add("open");
 }
 
 function closeProductModal() {
-  document.getElementById("productModal").classList.remove("open");
+  g("productModal").classList.remove("open");
 }
 
 function handleImageUpload(input) {
-  var preview = document.getElementById("imagePreview");
+  var preview = g("imagePreview");
   Array.from(input.files).forEach(function(file) {
     uploadedImages.push(file);
     var reader = new FileReader();
@@ -842,37 +952,45 @@ function handleImageUpload(input) {
 }
 
 function saveProduct() {
-  var name = document.getElementById("pName").value.trim();
-  var brand = document.getElementById("pBrand").value.trim();
-  var price = document.getElementById("pPrice").value;
-  var category = document.getElementById("pCategory").value;
+  var name = g("pName").value.trim();
+  var brand = g("pBrand").value.trim();
+  var price = g("pPrice").value;
+  var category = g("pCategory").value;
   if (!name || !brand || !price || !category) { showAdminToast("Please fill in all required fields ✕", "error"); return; }
 
   var productData = {
     name: name, brand: brand, category: category,
-    price: Number(price), orig_price: Number(document.getElementById("pOrigPrice").value) || Number(price),
-    stock: Number(document.getElementById("pStock").value) || 0,
-    sku: document.getElementById("pSku").value.trim(),
-    status: document.getElementById("pStatus").value,
-    tag: document.getElementById("pTag").value,
-    short_desc: document.getElementById("pShortDesc").value.trim(),
-    desc: document.getElementById("pDesc").value.trim(),
-    specs: document.getElementById("pSpecs").value.split(",").map(function(s){ return s.trim(); }).filter(Boolean),
-    commission: Number(document.getElementById("pCommission").value) || 0,
-    video: document.getElementById("pVideo").value.trim(),
+    price: Number(price), orig_price: Number(g("pOrigPrice").value) || Number(price),
+    stock: Number(g("pStock").value) || 0,
+    sku: g("pSku").value.trim(),
+    status: g("pStatus").value,
+    tag: g("pTag").value,
+    short_desc: g("pShortDesc").value.trim(),
+    desc: g("pDesc").value.trim(),
+    specs: g("pSpecs").value.split(",").map(function(s){ return s.trim(); }).filter(Boolean),
+    commission: Number(g("pCommission").value) || 0,
+    video: g("pVideo").value.trim(),
     icon: "ti-box"
   };
 
-  if (!isDemo && supabase) {
+  if (!isDemo && _sbClient) {
     // Real Supabase save
     var promise = editingProductId
-      ? supabase.from("products").update(productData).eq("id", editingProductId)
-      : supabase.from("products").insert([productData]);
+      ? _sbClient.from("products").update(productData).eq("id", editingProductId)
+      : _sbClient.from("products").insert([productData]);
     promise.then(function(res) {
-      if (res.error) { showAdminToast("Error: " + res.error.message, "error"); return; }
-      showAdminToast(editingProductId ? "Product updated!" : "Product added!", "success");
+      if (res.error) {
+        console.error("[ZYNTRIX] Save error:", res.error);
+        showAdminToast("Save failed: " + res.error.message, "error");
+        return;
+      }
+      console.log("[ZYNTRIX] Product saved successfully:", res.data);
+      showAdminToast(editingProductId ? "Product updated! ✓" : "Product added! ✓", "success");
       closeProductModal();
       loadProducts();
+    }).catch(function(e) {
+      console.error("[ZYNTRIX] Save exception:", e);
+      showAdminToast("Error: " + e.message, "error");
     });
   } else {
     // Demo mode save
@@ -892,8 +1010,8 @@ function saveProduct() {
 
 function deleteProduct(id) {
   if (!confirm("Delete this product? This cannot be undone.")) return;
-  if (!isDemo && supabase) {
-    supabase.from("products").delete().eq("id", id).then(function(res) {
+  if (!isDemo && _sbClient) {
+    _sbClient.from("products").delete().eq("id", id).then(function(res) {
       if (res.error) { showAdminToast("Error: " + res.error.message, "error"); return; }
       showAdminToast("Product deleted.", "success");
       loadProducts();
@@ -907,27 +1025,131 @@ function deleteProduct(id) {
 }
 
 // ── SUPABASE CONFIG ──────────────────────────────
-function saveSupabaseConfig() {
-  var url = document.getElementById("sbUrl").value.trim();
-  var key = document.getElementById("sbKey").value.trim();
-  if (!url || !key) { showAdminToast("Enter both URL and key ✕", "error"); return; }
-  SUPABASE_URL = url; SUPABASE_KEY = key;
-  try {
-    supabase = window.supabase.createClient(url, key);
-    isDemo = false;
-    document.getElementById("configBanner").style.display = "none";
-    showAdminToast("Supabase connected! ✓", "success");
-    loadProducts();
-  } catch(e) {
-    showAdminToast("Connection failed: " + e.message, "error");
+
+// ── CONNECTION ALERTS ────────────────────────────
+function showAlert(type, title, message, detail, actions) {
+  var overlay = document.getElementById("alertOverlay");
+  var iconEl = document.getElementById("alertIcon");
+  var iconInner = document.getElementById("alertIconInner");
+  var titleEl = document.getElementById("alertTitle");
+  var msgEl = document.getElementById("alertMessage");
+  var detailEl = document.getElementById("alertDetail");
+  var actionsEl = document.getElementById("alertActions");
+  if (!overlay) return;
+
+  // Icon
+  var icons = { success:"ti-circle-check", error:"ti-circle-x", loading:"ti-loader-2", warning:"ti-alert-triangle" };
+  iconEl.className = "alert-icon " + type;
+  iconInner.className = "ti " + (icons[type] || "ti-info-circle");
+
+  // Title & message
+  titleEl.className = "alert-title " + type;
+  titleEl.textContent = title;
+  msgEl.textContent = message;
+
+  // Detail (technical error info)
+  if (detail) {
+    detailEl.textContent = detail;
+    detailEl.classList.add("show");
+  } else {
+    detailEl.textContent = "";
+    detailEl.classList.remove("show");
   }
+
+  // Action buttons
+  actionsEl.innerHTML = "";
+  if (actions && actions.length > 0) {
+    actions.forEach(function(a) {
+      var btn = document.createElement("button");
+      btn.className = "alert-btn" + (a.secondary ? " secondary" : "");
+      btn.textContent = a.label;
+      btn.onclick = a.action;
+      actionsEl.appendChild(btn);
+    });
+  }
+
+  overlay.classList.add("show");
+}
+
+function hideAlert() {
+  var overlay = document.getElementById("alertOverlay");
+  if (overlay) overlay.classList.remove("show");
+}
+
+function saveSupabaseConfig() {
+  var urlEl = document.getElementById("sbUrl");
+  var keyEl = document.getElementById("sbKey");
+  var url = (urlEl && urlEl.value.trim()) ? urlEl.value.trim() : SUPABASE_URL;
+  var key = (keyEl && keyEl.value.trim()) ? keyEl.value.trim() : SUPABASE_KEY;
+
+  if (!url || url === "YOUR_SUPABASE_URL") {
+    showAlert("error", "Missing URL", "Please enter your Supabase Project URL in the Settings page.", null, [{ label:"Got it", action: hideAlert }]); return;
+  }
+  if (!key || key === "YOUR_SUPABASE_ANON_KEY") {
+    showAlert("error", "Missing API Key", "Please enter your Supabase anon/publishable key in the Settings page.", null, [{ label:"Got it", action: hideAlert }]); return;
+  }
+  if (!url.startsWith("https://")) {
+    showAlert("error", "Invalid URL", "Your Supabase URL must start with https://", null, [{ label:"Got it", action: hideAlert }]); return;
+  }
+
+  // Show loading state
+  showAlert("loading", "Connecting...", "Linking ZYNTRIX admin panel to your Supabase database. This takes a few seconds.", null, []);
+
+  loadSupabaseSDK(function() {
+    try {
+      supabase = window.supabase.createClient(url, key);
+      isDemo = false;
+      SUPABASE_URL = url;
+      SUPABASE_KEY = key;
+      var banner = document.getElementById("configBanner");
+      if (banner) banner.style.display = "none";
+      console.log("[ZYNTRIX] Supabase connected:", url);
+
+      // Test the connection by doing a quick fetch
+      _sbClient.from("products").select("count", { count:"exact", head:true })
+        .then(function(res) {
+          if (res.error) {
+            showAlert("error", "Connection Failed",
+              "Supabase responded but could not access the products table. Make sure you have created the table and disabled RLS.",
+              "Error: " + res.error.message,
+              [
+                { label:"Try Again", action: function(){ hideAlert(); saveSupabaseConfig(); } },
+                { label:"Dismiss", action: hideAlert, secondary: true }
+              ]
+            );
+            isDemo = true; _sbClient = null; return;
+          }
+          showAlert("success", "Connected!", 
+            "ZYNTRIX admin panel is now connected to your Supabase database. Products will load automatically.",
+            "Connected to: " + url,
+            [{ label:"Continue to Dashboard", action: function(){ hideAlert(); loadProducts(); } }]
+          );
+        }).catch(function(e) {
+          showAlert("error", "Connection Failed", "Could not reach your Supabase database.", "Error: " + e.message,
+            [{ label:"Try Again", action: function(){ hideAlert(); saveSupabaseConfig(); } },
+             { label:"Dismiss", action: hideAlert, secondary: true }]
+          );
+          isDemo = true; _sbClient = null;
+        });
+    } catch(e) {
+      console.error("[ZYNTRIX] createClient error:", e.message);
+      showAlert("error", "Connection Failed",
+        "Could not initialise the Supabase client. Check your URL and API key are correct.",
+        "Error: " + e.message,
+        [
+          { label:"Try Again", action: function(){ hideAlert(); saveSupabaseConfig(); } },
+          { label:"Dismiss", action: hideAlert, secondary: true }
+        ]
+      );
+    }
+  });
 }
 
 // ── MISC ─────────────────────────────────────────
 function refreshData() { loadProducts(); loadDashboard(); showAdminToast("Data refreshed ✓", "success"); }
 
 function showAdminToast(msg, type) {
-  var t = document.getElementById("adminToast");
+  var t = g("adminToast");
   if (!t) return;
   t.textContent = msg;
   t.className = "toast-admin show" + (type ? " " + type : "");
@@ -936,7 +1158,7 @@ function showAdminToast(msg, type) {
 }
 
 // Close modal on backdrop click
-document.getElementById("productModal").addEventListener("click", function(e) {
+g("productModal").addEventListener("click", function(e) {
   if (e.target === this) closeProductModal();
 });
 
