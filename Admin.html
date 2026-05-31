@@ -916,6 +916,9 @@ function handleImageUpload(input) {
 
 // ── SAVE PRODUCT ──────────────────────────────────
 function saveProduct() {
+  // DEBUG - confirm function is being called
+  console.log("[Z] saveProduct() called");
+  alert("saveProduct called! name=" + val("pName") + " brand=" + val("pBrand"));
   // Read all fields directly
   var name     = val("pName").trim();
   var brand    = val("pBrand").trim();
