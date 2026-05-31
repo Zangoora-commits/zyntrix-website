@@ -642,7 +642,7 @@ var uploadedImages = [];
 
 // ── INIT ─────────────────────────────────────────
 function loadSupabaseSDK(callback) {
-  // Poll for window.supabase to be available (loaded via static <script defer> in <head>)
+  // Poll for window.supabase to be available (loaded via static script tag in head)
   var attempts = 0;
   var maxAttempts = 30; // 3 seconds max (30 x 100ms)
   function poll() {
@@ -1216,3 +1216,6 @@ function saveSupabaseConfig() {
     }
   });
 }
+</script>
+</body>
+</html>
