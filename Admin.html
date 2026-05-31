@@ -722,63 +722,105 @@ function checkSession() {
 
 // ── AUTH ─────────────────────────────────────────
 function doLogin() {
-  var email = g("loginEmail").value.trim();
-  var password = g("loginPassword").value;
-  var btn = g("loginBtn");
-  var err = g("loginError");
-  err.style.display = "none";
+  // Always use direct getElementById for login elements — g() dummy can cause silent failures
+  var emailEl  = document.getElementById("loginEmail");
+  var passEl   = document.getElementById("loginPassword");
+  var btnEl    = document.getElementById("loginBtn");
+  var errEl    = document.getElementById("loginError");
 
-  if (!email || !password) { showLoginError("Please enter email and password."); return; }
+  if (!emailEl || !passEl || !btnEl) {
+    console.error("[ZYNTRIX] Login form elements not found");
+    return;
+  }
 
+  var email    = emailEl.value.trim();
+  var password = passEl.value;
+
+  // Hide previous error
+  if (errEl) { errEl.style.display = "none"; errEl.textContent = ""; }
+
+  if (!email || !password) {
+    showLoginError("Please enter your email and password.");
+    return;
+  }
+
+  // Demo mode — accept any valid looking credentials
   if (isDemo) {
-    if (email && password.length >= 4) {
-      currentUser = { email: email, id: "demo-user" };
-      showAdminPanel();
+    if (password.length >= 4) {
+      btnEl.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;animation:spin 1s linear infinite"></i> Signing in...';
+      btnEl.disabled = true;
+      setTimeout(function() {
+        btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+        btnEl.disabled = false;
+        currentUser = { email: email, id: "demo-user" };
+        showAdminPanel();
+      }, 800);
     } else {
-      showLoginError("Demo mode: enter any email and a password (4+ chars).");
+      showLoginError("Password must be at least 4 characters.");
     }
     return;
   }
 
-  // Ensure Supabase client is ready before attempting login
+  // If _sbClient not ready yet — wait for it then retry
   if (!_sbClient) {
-    showLoginError("Connecting to database... please wait a moment and try again.");
-    initSupabase();
+    console.warn("[ZYNTRIX] _sbClient not ready — initialising Supabase then retrying login");
+    btnEl.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;animation:spin 1s linear infinite"></i> Connecting...';
+    btnEl.disabled = true;
+    loadSupabaseSDK(function() {
+      try {
+        _sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        isDemo = false;
+        console.log("[ZYNTRIX] _sbClient ready — proceeding with login");
+        btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+        btnEl.disabled = false;
+        doLogin(); // retry now that client is ready
+      } catch(e) {
+        btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+        btnEl.disabled = false;
+        showLoginError("Could not connect to database: " + e.message);
+      }
+    });
     return;
   }
 
-  btn.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;animation:spin 1s linear infinite"></i> Signing in...';
-  btn.disabled = true;
+  // All good — attempt real login
+  btnEl.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;animation:spin 1s linear infinite"></i> Signing in...';
+  btnEl.disabled = true;
+
+  console.log("[ZYNTRIX] Attempting login for:", email);
 
   _sbClient.auth.signInWithPassword({ email: email, password: password })
     .then(function(res) {
-      btn.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
-      btn.disabled = false;
+      btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+      btnEl.disabled = false;
+
       if (res.error) {
-        console.error("[ZYNTRIX] Login error:", res.error.message);
+        console.error("[ZYNTRIX] Login failed:", res.error.message);
         showLoginError(res.error.message);
         return;
       }
       if (!res.data || !res.data.user) {
-        showLoginError("Login failed — no user returned. Check your credentials.");
+        showLoginError("Login failed — no user returned. Please check your credentials.");
         return;
       }
       currentUser = res.data.user;
-      console.log("[ZYNTRIX] Logged in as:", currentUser.email);
+      console.log("[ZYNTRIX] Login successful:", currentUser.email);
       showAdminPanel();
     })
     .catch(function(e) {
-      btn.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
-      btn.disabled = false;
-      console.error("[ZYNTRIX] Login exception:", e);
-      showLoginError("Connection error: " + e.message);
+      btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
+      btnEl.disabled = false;
+      console.error("[ZYNTRIX] Login exception:", e.message);
+      showLoginError("Connection error — " + e.message + ". Please refresh and try again.");
     });
 }
 
 function showLoginError(msg) {
-  var err = g("loginError");
+  var err = document.getElementById("loginError");
+  if (!err) { alert(msg); return; } // absolute fallback
   err.textContent = msg;
   err.style.display = "block";
+  console.warn("[ZYNTRIX] Login error shown:", msg);
 }
 
 function doLogout() {
