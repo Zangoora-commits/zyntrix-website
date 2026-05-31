@@ -991,25 +991,61 @@ function handleImageUpload(input) {
   });
 }
 
+function getVal(id) {
+  var el = document.getElementById(id);
+  return el ? el.value : "";
+}
+
 function saveProduct() {
-  var name = g("pName").value.trim();
-  var brand = g("pBrand").value.trim();
-  var price = g("pPrice").value;
-  var category = g("pCategory").value;
-  if (!name || !brand || !price || !category) { showAdminToast("Please fill in all required fields ✕", "error"); return; }
+  // Use direct getElementById to avoid g() dummy object issue
+  var name     = getVal("pName").trim();
+  var brand    = getVal("pBrand").trim();
+  var price    = getVal("pPrice").trim();
+  var category = getVal("pCategory").trim();
+
+  // Clear previous validation styles
+  ["pName","pBrand","pPrice","pCategory"].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.borderColor = "";
+  });
+
+  // Validate required fields with visible feedback
+  var errors = [];
+  if (!name)     { errors.push("pName");     }
+  if (!brand)    { errors.push("pBrand");    }
+  if (!price)    { errors.push("pPrice");    }
+  if (!category) { errors.push("pCategory"); }
+
+  if (errors.length > 0) {
+    errors.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.borderColor = "var(--red)";
+    });
+    showAlert("error", "Missing Required Fields",
+      "Please fill in: " + errors.map(function(id){
+        return {pName:"Product Name", pBrand:"Brand", pPrice:"Price", pCategory:"Category"}[id];
+      }).join(", "),
+      null,
+      [{label:"OK", action:hideAlert}]
+    );
+    return;
+  }
 
   var productData = {
-    name: name, brand: brand, category: category,
-    price: Number(price), orig_price: Number(g("pOrigPrice").value) || Number(price),
-    stock: Number(g("pStock").value) || 0,
-    sku: g("pSku").value.trim(),
-    status: g("pStatus").value,
-    tag: g("pTag").value,
-    short_desc: g("pShortDesc").value.trim(),
-    desc: g("pDesc").value.trim(),
-    specs: g("pSpecs").value.split(",").map(function(s){ return s.trim(); }).filter(Boolean),
-    commission: Number(g("pCommission").value) || 0,
-    video: g("pVideo").value.trim(),
+    name: name,
+    brand: brand,
+    category: category,
+    price: Number(price),
+    orig_price: Number(getVal("pOrigPrice")) || Number(price),
+    stock: Number(getVal("pStock")) || 0,
+    sku: getVal("pSku").trim(),
+    status: getVal("pStatus") || "active",
+    tag: getVal("pTag"),
+    short_desc: getVal("pShortDesc").trim(),
+    desc: getVal("pDesc").trim(),
+    specs: getVal("pSpecs").split(",").map(function(s){ return s.trim(); }).filter(Boolean),
+    commission: Number(getVal("pCommission")) || 0,
+    video: getVal("pVideo").trim(),
     icon: "ti-box"
   };
 
@@ -1083,6 +1119,15 @@ function deleteProduct(id) {
 // ── SUPABASE CONFIG ──────────────────────────────
 
 // ── CONNECTION ALERTS ────────────────────────────
+function showAdminToast(msg, type) {
+  var t = document.getElementById("adminToast");
+  if (!t) return;
+  t.textContent = msg;
+  t.className = "toast-admin show" + (type ? " " + type : "");
+  clearTimeout(window._at);
+  window._at = setTimeout(function(){ t.classList.remove("show"); }, 3000);
+}
+
 function showAlert(type, title, message, detail, actions) {
   var overlay = document.getElementById("alertOverlay");
   var iconEl = document.getElementById("alertIcon");
