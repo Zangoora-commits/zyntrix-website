@@ -932,7 +932,9 @@ function handleImageUpload(input) {
 
 // ── SAVE PRODUCT ──────────────────────────────────
 function saveProduct() {
+  // Bulletproof simple version - uses native alert() only
   try {
+  alert("✓ Save button clicked");
   // Read all fields directly
   var name     = val("pName").trim();
   var brand    = val("pBrand").trim();
@@ -962,11 +964,7 @@ function saveProduct() {
   if (!category) { missing.push("Category");      var e=el("pCategory"); if(e) e.style.borderColor="var(--red)"; }
 
   if (missing.length > 0) {
-    showAlert("error","Required Fields Missing",
-      "Please fill in: " + missing.join(", "),
-      null,
-      [{label:"OK, got it", fn:hideAlert}]
-    );
+    alert("❌ Please fill in these required fields:\n\n• " + missing.join("\n• "));
     return;
   }
 
@@ -993,7 +991,6 @@ function saveProduct() {
   if (!isDemo && db) {
     // Real save to Supabase
     console.log("[Z] Going to Supabase save path");
-    showAlert("loading","Saving...","Saving product to your database.",null,[]);
     var promise = editingId
       ? db.from("products").update(data).eq("id", editingId)
       : db.from("products").insert([data]).select();
@@ -1001,26 +998,15 @@ function saveProduct() {
     promise.then(function(r) {
       console.log("[Z] Save response:", r);
       if (r.error) {
-        showAlert("error","Save Failed",
-          "Could not save to Supabase: " + r.error.message,
-          "Code: " + r.error.code,
-          [{label:"Try Again", fn:function(){hideAlert();saveProduct();}},
-           {label:"Dismiss",   fn:hideAlert, secondary:true}]
-        );
+        alert("❌ Save Failed\n\nSupabase error: " + r.error.message + "\nCode: " + r.error.code);
         return;
       }
       closeModal();
-      showAlert("success",
-        editingId ? "Product Updated!" : "Product Added!",
-        "Saved successfully to your database.",
-        null,
-        [{label:"View Products", fn:function(){hideAlert();showPage("products",null);loadProducts();}},
-         {label:"Add Another",   fn:function(){hideAlert();openAddProduct();}}]
-      );
+      alert("✅ Product saved to Supabase!\n\nName: " + name + "\nBrand: " + brand + "\nPrice: ₹" + price);
       loadProducts();
     }).catch(function(e) {
       console.error("[Z] Save exception:", e);
-      showAlert("error","Save Error", e.message, null, [{label:"Dismiss", fn:hideAlert}]);
+      alert("❌ Save error: " + e.message);
     });
 
   } else {
@@ -1035,20 +1021,8 @@ function saveProduct() {
     closeModal();
     renderProducts(allProducts);
     loadDashboard();
-    console.log("[Z] Demo save complete, showing success");
-    // Use native alert as guaranteed fallback + try showAlert
-    try {
-      showAlert("success",
-        editingId ? "Product Updated (Demo)" : "Product Added (Demo)",
-        "Saved in demo mode — connect Supabase in Settings to save permanently.",
-        null,
-        [{label:"View Products", fn:function(){hideAlert();showPage("products",null);}},
-         {label:"Add Another",   fn:function(){hideAlert();openAddProduct();}}]
-      );
-    } catch(e) {
-      console.error("[Z] showAlert failed:", e.message);
-      alert(editingId ? "Product Updated!" : "Product Added! (Demo mode)");
-    }
+    console.log("[Z] Demo save complete");
+    alert("✅ Product saved (DEMO MODE)\n\nName: " + name + "\nBrand: " + brand + "\nPrice: ₹" + price + "\n\nNote: This is demo mode. Connect Supabase in Settings to save permanently.");
   }
   } catch(e) {
     console.error("[Z] saveProduct CRASH:", e.message, e.stack);
