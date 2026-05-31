@@ -224,6 +224,7 @@ input,select,textarea,button{font-family:var(--font-body)}
 .config-banner-text{color:#fcd34d;line-height:1.6}
 .config-banner-text a{color:var(--cyan);cursor:pointer;text-decoration:underline}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 </head>
 <body>
 
@@ -641,34 +642,31 @@ var uploadedImages = [];
 
 // ── INIT ─────────────────────────────────────────
 function loadSupabaseSDK(callback) {
-  // Dynamically inject the Supabase SDK and wait for it to fully load
-  // Check if SDK already loaded (window.supabase is the library namespace)
-  if (typeof window.supabase !== "undefined" && typeof window.supabase.createClient === "function") {
-    callback(); return;
-  }
-  var script = document.createElement("script");
-  script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";
-  script.onload = function() {
-    // Small delay to ensure the SDK fully initialises after script parse
-    setTimeout(function() {
-      if (typeof window.supabase === "undefined" || typeof window.supabase.createClient !== "function") {
-        console.error("[ZYNTRIX] SDK loaded but createClient not available");
-        showDemoMode(); return;
-      }
-      console.log("[ZYNTRIX] Supabase SDK ready");
+  // Poll for window.supabase to be available (loaded via static <script defer> in <head>)
+  var attempts = 0;
+  var maxAttempts = 30; // 3 seconds max (30 x 100ms)
+  function poll() {
+    attempts++;
+    if (typeof window.supabase !== "undefined" && typeof window.supabase.createClient === "function") {
+      console.log("[ZYNTRIX] Supabase SDK ready after", attempts * 100, "ms");
       callback();
-    }, 100);
-  };
-  script.onerror = function() {
-    console.error("[ZYNTRIX] Failed to load Supabase SDK");
-    showAlert("error", "SDK Failed to Load",
-      "Could not load the Supabase library. Please check your internet connection and try refreshing the page.",
-      "CDN: cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
-      [{ label:"Refresh Page", action: function(){ window.location.reload(); } },
-       { label:"Continue in Demo Mode", action: function(){ hideAlert(); showDemoMode(); }, secondary: true }]
-    );
-  };
-  document.head.appendChild(script);
+      return;
+    }
+    if (attempts >= maxAttempts) {
+      console.error("[ZYNTRIX] Supabase SDK did not load after 3 seconds");
+      showAlert("error", "Supabase SDK Not Loading",
+        "The Supabase library is taking too long. This is usually a network issue. Please refresh the page.",
+        "Attempted " + attempts + " times over 3 seconds",
+        [
+          { label:"Refresh Page", action: function(){ window.location.reload(); } },
+          { label:"Demo Mode", action: function(){ hideAlert(); showDemoMode(); }, secondary:true }
+        ]
+      );
+      return;
+    }
+    setTimeout(poll, 100);
+  }
+  poll();
 }
 
 function initSupabase() {
