@@ -648,25 +648,41 @@ function toast(msg, type) {
 
 // ── ALERT MODAL ──────────────────────────────────
 function showAlert(type, title, msg, detail, buttons) {
-  var o = el("alertOverlay"); if (!o) { alert(title + ": " + msg); return; }
+  var o = el("alertOverlay");
+  // Fallback to native alert if overlay missing
+  if (!o) { alert(title + "\n\n" + msg + (detail ? "\n\n" + detail : "")); return; }
+
   var icons = {success:"ti-circle-check", error:"ti-circle-x", loading:"ti-loader-2", warning:"ti-alert-triangle"};
-  el("alertIcon").className      = "alert-icon " + type;
-  el("alertIconInner").className = "ti " + (icons[type]||"ti-info-circle");
-  el("alertTitle").className     = "alert-title " + type;
-  setText("alertTitle",   title);
-  setText("alertMessage", msg);
+
+  var icon = el("alertIcon");
+  if (icon) icon.className = "alert-icon " + type;
+
+  var iconInner = el("alertIconInner");
+  if (iconInner) iconInner.className = "ti " + (icons[type]||"ti-info-circle");
+
+  var titleEl = el("alertTitle");
+  if (titleEl) { titleEl.className = "alert-title " + type; titleEl.textContent = title; }
+
+  var msgEl = el("alertMessage");
+  if (msgEl) msgEl.textContent = msg;
+
   var det = el("alertDetail");
   if (det) { det.textContent = detail||""; det.className = "alert-detail" + (detail?" show":""); }
-  var act = el("alertActions"); if (act) act.innerHTML = "";
-  if (buttons && act) {
-    buttons.forEach(function(b) {
-      var btn = document.createElement("button");
-      btn.className = "alert-btn" + (b.secondary?" secondary":"");
-      btn.textContent = b.label;
-      btn.onclick = b.fn;
-      act.appendChild(btn);
-    });
+
+  var act = el("alertActions");
+  if (act) {
+    act.innerHTML = "";
+    if (buttons) {
+      buttons.forEach(function(b) {
+        var btn = document.createElement("button");
+        btn.className   = "alert-btn" + (b.secondary?" secondary":"");
+        btn.textContent = b.label;
+        btn.onclick     = b.fn;
+        act.appendChild(btn);
+      });
+    }
   }
+
   o.classList.add("show");
 }
 
@@ -916,9 +932,7 @@ function handleImageUpload(input) {
 
 // ── SAVE PRODUCT ──────────────────────────────────
 function saveProduct() {
-  // DEBUG - confirm function is being called
-  console.log("[Z] saveProduct() called");
-  alert("saveProduct called! name=" + val("pName") + " brand=" + val("pBrand"));
+  try {
   // Read all fields directly
   var name     = val("pName").trim();
   var brand    = val("pBrand").trim();
@@ -978,6 +992,7 @@ function saveProduct() {
 
   if (!isDemo && db) {
     // Real save to Supabase
+    console.log("[Z] Going to Supabase save path");
     showAlert("loading","Saving...","Saving product to your database.",null,[]);
     var promise = editingId
       ? db.from("products").update(data).eq("id", editingId)
@@ -1020,13 +1035,24 @@ function saveProduct() {
     closeModal();
     renderProducts(allProducts);
     loadDashboard();
-    showAlert("success",
-      editingId ? "Product Updated (Demo)" : "Product Added (Demo)",
-      "Saved in demo mode — connect Supabase in Settings to save permanently.",
-      null,
-      [{label:"View Products", fn:function(){hideAlert();showPage("products",null);}},
-       {label:"Add Another",   fn:function(){hideAlert();openAddProduct();}}]
-    );
+    console.log("[Z] Demo save complete, showing success");
+    // Use native alert as guaranteed fallback + try showAlert
+    try {
+      showAlert("success",
+        editingId ? "Product Updated (Demo)" : "Product Added (Demo)",
+        "Saved in demo mode — connect Supabase in Settings to save permanently.",
+        null,
+        [{label:"View Products", fn:function(){hideAlert();showPage("products",null);}},
+         {label:"Add Another",   fn:function(){hideAlert();openAddProduct();}}]
+      );
+    } catch(e) {
+      console.error("[Z] showAlert failed:", e.message);
+      alert(editingId ? "Product Updated!" : "Product Added! (Demo mode)");
+    }
+  }
+  } catch(e) {
+    console.error("[Z] saveProduct CRASH:", e.message, e.stack);
+    alert("Save crashed: " + e.message + "\n\nCheck browser console for details.");
   }
 }
 
