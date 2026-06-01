@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZYNTRIX — The Future, Delivered.</title>
+<title>TWIPID — The Future, Delivered.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
@@ -461,14 +461,14 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 <!-- Supabase Connection -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
 <script>
-  var ZYNTRIX_SUPABASE_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
-  var ZYNTRIX_SUPABASE_KEY = "sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF";
+  var TWIPID_SUPABASE_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
+  var TWIPID_SUPABASE_KEY = "sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF";
   var db = null;
   try {
-    db = window.supabase.createClient(ZYNTRIX_SUPABASE_URL, ZYNTRIX_SUPABASE_KEY);
-    console.log("[ZYNTRIX] Supabase connected");
+    db = window.supabase.createClient(TWIPID_SUPABASE_URL, TWIPID_SUPABASE_KEY);
+    console.log("[TWIPID] Supabase connected");
   } catch(e) {
-    console.warn("[ZYNTRIX] Supabase connection failed:", e);
+    console.warn("[TWIPID] Supabase connection failed:", e);
   }
 
   // Load real products from Supabase on page load
@@ -482,10 +482,10 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
       .eq("status", "active")
       .order("created_at", { ascending: false })
       .then(function(res) {
-        if (res.error) { console.warn("[ZYNTRIX] Could not load products:", res.error.message); return; }
+        if (res.error) { console.warn("[TWIPID] Could not load products:", res.error.message); return; }
         if (res.data && res.data.length > 0) {
           renderStoreProducts(res.data);
-          console.log("[ZYNTRIX] Loaded", res.data.length, "products from database");
+          console.log("[TWIPID] Loaded", res.data.length, "products from database");
         }
       });
   }
@@ -562,25 +562,25 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 
 <!-- FLOATING SOCIAL SIDEBAR -->
 <div class="float-social" id="floatSocial">
-  <a class="float-social-btn" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener" title="Instagram">
+  <a class="float-social-btn" href="https://instagram.com/twipid.com" target="_blank" rel="noopener" title="Instagram">
     <i class="ti ti-brand-instagram"></i><span class="fs-label">Instagram</span>
   </a>
-  <a class="float-social-btn" href="https://twitter.com/zyntrix_in" target="_blank" rel="noopener" title="Twitter / X">
+  <a class="float-social-btn" href="https://twitter.com/twipid_in" target="_blank" rel="noopener" title="Twitter / X">
     <i class="ti ti-brand-x"></i><span class="fs-label">Twitter / X</span>
   </a>
-  <a class="float-social-btn" href="https://linkedin.com/company/zyntrix" target="_blank" rel="noopener" title="LinkedIn">
+  <a class="float-social-btn" href="https://linkedin.com/company/twipid" target="_blank" rel="noopener" title="LinkedIn">
     <i class="ti ti-brand-linkedin"></i><span class="fs-label">LinkedIn</span>
   </a>
-  <a class="float-social-btn" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener" title="YouTube">
+  <a class="float-social-btn" href="https://youtube.com/@twipid" target="_blank" rel="noopener" title="YouTube">
     <i class="ti ti-brand-youtube"></i><span class="fs-label">YouTube</span>
   </a>
   <a class="float-social-btn" href="https://wa.me/919999999999" target="_blank" rel="noopener" title="WhatsApp">
     <i class="ti ti-brand-whatsapp"></i><span class="fs-label">WhatsApp</span>
   </a>
-  <a class="float-social-btn" href="https://tiktok.com/@zyntrix" target="_blank" rel="noopener" title="TikTok">
+  <a class="float-social-btn" href="https://tiktok.com/@twipid" target="_blank" rel="noopener" title="TikTok">
     <i class="ti ti-brand-tiktok"></i><span class="fs-label">TikTok</span>
   </a>
-  <a class="float-social-btn" href="https://pinterest.com/zyntrix" target="_blank" rel="noopener" title="Pinterest">
+  <a class="float-social-btn" href="https://pinterest.com/twipid" target="_blank" rel="noopener" title="Pinterest">
     <i class="ti ti-brand-pinterest"></i><span class="fs-label">Pinterest</span>
   </a>
 </div>
@@ -591,8 +591,8 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">
-    <div class="logo-hex"><span>Z</span></div>
-    <div class="logo-text">ZYNTRIX<span class="dot">.</span></div>
+    <div class="logo-hex"><span>T</span></div>
+    <div class="logo-text">TWIPID<span class="dot">.</span></div>
   </a>
   <ul class="nav-links">
     <li><a href="#products">Products</a></li>
@@ -619,7 +619,7 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   <div class="hero-content">
     <div class="hero-badge"><span class="hero-badge-dot"></span>New arrivals — 12 products added this week</div>
     <h1 class="hero-title">The Future,<br><span class="line2">Delivered</span><br><span class="accent">To You.</span></h1>
-    <p class="hero-sub">ZYNTRIX is India's curated tech marketplace — partnering with top brands to bring you the latest gadgets, wearables, and smart devices. Zero compromise, every time.</p>
+    <p class="hero-sub">TWIPID is India's curated tech marketplace — partnering with top brands to bring you the latest gadgets, wearables, and smart devices. Zero compromise, every time.</p>
     <div class="hero-cta">
       <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now <i class="ti ti-arrow-right"></i></button>
       <button class="btn-ghost" onclick="document.getElementById('partners').scrollIntoView({behavior:'smooth'})">Become a Partner</button>
@@ -633,7 +633,7 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   </div>
   <div class="hero-visual">
     <div class="hex-ring"></div><div class="hex-ring"></div><div class="hex-ring"></div>
-    <div class="hex-center"><span class="hex-z">Z</span></div>
+    <div class="hex-center"><span class="hex-z">T</span></div>
   </div>
 </section>
 
@@ -764,12 +764,12 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   <div class="partner-layout">
     <div class="partner-left">
       <div class="section-eyebrow">For brands &amp; sellers</div>
-      <div class="section-title">Partner with<br>ZYNTRIX</div>
+      <div class="section-title">Partner with<br>TWIPID</div>
       <p class="section-sub">List your products on India's fastest-growing tech marketplace. We handle discovery, marketing, and customer trust — you handle fulfillment and keep control of your brand.</p>
       <div class="partner-steps">
         <div class="pstep"><span class="pstep-num">01 —</span><div><div class="pstep-title">Apply &amp; Get Approved</div><div class="pstep-desc">Submit your brand profile and product catalogue. Our team reviews within 48 hours.</div></div></div>
         <div class="pstep"><span class="pstep-num">02 —</span><div><div class="pstep-title">List Your Products</div><div class="pstep-desc">Connect via our simple product feed, CSV upload, or API integration.</div></div></div>
-        <div class="pstep"><span class="pstep-num">03 —</span><div><div class="pstep-title">We Market, You Fulfill</div><div class="pstep-desc">ZYNTRIX drives traffic. When a sale happens, you ship directly to the customer.</div></div></div>
+        <div class="pstep"><span class="pstep-num">03 —</span><div><div class="pstep-title">We Market, You Fulfill</div><div class="pstep-desc">TWIPID drives traffic. When a sale happens, you ship directly to the customer.</div></div></div>
         <div class="pstep"><span class="pstep-num">04 —</span><div><div class="pstep-title">Get Paid Every Week</div><div class="pstep-desc">Weekly settlements direct to your bank. Full dashboard with analytics.</div></div></div>
       </div>
     </div>
@@ -795,7 +795,7 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   <div class="section-eyebrow">What people say</div>
   <div class="section-title">Loved by tech buyers<br>across India</div>
   <div class="testi-grid">
-    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Got the XStrike controller in 22 hours. The packaging was premium and the product is exactly as described. Zero friction. ZYNTRIX is my go-to for all tech purchases now."</p><div class="testi-author"><div class="testi-avatar" style="background:rgba(37,99,235,.15);color:#60a5fa">RK</div><div><div class="testi-name">Rahul Khanna</div><div class="testi-loc">Mumbai, MH</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Got the XStrike controller in 22 hours. The packaging was premium and the product is exactly as described. Zero friction. TWIPID is my go-to for all tech purchases now."</p><div class="testi-author"><div class="testi-avatar" style="background:rgba(37,99,235,.15);color:#60a5fa">RK</div><div><div class="testi-name">Rahul Khanna</div><div class="testi-loc">Mumbai, MH</div></div></div></div>
     <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"As a brand partner, the onboarding took less than a day. Sales started coming in within the first week. The partner dashboard is clean and the weekly payouts are reliable."</p><div class="testi-author"><div class="testi-avatar" style="background:rgba(6,214,245,.1);color:#06d6f5">PS</div><div><div class="testi-name">Priya Sharma</div><div class="testi-loc">BassCore, Bengaluru</div></div></div></div>
     <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Returned a headset with no questions asked. Got a full refund in 3 days. The support team actually picked up the phone. Rare in Indian e-commerce honestly."</p><div class="testi-author"><div class="testi-avatar" style="background:rgba(234,179,8,.1);color:#fbbf24">AV</div><div><div class="testi-name">Arjun Verma</div><div class="testi-loc">Delhi, NCR</div></div></div></div>
   </div>
@@ -805,39 +805,39 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 <!-- SOCIAL MEDIA SECTION -->
 <section class="social-section" id="social">
   <div class="social-section-inner">
-    <div class="section-eyebrow" style="justify-content:center">Follow ZYNTRIX</div>
+    <div class="section-eyebrow" style="justify-content:center">Follow TWIPID</div>
     <div class="social-section-title">Join Our Community</div>
     <p class="social-section-sub">Stay connected for the latest drops, unboxings, tech reviews, and exclusive deals. Our community gets first access to everything.</p>
     <div class="social-cards">
 
-      <a class="social-card sc-instagram" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener">
+      <a class="social-card sc-instagram" href="https://instagram.com/twipid.com" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-instagram"></i></div>
         <div class="social-card-name">Instagram</div>
-        <div class="social-card-handle">@zyntrix.in</div>
+        <div class="social-card-handle">@twipid.com</div>
         <div class="social-card-followers">12.4K followers</div>
         <div class="social-card-follow">Follow</div>
       </a>
 
-      <a class="social-card sc-twitter" href="https://twitter.com/zyntrix_in" target="_blank" rel="noopener">
+      <a class="social-card sc-twitter" href="https://twitter.com/twipid_in" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-x"></i></div>
         <div class="social-card-name">Twitter / X</div>
-        <div class="social-card-handle">@zyntrix_in</div>
+        <div class="social-card-handle">@twipid_in</div>
         <div class="social-card-followers">8.2K followers</div>
         <div class="social-card-follow">Follow</div>
       </a>
 
-      <a class="social-card sc-youtube" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener">
+      <a class="social-card sc-youtube" href="https://youtube.com/@twipid" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-youtube"></i></div>
         <div class="social-card-name">YouTube</div>
-        <div class="social-card-handle">@zyntrix</div>
+        <div class="social-card-handle">@twipid</div>
         <div class="social-card-followers">6.1K subscribers</div>
         <div class="social-card-follow">Subscribe</div>
       </a>
 
-      <a class="social-card sc-linkedin" href="https://linkedin.com/company/zyntrix" target="_blank" rel="noopener">
+      <a class="social-card sc-linkedin" href="https://linkedin.com/company/twipid" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-linkedin"></i></div>
         <div class="social-card-name">LinkedIn</div>
-        <div class="social-card-handle">ZYNTRIX Technologies</div>
+        <div class="social-card-handle">Twipid Technologies</div>
         <div class="social-card-followers">3.8K followers</div>
         <div class="social-card-follow">Connect</div>
       </a>
@@ -850,34 +850,34 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
         <div class="social-card-follow">Message</div>
       </a>
 
-      <a class="social-card sc-tiktok" href="https://tiktok.com/@zyntrix" target="_blank" rel="noopener">
+      <a class="social-card sc-tiktok" href="https://tiktok.com/@twipid" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-tiktok"></i></div>
         <div class="social-card-name">TikTok</div>
-        <div class="social-card-handle">@zyntrix</div>
+        <div class="social-card-handle">@twipid</div>
         <div class="social-card-followers">18.7K followers</div>
         <div class="social-card-follow">Follow</div>
       </a>
 
-      <a class="social-card sc-pinterest" href="https://pinterest.com/zyntrix" target="_blank" rel="noopener">
+      <a class="social-card sc-pinterest" href="https://pinterest.com/twipid" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-pinterest"></i></div>
         <div class="social-card-name">Pinterest</div>
-        <div class="social-card-handle">@zyntrix</div>
+        <div class="social-card-handle">@twipid</div>
         <div class="social-card-followers">4.3K followers</div>
         <div class="social-card-follow">Follow</div>
       </a>
 
-      <a class="social-card sc-threads" href="https://threads.net/@zyntrix.in" target="_blank" rel="noopener">
+      <a class="social-card sc-threads" href="https://threads.net/@twipid.com" target="_blank" rel="noopener">
         <div class="social-card-icon"><i class="ti ti-brand-threads"></i></div>
         <div class="social-card-name">Threads</div>
-        <div class="social-card-handle">@zyntrix.in</div>
+        <div class="social-card-handle">@twipid.com</div>
         <div class="social-card-followers">5.9K followers</div>
         <div class="social-card-follow">Follow</div>
       </a>
 
     </div>
     <div class="social-bottom-row">
-      <a class="social-bottom-btn" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener"><i class="ti ti-brand-instagram"></i> Latest Unboxings</a>
-      <a class="social-bottom-btn" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener"><i class="ti ti-brand-youtube"></i> Watch Reviews</a>
+      <a class="social-bottom-btn" href="https://instagram.com/twipid.com" target="_blank" rel="noopener"><i class="ti ti-brand-instagram"></i> Latest Unboxings</a>
+      <a class="social-bottom-btn" href="https://youtube.com/@twipid" target="_blank" rel="noopener"><i class="ti ti-brand-youtube"></i> Watch Reviews</a>
       <a class="social-bottom-btn" href="https://wa.me/919999999999" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Get Support</a>
     </div>
   </div>
@@ -900,22 +900,22 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
 <footer>
   <div class="footer-top">
     <div>
-      <div style="display:flex;align-items:center;gap:10px"><div class="logo-hex"><span>Z</span></div><div class="logo-text" style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px">ZYNTRIX<span class="dot">.</span></div></div>
+      <div style="display:flex;align-items:center;gap:10px"><div class="logo-hex"><span>T</span></div><div class="logo-text" style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px">TWIPID<span class="dot">.</span></div></div>
       <p class="footer-brand-text">India's curated tech marketplace. Partnering with the best brands to bring you the future, delivered.</p>
     </div>
     <div><div class="footer-col-title">Shop</div><ul class="footer-links"><li><a href="#">New Arrivals</a></li><li><a href="#">Best Sellers</a></li><li><a href="#">Audio</a></li><li><a href="#">Wearables</a></li><li><a href="#">Smart Home</a></li><li><a href="#">Gaming</a></li></ul></div>
-    <div><div class="footer-col-title">Company</div><ul class="footer-links"><li><a href="#">About ZYNTRIX</a></li><li><a href="#">Partner Programme</a></li><li><a href="#">Careers</a></li><li><a href="#">Press Kit</a></li><li><a href="#">Blog</a></li></ul></div>
+    <div><div class="footer-col-title">Company</div><ul class="footer-links"><li><a href="#">About TWIPID</a></li><li><a href="#">Partner Programme</a></li><li><a href="#">Careers</a></li><li><a href="#">Press Kit</a></li><li><a href="#">Blog</a></li></ul></div>
     <div><div class="footer-col-title">Support</div><ul class="footer-links"><li><a href="#">Track Order</a></li><li><a href="#">Returns &amp; Refunds</a></li><li><a href="#">Shipping Info</a></li><li><a href="#">FAQ</a></li><li><a href="#">Contact Us</a></li></ul></div>
   </div>
   <div class="footer-bottom">
-    <p class="footer-copy">© 2026 ZYNTRIX Technologies Pvt. Ltd. · GST: 09ABCDE1234F1Z5</p>
+    <p class="footer-copy">© 2026 Twipid Technologies Pvt. Ltd. · GST: 09ABCDE1234F1Z5</p>
     <div class="socials">
-      <a class="social-btn" href="https://instagram.com/zyntrix.in" target="_blank" rel="noopener" title="Instagram"><i class="ti ti-brand-instagram"></i></a>
-      <a class="social-btn" href="https://twitter.com/zyntrix_in" target="_blank" rel="noopener" title="Twitter/X"><i class="ti ti-brand-x"></i></a>
-      <a class="social-btn" href="https://linkedin.com/company/zyntrix" target="_blank" rel="noopener" title="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
-      <a class="social-btn" href="https://youtube.com/@zyntrix" target="_blank" rel="noopener" title="YouTube"><i class="ti ti-brand-youtube"></i></a>
+      <a class="social-btn" href="https://instagram.com/twipid.com" target="_blank" rel="noopener" title="Instagram"><i class="ti ti-brand-instagram"></i></a>
+      <a class="social-btn" href="https://twitter.com/twipid_in" target="_blank" rel="noopener" title="Twitter/X"><i class="ti ti-brand-x"></i></a>
+      <a class="social-btn" href="https://linkedin.com/company/twipid" target="_blank" rel="noopener" title="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
+      <a class="social-btn" href="https://youtube.com/@twipid" target="_blank" rel="noopener" title="YouTube"><i class="ti ti-brand-youtube"></i></a>
       <a class="social-btn" href="https://wa.me/919999999999" target="_blank" rel="noopener" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
-      <a class="social-btn" href="https://tiktok.com/@zyntrix" target="_blank" rel="noopener" title="TikTok"><i class="ti ti-brand-tiktok"></i></a>
+      <a class="social-btn" href="https://tiktok.com/@twipid" target="_blank" rel="noopener" title="TikTok"><i class="ti ti-brand-tiktok"></i></a>
     </div>
   </div>
 </footer>
@@ -1117,7 +1117,7 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
       <div class="os-discount"><input type="text" placeholder="Promo code" id="promo-input"><button onclick="applyPromo()">Apply</button></div>
       <div class="os-line"><span>Subtotal</span><span id="os-subtotal">₹0</span></div>
       <div class="os-line"><span>Shipping</span><span class="os-free" id="os-shipping">FREE</span></div>
-      <div class="os-line" id="os-discount-line" style="display:none;color:#4ade80"><span>Promo (ZYNTRIX10)</span><span id="os-discount-val"></span></div>
+      <div class="os-line" id="os-discount-line" style="display:none;color:#4ade80"><span>Promo (TWIPID10)</span><span id="os-discount-val"></span></div>
       <div class="os-line total"><span>Total</span><span id="os-total">₹0</span></div>
       <div class="os-secure"><i class="ti ti-shield-check"></i> Safe &amp; Secure Payment</div>
     </div>
@@ -1129,7 +1129,7 @@ footer{background:var(--bg);padding:64px 48px 32px;border-top:1px solid var(--bo
   <div class="success-body">
     <div class="success-icon"><i class="ti ti-check" style="font-size:40px"></i></div>
     <div class="success-title">Order Placed!</div>
-    <div class="success-sub">Thank you for shopping with ZYNTRIX. Your order has been confirmed and will be dispatched within 24 hours.</div>
+    <div class="success-sub">Thank you for shopping with TWIPID. Your order has been confirmed and will be dispatched within 24 hours.</div>
     <div class="success-order">
       <div class="success-order-title">Order Confirmation</div>
       <div class="success-order-num" id="success-order-num">#ZYN-000000</div>
@@ -1360,7 +1360,7 @@ function updateOrderSummaryTotals(){
 function applyPromo(){
   var inp=g("promo-input"); if(!inp) return;
   var code=inp.value.trim().toUpperCase();
-  if(code==="ZYNTRIX10"&&!promoApplied){
+  if(code==="TWIPID10"&&!promoApplied){
     promoApplied=true; updateOrderSummaryTotals(); showToast("Promo applied! 10% off ✓");
   } else if(promoApplied){ showToast("Promo already applied ✓");
   } else { showToast("Invalid promo code ✕"); }
@@ -1460,7 +1460,7 @@ function submitPartner(){
 function subscribeNL(){
   var email=g("nl-email");
   if(!email||!email.value.trim()||!email.value.includes("@")){ showToast("Please enter a valid email ✕"); return; }
-  showToast("You are in! Welcome to the ZYNTRIX inner circle ✓");
+  showToast("You are in! Welcome to the TWIPID inner circle ✓");
   email.value="";
 }
 
