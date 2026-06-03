@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TWIPID Admin Panel</title>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<title>twipid Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 
@@ -12,7 +13,7 @@
 :root{
   --bg:#07090f;--surface:#0b0e1a;--card:#0f1322;--card2:#131829;
   --border:#1a2035;--border2:#243050;
-  --blue:#2563eb;--cyan:#06d6f5;--electric:#00e5ff;
+  --blue:#0ca678;--cyan:#10b981;--electric:#5ee3b6;
   --text:#eef2ff;--muted:#6b7db3;--hint:#2a3355;
   --green:#10b981;--red:#ef4444;--amber:#f59e0b;
   --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'DM Mono',monospace;
@@ -235,8 +236,8 @@ input,select,textarea,button{font-family:var(--font-body)}
   <div class="login-grid-bg"></div>
   <div class="login-box">
     <div class="login-logo">
-      <div class="login-hex"><span>T</span></div>
-      <div class="login-brand">TWIPID<span class="dot">.</span></div>
+      <svg width="40" height="40" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="12" fill="#0ca678"/><path d="M22 12 V28 Q22 31.5 25.5 30.5" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="15" y1="17.5" x2="29" y2="17.5" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="31" cy="31" r="6" fill="#d4ff3f" stroke="#0ca678" stroke-width="2"/></svg>
+      <div class="login-brand" style="letter-spacing:-1px"><span style="color:#0ca678">t</span>wipid</div>
     </div>
     <div class="login-badge">Admin Control Panel</div>
     <div class="login-title">Welcome back</div>
@@ -271,9 +272,9 @@ input,select,textarea,button{font-family:var(--font-body)}
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <div class="login-hex" style="width:28px;height:28px"><span style="font-size:11px">T</span></div>
+        <svg width="28" height="28" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="12" fill="#0ca678"/><path d="M22 12 V28 Q22 31.5 25.5 30.5" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="15" y1="17.5" x2="29" y2="17.5" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="31" cy="31" r="6" fill="#d4ff3f" stroke="#0ca678" stroke-width="2"/></svg>
         <div>
-          <div class="sidebar-brand">TWIPID<span class="dot">.</span></div>
+          <div class="sidebar-brand" style="letter-spacing:-.5px"><span style="color:#0ca678">t</span>wipid</div>
           <div class="sidebar-role" id="sidebarRole">Owner</div>
         </div>
       </div>
@@ -401,18 +402,16 @@ input,select,textarea,button{font-family:var(--font-body)}
 
         <!-- ── ORDERS ── -->
         <div class="page" id="page-orders">
-          <div class="page-header"><div class="page-title">Orders</div></div>
+          <div class="page-header"><div class="page-title">Orders</div><button class="btn-secondary" onclick="loadOrders()" style="margin-left:auto"><i class="ti ti-refresh"></i> Refresh</button></div>
           <div class="search-filter-row">
-            <input class="search-input" type="text" placeholder="Search by order ID or customer...">
-            <select class="filter-select"><option>All Statuses</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option></select>
+            <input class="search-input" type="text" id="orderSearch" placeholder="Search by order ID, name or email..." oninput="renderOrders()">
+            <select class="filter-select" id="orderStatusFilter" onchange="renderOrders()"><option value="">All Statuses</option><option value="pending">Pending</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select>
           </div>
           <div style="overflow-x:auto">
             <table class="orders-table">
               <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody id="ordersTableBody">
-                <tr><td><span style="font-family:var(--font-mono);color:var(--cyan)">#ZYN-001</span></td><td>Rahul Khanna<br><span style="font-size:11px;color:var(--muted)">rahul@email.com</span></td><td>ProAir X90 × 1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹7,499</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">25 May 2026</td><td><span class="status-badge status-delivered">Delivered</span></td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn success">Ship</button></div></td></tr>
-                <tr><td><span style="font-family:var(--font-mono);color:var(--cyan)">#ZYN-002</span></td><td>Priya Sharma<br><span style="font-size:11px;color:var(--muted)">priya@email.com</span></td><td>VitaWatch Ultra 3 × 1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹11,999</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">24 May 2026</td><td><span class="status-badge status-shipped">Shipped</span></td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn success">Track</button></div></td></tr>
-                <tr><td><span style="font-family:var(--font-mono);color:var(--cyan)">#ZYN-003</span></td><td>Arjun Verma<br><span style="font-size:11px;color:var(--muted)">arjun@email.com</span></td><td>XStrike Vortex × 1</td><td style="font-family:var(--font-mono);color:var(--electric)">₹4,799</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">24 May 2026</td><td><span class="status-badge status-processing">Processing</span></td><td><div class="action-btns"><button class="action-btn">View</button><button class="action-btn success">Ship</button></div></td></tr>
+                <tr><td colspan="7"><div class="empty-state"><i class="ti ti-shopping-cart"></i><h3>Loading orders…</h3><p>Connect Supabase to see live orders.</p></div></td></tr>
               </tbody>
             </table>
           </div>
@@ -474,7 +473,7 @@ input,select,textarea,button{font-family:var(--font-body)}
             </div>
             <div class="settings-card">
               <div class="settings-title">Store Settings</div>
-              <div class="settings-sub">General configuration for your TWIPID store.</div>
+              <div class="settings-sub">General configuration for your twipid store.</div>
               <div class="toggle-row"><div><div class="toggle-label">Maintenance Mode</div><div class="toggle-sub">Hides store from customers</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
               <div class="toggle-row"><div><div class="toggle-label">Allow New Registrations</div><div class="toggle-sub">Customers can sign up</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
               <div class="toggle-row"><div><div class="toggle-label">COD Enabled</div><div class="toggle-sub">Cash on delivery option</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
@@ -818,6 +817,73 @@ function showPage(name, navEl) {
   setText("topbarTitle", titles[name]||name);
   var btn = el("topbarAction");
   if (btn) btn.style.display = (name==="products") ? "flex" : "none";
+  if (name==="orders") loadOrders();
+}
+
+// ── ORDERS ────────────────────────────────────────
+var allOrders = [];
+function loadOrders(){
+  var tbody = el("ordersTableBody"); if(!tbody) return;
+  if(isDemo || !db){
+    allOrders = [
+      {id:"DEMO-1",customer_name:"Rahul Khanna",customer_email:"rahul@email.com",items:[{name:"ProAir X90",qty:1}],total:7499,status:"delivered",created_at:"2026-05-25"},
+      {id:"DEMO-2",customer_name:"Priya Sharma",customer_email:"priya@email.com",items:[{name:"VitaWatch Ultra 3",qty:1}],total:11999,status:"shipped",created_at:"2026-05-24"},
+      {id:"DEMO-3",customer_name:"Arjun Verma",customer_email:"arjun@email.com",items:[{name:"XStrike Vortex",qty:1}],total:4799,status:"processing",created_at:"2026-05-24"}
+    ];
+    renderOrders(); return;
+  }
+  tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-loader"></i><h3>Loading…</h3></div></td></tr>';
+  db.from("orders").select("*").order("created_at",{ascending:false}).then(function(r){
+    if(r.error){ tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-alert-triangle"></i><h3>Couldn\'t load orders</h3><p>'+r.error.message+'</p></div></td></tr>'; return; }
+    allOrders = r.data||[];
+    setText("orderCount", allOrders.filter(function(o){return (o.status||"pending")==="pending";}).length);
+    setText("statOrders", allOrders.length);
+    renderOrders();
+  }).catch(function(){ tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-cloud-off"></i><h3>Connection error</h3></div></td></tr>'; });
+}
+function renderOrders(){
+  var tbody = el("ordersTableBody"); if(!tbody) return;
+  var q=(el("orderSearch")&&el("orderSearch").value||"").toLowerCase().trim();
+  var sf=(el("orderStatusFilter")&&el("orderStatusFilter").value||"");
+  var list = allOrders.filter(function(o){
+    var st=(o.status||"pending").toLowerCase();
+    var okS = !sf || st===sf;
+    var hay=((o.id||"")+" "+(o.customer_name||"")+" "+(o.customer_email||"")).toLowerCase();
+    return okS && (!q || hay.indexOf(q)>=0);
+  });
+  if(!list.length){ tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-shopping-cart"></i><h3>No orders found</h3><p>Orders placed on your store will appear here.</p></div></td></tr>'; return; }
+  var statusClass={pending:"status-pending",processing:"status-processing",shipped:"status-shipped",delivered:"status-delivered",cancelled:"status-pending"};
+  tbody.innerHTML = list.map(function(o){
+    var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
+    var itemStr=(items||[]).map(function(it){return (it.name||"item")+" × "+(it.qty||1);}).join(", ")||"—";
+    var d=o.created_at?new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
+    var st=(o.status||"pending").toLowerCase();
+    var opts=["pending","processing","shipped","delivered","cancelled"].map(function(s){return '<option value="'+s+'"'+(s===st?" selected":"")+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>';}).join("");
+    return "<tr>"
+      +'<td><span style="font-family:var(--font-mono);color:var(--cyan)">#'+(o.id||"—")+'</span></td>'
+      +'<td>'+(o.customer_name||"—")+'<br><span style="font-size:11px;color:var(--muted)">'+(o.customer_email||"")+'</span>'+(o.customer_phone?'<br><span style="font-size:11px;color:var(--muted)">'+o.customer_phone+'</span>':'')+'</td>'
+      +'<td style="font-size:12px;max-width:220px">'+itemStr+'</td>'
+      +'<td style="font-family:var(--font-mono);color:var(--electric)">&#8377;'+Number(o.total||0).toLocaleString("en-IN")+'</td>'
+      +'<td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">'+d+'</td>'
+      +'<td><span class="status-badge '+(statusClass[st]||"status-pending")+'">'+st+'</span></td>'
+      +'<td><div class="action-btns"><select class="filter-select" style="padding:5px 8px;font-size:11px" onchange="updateOrderStatus('+(typeof o.id==="number"?o.id:("'"+o.id+"'"))+',this.value)">'+opts+'</select>'+(o.address?'<button class="action-btn" onclick="viewOrder('+(typeof o.id==="number"?o.id:("'"+o.id+"'"))+')">View</button>':'')+'</div></td>'
+      +"</tr>";
+  }).join("");
+}
+function updateOrderStatus(id,status){
+  if(isDemo || !db){ toast("Demo mode — status not saved","info"); return; }
+  db.from("orders").update({status:status}).eq("id",id).then(function(r){
+    if(r.error){ toast("Update failed: "+r.error.message,"error"); return; }
+    var o=allOrders.find(function(x){return x.id==id;}); if(o)o.status=status;
+    toast("Order #"+id+" → "+status,"success"); renderOrders();
+  }).catch(function(){ toast("Update failed","error"); });
+}
+function viewOrder(id){
+  var o=allOrders.find(function(x){return x.id==id;}); if(!o)return;
+  var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
+  var itemStr=(items||[]).map(function(it){return "• "+(it.name||"item")+" × "+(it.qty||1)+"  —  ₹"+Number(it.price||0).toLocaleString("en-IN");}).join("\n");
+  var addr=[o.address,o.city,o.state,o.pin].filter(Boolean).join(", ");
+  alert("ORDER #"+id+"\n\nCustomer: "+(o.customer_name||"")+"\nEmail: "+(o.customer_email||"")+"\nPhone: "+(o.customer_phone||"")+"\n\nShipping: "+addr+"\n\nItems:\n"+itemStr+"\n\nTotal: ₹"+Number(o.total||0).toLocaleString("en-IN")+"\nPayment: "+(o.payment_method||"—")+"\nStatus: "+(o.status||"pending"));
 }
 
 // ── DASHBOARD ─────────────────────────────────────
@@ -891,7 +957,7 @@ function openAddProduct() {
   var ps=el("pStatus");   if(ps) ps.value="active";
   var pt=el("pTag");      if(pt) pt.value="";
   var ip=el("imagePreview"); if(ip) ip.innerHTML="";
-  uploadImages=[];
+  uploadImages=[]; uploadedImageUrls=[]; editingImageUrl=null;
   var pm=el("productModal"); if(pm) pm.classList.add("open");
 }
 
@@ -907,8 +973,8 @@ function editProduct(id) {
   Object.keys(fields).forEach(function(id){
     var e=el(id); if(e){ e.value=fields[id]||""; e.style.borderColor=""; }
   });
-  var ip=el("imagePreview"); if(ip) ip.innerHTML="";
-  uploadImages=[];
+  var ip=el("imagePreview"); if(ip){ ip.innerHTML=""; if(p.image_url){ var im=document.createElement("img"); im.className="preview-img"; im.src=String(p.image_url).replace(/^http:/i,"https:"); ip.appendChild(im); } }
+  uploadImages=[]; uploadedImageUrls=[]; editingImageUrl=p.image_url||null;
   var pm=el("productModal"); if(pm) pm.classList.add("open");
 }
 
@@ -916,25 +982,40 @@ function closeModal() {
   var pm=el("productModal"); if(pm) pm.classList.remove("open");
 }
 
+var uploadedImageUrls = [];
+var editingImageUrl = null;
 function handleImageUpload(input) {
   var preview = el("imagePreview"); if(!preview) return;
   Array.from(input.files).forEach(function(file){
-    uploadImages.push(file);
+    if(file.size > 10*1024*1024){ toast(file.name+" is over 10MB","error"); return; }
+    // local preview immediately
+    var wrap=document.createElement("div"); wrap.style.cssText="position:relative;display:inline-block";
+    var img = document.createElement("img"); img.className="preview-img"; wrap.appendChild(img); preview.appendChild(wrap);
     var reader = new FileReader();
-    reader.onload = function(e){
-      var img = document.createElement("img");
-      img.src = e.target.result; img.className="preview-img";
-      preview.appendChild(img);
-    };
+    reader.onload = function(e){ img.src = e.target.result; };
     reader.readAsDataURL(file);
+    // upload to Supabase Storage
+    if(!isDemo && db && db.storage){
+      var badge=document.createElement("div"); badge.style.cssText="position:absolute;inset:0;background:rgba(7,9,15,.6);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border-radius:8px";
+      badge.textContent="Uploading…"; wrap.appendChild(badge);
+      var ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+      var path="products/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+"."+ext;
+      db.storage.from("product-images").upload(path, file, {cacheControl:"3600",upsert:false}).then(function(r){
+        if(r.error){ badge.textContent="Failed"; badge.style.background="rgba(239,68,68,.7)"; toast("Upload failed — is the 'product-images' bucket created & public?","error"); return; }
+        var pub=db.storage.from("product-images").getPublicUrl(path);
+        var url=pub && pub.data && pub.data.publicUrl;
+        if(url){ uploadedImageUrls.push(url); badge.remove(); toast("Image uploaded","success"); }
+        else { badge.textContent="No URL"; }
+      }).catch(function(){ badge.textContent="Failed"; badge.style.background="rgba(239,68,68,.7)"; toast("Upload error","error"); });
+    } else {
+      toast("Demo mode — image previews only (not saved)","info");
+    }
   });
 }
 
 // ── SAVE PRODUCT ──────────────────────────────────
 function saveProduct() {
-  // Bulletproof simple version - uses native alert() only
   try {
-  alert("✓ Save button clicked");
   // Read all fields directly
   var name     = val("pName").trim();
   var brand    = val("pBrand").trim();
@@ -983,6 +1064,7 @@ function saveProduct() {
     specs:      specs ? specs.split(",").map(function(s){return s.trim();}).filter(Boolean) : [],
     commission: Number(commission) || 0,
     video:      video,
+    image_url:  (uploadedImageUrls[0] || editingImageUrl || null),
     icon:       "ti-box"
   };
 
