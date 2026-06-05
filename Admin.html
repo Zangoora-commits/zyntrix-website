@@ -432,32 +432,47 @@ input,select,textarea,button{font-family:var(--font-body)}
         </div>
 
         <!-- ── DELIVERY ── -->
-        <div class="page" id="page-delivery">
-          <div class="page-header"><div class="page-title">Delivery Settings</div></div>
-          <div class="settings-grid">
-            <div class="settings-card">
-              <div class="settings-title">Shiprocket Integration</div>
-              <div class="settings-sub">Connect your Shiprocket account for automated pickup and tracking.</div>
-              <label class="field-label">Shiprocket Email</label>
-              <input class="field-input" type="email" placeholder="your@email.com">
-              <label class="field-label">Shiprocket Password</label>
-              <input class="field-input" type="password" placeholder="••••••••">
-              <button class="btn-save" style="width:100%;justify-content:center">Connect Shiprocket</button>
-            </div>
-            <div class="settings-card">
-              <div class="settings-title">Pickup Address</div>
-              <div class="settings-sub">Courier will come here to collect orders.</div>
-              <label class="field-label">Full Address</label>
-              <input class="field-input" type="text" placeholder="Flat / House no., Street">
-              <label class="field-label">City & PIN Code</label>
-              <input class="field-input" type="text" placeholder="City — 110001">
-              <label class="field-label">State</label>
-              <input class="field-input" type="text" placeholder="Delhi">
-              <button class="btn-save" style="width:100%;justify-content:center">Save Address</button>
-            </div>
-          </div>
-        </div>
+<div class="page" id="page-delivery">
+  <div class="page-header"><div class="page-title">Delivery Settings</div></div>
+  <div class="settings-grid">
+    <div class="settings-card">
+      <div class="settings-title">Shiprocket Integration</div>
+      <div class="settings-sub">Connect your Shiprocket account for automated pickup and tracking.</div>
 
+      <label class="field-label">Shiprocket Email</label>
+      <input class="field-input" id="shiprocketEmail" type="email" placeholder="your@email.com">
+
+      <label class="field-label">Shiprocket Password</label>
+      <input class="field-input" id="shiprocketPassword" type="password" placeholder="••••••••">
+
+      <button class="btn-save" onclick="saveShiprocketConfig()" style="width:100%;justify-content:center">
+        <i class="ti ti-link" style="font-size:14px"></i> Connect Shiprocket
+      </button>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-title">Pickup Address</div>
+      <div class="settings-sub">Courier will come here to collect orders.</div>
+
+      <label class="field-label">Full Address</label>
+      <input class="field-input" id="pickupAddress" type="text" placeholder="Flat / House no., Street">
+
+      <label class="field-label">City</label>
+      <input class="field-input" id="pickupCity" type="text" placeholder="Delhi">
+
+      <label class="field-label">PIN Code</label>
+      <input class="field-input" id="pickupPin" type="text" placeholder="110001">
+
+      <label class="field-label">State</label>
+      <input class="field-input" id="pickupState" type="text" placeholder="Delhi">
+
+      <button class="btn-save" onclick="savePickupAddress()" style="width:100%;justify-content:center">
+        <i class="ti ti-map-pin" style="font-size:14px"></i> Save Address
+      </button>
+    </div>
+  </div>
+</div>
+        
         <!-- ── SETTINGS ── -->
         <div class="page" id="page-settings">
           <div class="page-header"><div class="page-title">Settings</div></div>
