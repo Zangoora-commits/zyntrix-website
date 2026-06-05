@@ -1183,6 +1183,75 @@ function saveSupabaseConfig() {
   });
 }
 
+  // ── DELIVERY / SHIPROCKET ─────────────────────────
+function saveShiprocketConfig() {
+  var email = val("shiprocketEmail").trim();
+  var password = val("shiprocketPassword").trim();
+
+  if (!email || !password) {
+    toast("Enter Shiprocket email and password", "error");
+    return;
+  }
+
+  if (isDemo || !db) {
+    toast("Demo mode — Shiprocket config not saved permanently", "info");
+    return;
+  }
+
+  var payload = {
+    config_key: "shiprocket",
+    shiprocket_email: email,
+    shiprocket_password: password,
+    updated_at: new Date().toISOString()
+  };
+
+  db.from("store_config").upsert([payload], { onConflict: "config_key" }).then(function(r) {
+    if (r.error) {
+      toast("Shiprocket save failed: " + r.error.message, "error");
+      return;
+    }
+    toast("Shiprocket connected successfully", "success");
+  }).catch(function(e) {
+    toast("Shiprocket save error: " + e.message, "error");
+  });
+}
+
+function savePickupAddress() {
+  var address = val("pickupAddress").trim();
+  var city = val("pickupCity").trim();
+  var pin = val("pickupPin").trim();
+  var state = val("pickupState").trim();
+
+  if (!address || !city || !pin || !state) {
+    toast("Fill all pickup address fields", "error");
+    return;
+  }
+
+  if (isDemo || !db) {
+    toast("Demo mode — pickup address not saved permanently", "info");
+    return;
+  }
+
+  var payload = {
+    config_key: "pickup_address",
+    pickup_address: address,
+    pickup_city: city,
+    pickup_pin: pin,
+    pickup_state: state,
+    updated_at: new Date().toISOString()
+  };
+
+  db.from("store_config").upsert([payload], { onConflict: "config_key" }).then(function(r) {
+    if (r.error) {
+      toast("Pickup address save failed: " + r.error.message, "error");
+      return;
+    }
+    toast("Pickup address saved", "success");
+  }).catch(function(e) {
+    toast("Pickup address save error: " + e.message, "error");
+  });
+}
+  
 // ── MISC ──────────────────────────────────────────
 function refreshData(){ loadProducts(); loadDashboard(); toast("Refreshed","success"); }
 
