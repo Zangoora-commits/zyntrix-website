@@ -631,6 +631,7 @@ var currentUser  = null;
 var editingId    = null;
 var uploadImages = [];
 var allProducts  = [];
+var shownProducts = [];
 
 var DEMO_PRODUCTS = [
   {id:1, name:"ProAir X90 Headphones",       brand:"SoundVibe", category:"Audio",      price:7499,  orig_price:12000, stock:24, status:"active",       tag:"Hot",  icon:"ti-headphones"},
@@ -928,12 +929,13 @@ function loadProducts() {
 
 function renderProducts(list) {
   var tbody = el("productsTableBody"); if (!tbody) return;
+  shownProducts = list || [];
   if (!list || !list.length) {
     tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i class="ti ti-box"></i><h3>No products yet</h3><p>Click Add Product to get started.</p></div></td></tr>';
     return;
   }
   var html = "";
-  list.forEach(function(p) {
+  list.forEach(function(p, i) {
     var sc = p.stock===0?"stock-out":p.stock<5?"stock-low":"stock-in";
     var sl = p.stock===0?"Out of Stock":p.stock<5?"Low ("+p.stock+")":"In Stock ("+p.stock+")";
     var st = p.status==="active"?"status-delivered":p.status==="draft"?"status-pending":"status-processing";
@@ -946,8 +948,8 @@ function renderProducts(list) {
       + "<td><span class='stock-badge "+sc+"'>"+sl+"</span></td>"
       + "<td><span class='status-badge "+st+"'>"+p.status+"</span></td>"
       + "<td><div class='action-btns'>"
-      + "<button class='action-btn success' onclick='editProduct("+p.id+")'>Edit</button>"
-      + "<button class='action-btn danger'  onclick='delProduct("+p.id+")'>Delete</button>"
+      + "<button class='action-btn success' onclick='editProduct("+i+")'>Edit</button>"
+      + "<button class='action-btn danger'  onclick='delProduct("+i+")'>Delete</button>"
       + "</div></td></tr>";
   });
   tbody.innerHTML = html;
@@ -976,11 +978,11 @@ function openAddProduct() {
   var pm=el("productModal"); if(pm) pm.classList.add("open");
 }
 
-function editProduct(id) {
+function editProduct(i) {
   try {
-  var p = allProducts.find(function(x){ return x.id===id; });
+  var p = shownProducts[i];
   if (!p) { toast("Product not found","error"); return; }
-  editingId = id;
+  editingId = (p.id!==undefined && p.id!==null && String(p.id)!=="null") ? p.id : null;
   setText("modalTitle","Edit Product");
   var specsStr = Array.isArray(p.specs) ? p.specs.join(", ") : (p.specs ? String(p.specs) : "");
   var fields = {pName:p.name, pBrand:p.brand, pCategory:p.category, pPrice:p.price,
@@ -1130,15 +1132,22 @@ function saveProduct() {
   }
 }
 
-function delProduct(id) {
-  if (!confirm("Delete this product? Cannot be undone.")) return;
+function delProduct(i) {
+  var p = shownProducts[i];
+  if (!p) { toast("Product not found","error"); return; }
+  if (!confirm('Delete "'+(p.name||"this product")+'"?\nThis cannot be undone.')) return;
   if (!isDemo && db) {
-    db.from("products").delete().eq("id",id).then(function(r){
+    var hasId = (p.id!==undefined && p.id!==null && String(p.id)!=="null" && !(typeof p.id==="number" && isNaN(p.id)));
+    var q;
+    if (hasId) { q = db.from("products").delete().eq("id", p.id); }
+    else if (p.name) { q = db.from("products").delete().eq("name", p.name); }   // fallback for rows missing an id
+    else { toast("Can't identify this product to delete.","error"); return; }
+    q.then(function(r){
       if (r.error) { toast("Delete failed: "+r.error.message,"error"); return; }
       toast("Product deleted","success"); loadProducts();
-    });
+    }).catch(function(e){ toast("Delete failed: "+e.message,"error"); });
   } else {
-    allProducts = allProducts.filter(function(p){return p.id!==id;});
+    allProducts = allProducts.filter(function(x){ return x!==p; });
     renderProducts(allProducts); loadDashboard();
     toast("Product deleted (demo)","success");
   }
