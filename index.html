@@ -1246,55 +1246,111 @@ function placeOrder(){
   var name=el("coName").value.trim(), phone=el("coPhone").value.trim(), email=el("coEmail").value.trim(),
       addr=el("coAddr").value.trim(), city=el("coCity").value.trim(), state=el("coState").value.trim(), pin=el("coPin").value.trim(), pay=el("coPay").value;
   var err=el("coErr");
-  if(!name||!phone||!email||!addr||!city||!state||!pin){ err.textContent="Please fill in all the delivery details."; err.classList.add("show"); return; }
-  if(!/^\d{10}$/.test(phone)){ err.textContent="Please enter a valid 10-digit phone number."; err.classList.add("show"); return; }
-  if(!email.includes("@")){ err.textContent="Please enter a valid email."; err.classList.add("show"); return; }
+
+  if(!name||!phone||!email||!addr||!city||!state||!pin){
+    err.textContent="Please fill in all the delivery details.";
+    err.classList.add("show");
+    return;
+  }
+
+  if(!/^\d{10}$/.test(phone)){
+    err.textContent="Please enter a valid 10-digit phone number.";
+    err.classList.add("show");
+    return;
+  }
+
+  if(!email.includes("@")){
+    err.textContent="Please enter a valid email.";
+    err.classList.add("show");
+    return;
+  }
+
   err.classList.remove("show");
-  var sub=cart.reduce(function(s,i){return s+i.price*i.qty;},0), ship=sub>=999?0:99, total=sub+ship;
-  var order={customer_name:name,customer_email:email,customer_phone:phone,address:addr,city:city,state:state,pin:pin,
-    items:cart.map(function(it){return {name:it.name,brand:it.brand,price:it.price,qty:it.qty};}),total:total,status:"pending",payment_method:pay,payment_id:null};
-  var btn=el("coBtn"); btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Placing…';
-  function done(){ cart=[]; save("twipid_cart",cart); updateCart(); closeCheckout(); btn.disabled=false; btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order';
-    showInfo("ti-circle-check","Order placed! 🎉","Thanks "+name.split(" ")[0]+"! Your test order is in. You'll find it under “My Orders”. Online payments are coming soon."); }
+
+  var sub=cart.reduce(function(s,i){ return s+i.price*i.qty; },0),
+      ship=sub>=999?0:99,
+      total=sub+ship;
+
+  var order={
+    customer_name:name,
+    customer_email:email,
+    customer_phone:phone,
+    address:addr,
+    city:city,
+    state:state,
+    pin:pin,
+    items:cart.map(function(it){
+      return {
+        name:it.name,
+        brand:it.brand,
+        price:it.price,
+        qty:it.qty
+      };
+    }),
+    total:total,
+    status:"pending",
+    payment_method:pay,
+    payment_id:null
+  };
+
+  var btn=el("coBtn");
+  btn.disabled=true;
+  btn.innerHTML='<i class="ti ti-loader"></i> Placing…';
+
+  function done(){
+    cart=[];
+    save("twipid_cart",cart);
+    updateCart();
+    closeCheckout();
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order';
+    showInfo(
+      "ti-circle-check",
+      "Order placed! 🎉",
+      "Thanks "+name.split(" ")[0]+"! Your test order is in. You'll find it under “My Orders”. Online payments are coming soon."
+    );
+  }
+
   if (db) {
-  db.from("orders")
-    .insert([order])
-    .select()
-    .single()
-    .then(async function (r) {
-      if (r.error) {
-        console.warn("Order insert error:", r.error);
+    db.from("orders")
+      .insert([order])
+      .select()
+      .single()
+      .then(async function (r) {
+        if (r.error) {
+          console.warn("Order insert error:", r.error);
+          btn.disabled = false;
+          btn.innerHTML = '<i class="ti ti-circle-check"></i> Place Order';
+          err.textContent = "Could not place order. Please try again.";
+          err.classList.add("show");
+          return;
+        }
+
+        var newOrder = r.data;
+
+        const { data: shiprocketData, error: shiprocketError } =
+          await db.functions.invoke("create-shiprocket-order", {
+            body: { order_id: newOrder.id }
+          });
+
+        if (shiprocketError) {
+          console.warn("Shiprocket function error:", shiprocketError);
+        } else {
+          console.log("Shiprocket success:", shiprocketData);
+        }
+
+        done();
+      })
+      .catch(function (e) {
+        console.warn("Place order catch error:", e);
         btn.disabled = false;
         btn.innerHTML = '<i class="ti ti-circle-check"></i> Place Order';
         err.textContent = "Could not place order. Please try again.";
         err.classList.add("show");
-        return;
-      }
-
-      var newOrder = r.data;
-
-      const { data: shiprocketData, error: shiprocketError } =
-        await db.functions.invoke("create-shiprocket-order", {
-          body: { order_id: newOrder.id }
-        });
-
-      if (shiprocketError) {
-        console.warn("Shiprocket function error:", shiprocketError);
-      } else {
-        console.log("Shiprocket success:", shiprocketData);
-      }
-
-      done();
-    })
-    .catch(function (e) {
-      console.warn("Place order catch error:", e);
-      btn.disabled = false;
-      btn.innerHTML = '<i class="ti ti-circle-check"></i> Place Order';
-      err.textContent = "Could not place order. Please try again.";
-      err.classList.add("show");
-    });
-} else {
-  done();
+      });
+  } else {
+    done();
+  }
 }
 
 /* ===== AUTH ===== */
