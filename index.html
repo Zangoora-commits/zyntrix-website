@@ -777,8 +777,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       <div class="rev-list" id="revList"></div>
       <div class="rev-form">
         <h5>Write a review</h5>
-        <div class="star-pick-label">Your rating <span style="color:var(--orange)">*</span></div>
-        <div class="star-pick" id="starPick"><i class="ti ti-star-filled" data-s="1"></i><i class="ti ti-star-filled" data-s="2"></i><i class="ti ti-star-filled" data-s="3"></i><i class="ti ti-star-filled" data-s="4"></i><i class="ti ti-star-filled" data-s="5"></i></div>
+        <div class="star-pick-label">Your rating <span style="color:var(--orange)">*</span> <span id="starHint" style="color:var(--muted);font-weight:600">— tap a star</span></div>
+        <div class="star-pick" id="starPick"><i class="ti ti-star" data-s="1" onclick="setStars(1)"></i><i class="ti ti-star" data-s="2" onclick="setStars(2)"></i><i class="ti ti-star" data-s="3" onclick="setStars(3)"></i><i class="ti ti-star" data-s="4" onclick="setStars(4)"></i><i class="ti ti-star" data-s="5" onclick="setStars(5)"></i></div>
         <input type="text" id="revName" placeholder="Your name">
         <input type="text" id="revTitle" placeholder="Review title (optional)">
         <textarea id="revBody" placeholder="Share your experience..."></textarea>
@@ -1086,10 +1086,15 @@ function loadReviews(p){
       .catch(function(){ paint([]); });
   } else { paint([]); }
 }
-function paintStars(n){ document.querySelectorAll("#starPick i").forEach(function(s){ s.classList.toggle("lit", parseInt(s.getAttribute("data-s"))<=n); }); }
-document.addEventListener("DOMContentLoaded",function(){
-  var sp=el("starPick"); if(sp){ sp.querySelectorAll("i").forEach(function(s){ s.addEventListener("click",function(){ pickedStars=parseInt(this.getAttribute("data-s")); paintStars(pickedStars); }); s.addEventListener("mouseenter",function(){ paintStars(parseInt(this.getAttribute("data-s"))); }); }); sp.addEventListener("mouseleave",function(){ paintStars(pickedStars); }); }
-});
+function paintStars(n){
+  document.querySelectorAll("#starPick i").forEach(function(s){
+    var k=parseInt(s.getAttribute("data-s"));
+    if(k<=n){ s.className="ti ti-star-filled lit"; }
+    else { s.className="ti ti-star"; }
+  });
+  var hint=el("starHint"); if(hint) hint.textContent = n? ("— "+n+"/5") : "— tap a star";
+}
+function setStars(n){ pickedStars=n; paintStars(n); }
 function submitReview(){
   if(!modalProduct) return;
   var name=el("revName").value.trim(), title=el("revTitle").value.trim(), body=el("revBody").value.trim();
@@ -1099,10 +1104,10 @@ function submitReview(){
   var rec={product_id:(modalProduct.id||null),product_key:keyOf(modalProduct),author:name,email:(currentUser?currentUser.email:null),rating:pickedStars,title:title||null,body:body};
   if(db){
     db.from("reviews").insert([rec]).then(function(r){
-      if(r.error){ showToast("Couldn't save review (is the reviews table set up?)"); return; }
+      if(r.error){ showToast("Review error: "+r.error.message); console.error("Review insert error:",r.error); return; }
       el("revName").value=""; el("revTitle").value=""; el("revBody").value=""; pickedStars=0; paintStars(0);
       showToast("Thanks for your review! 🌟"); loadReviews(modalProduct);
-    }).catch(function(){ showToast("Couldn't save review right now."); });
+    }).catch(function(e){ showToast("Review error: "+(e&&e.message?e.message:"unknown")); });
   } else { showToast("Connect to save reviews."); }
 }
 
