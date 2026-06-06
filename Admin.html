@@ -977,20 +977,23 @@ function openAddProduct() {
 }
 
 function editProduct(id) {
+  try {
   var p = allProducts.find(function(x){ return x.id===id; });
   if (!p) { toast("Product not found","error"); return; }
   editingId = id;
   setText("modalTitle","Edit Product");
+  var specsStr = Array.isArray(p.specs) ? p.specs.join(", ") : (p.specs ? String(p.specs) : "");
   var fields = {pName:p.name, pBrand:p.brand, pCategory:p.category, pPrice:p.price,
     pOrigPrice:p.orig_price, pStock:p.stock, pSku:p.sku||"", pStatus:p.status||"active",
     pTag:p.tag||"", pShortDesc:p.short_desc||"", pDesc:p.desc||"",
-    pSpecs:(p.specs||[]).join(", "), pCommission:p.commission||"", pVideo:p.video||""};
-  Object.keys(fields).forEach(function(id){
-    var e=el(id); if(e){ e.value=fields[id]||""; e.style.borderColor=""; }
+    pSpecs:specsStr, pCommission:p.commission||"", pVideo:p.video||""};
+  Object.keys(fields).forEach(function(fid){
+    var e=el(fid); if(e){ var v=fields[fid]; e.value=(v===undefined||v===null)?"":v; e.style.borderColor=""; }
   });
   var ip=el("imagePreview"); if(ip){ ip.innerHTML=""; if(p.image_url){ var im=document.createElement("img"); im.className="preview-img"; im.src=String(p.image_url).replace(/^http:/i,"https:"); ip.appendChild(im); } }
   uploadImages=[]; uploadedImageUrls=[]; editingImageUrl=p.image_url||null;
   var pm=el("productModal"); if(pm) pm.classList.add("open");
+  } catch(err){ toast("Couldn't open editor: "+err.message,"error"); console.error("editProduct error:",err); }
 }
 
 function closeModal() {
