@@ -1330,7 +1330,7 @@ function placeOrder(){
 
         const { data: shiprocketData, error: shiprocketError } =
           await db.functions.invoke("create-shiprocket-order", {
-            body: { orderId: newOrder.id }
+            body: { orderId: newOrderId }
           });
 
         if (shiprocketError) {
