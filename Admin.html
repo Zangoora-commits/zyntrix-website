@@ -632,6 +632,9 @@ var editingId    = null;
 var uploadImages = [];
 var allProducts  = [];
 var shownProducts = [];
+// Only these emails may access the admin panel. Add more inside the quotes, comma-separated.
+var ADMIN_EMAILS = ["skumar_ahuja@hotmail.com", "sirajca.akhan@gmail.com"];
+function isAdminEmail(e){ return !!e && ADMIN_EMAILS.indexOf(String(e).trim().toLowerCase())>=0; }
 
 var DEMO_PRODUCTS = [
   {id:1, name:"ProAir X90 Headphones",       brand:"SoundVibe", category:"Audio",      price:7499,  orig_price:12000, stock:24, status:"active",       tag:"Hot",  icon:"ti-headphones"},
@@ -735,7 +738,9 @@ function checkSession() {
   if (!db) return;
   db.auth.getSession().then(function(r) {
     if (r.data && r.data.session) {
-      currentUser = r.data.session.user;
+      var u = r.data.session.user;
+      if (!isAdminEmail(u && u.email)) { db.auth.signOut(); return; }
+      currentUser = u;
       showPanel();
     }
   }).catch(function(){});
@@ -790,6 +795,12 @@ function doLogin() {
       return;
     }
     currentUser = r.data.user;
+    if (!isAdminEmail(currentUser && currentUser.email)) {
+      db.auth.signOut();
+      currentUser = null;
+      if (errEl) { errEl.textContent="This account doesn't have admin access."; errEl.style.display="block"; }
+      return;
+    }
     showPanel();
   }).catch(function(e) {
     btnEl.disabled = false;
