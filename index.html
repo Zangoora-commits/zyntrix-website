@@ -28,6 +28,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -823,6 +824,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   <div class="field" id="nameField" style="display:none"><label>Full name</label><input type="text" id="authName" placeholder="Your name" autocomplete="name"></div>
   <div class="field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email"></div>
   <div class="field"><label>Password</label><input type="password" id="authPass" placeholder="••••••••" autocomplete="current-password"></div>
+  <div id="forgotRow" style="text-align:right;margin:-6px 0 12px"><a onclick="doForgot()" style="font-size:12.5px;color:var(--brand-deep);font-weight:700;cursor:pointer">Forgot password?</a></div>
   <button class="fm-btn" id="authBtn" onclick="doAuth()">Sign In</button>
   <div class="fm-foot" id="authFoot">New to twipid? <a onclick="switchAuth('signup')">Create an account</a></div>
 </div></div></div>
@@ -837,9 +839,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   <div class="field"><label>Email</label><input type="email" id="coEmail"></div>
   <div class="field"><label>Address</label><input type="text" id="coAddr" placeholder="House no, street, area"></div>
   <div class="field-row"><div class="field"><label>City</label><input type="text" id="coCity"></div><div class="field"><label>State</label><input type="text" id="coState"></div></div>
-  <div class="field-row"><div class="field"><label>PIN code</label><input type="text" id="coPin" placeholder="6-digit PIN"></div><div class="field"><label>Payment</label><select id="coPay"><option value="COD (Test)">Cash on Delivery (Test)</option><option value="Online (Coming soon)">Online — coming soon</option></select></div></div>
+  <div class="field-row"><div class="field"><label>PIN code</label><input type="text" id="coPin" placeholder="6-digit PIN"></div><div class="field"><label>Payment</label><select id="coPay"><option value="Razorpay">Online — Card / UPI / NetBanking</option><option value="COD (Test)">Cash on Delivery (Test)</option></select></div></div>
   <button class="fm-btn" id="coBtn" onclick="placeOrder()"><i class="ti ti-circle-check"></i> Place Order</button>
-  <div class="fm-note"><i class="ti ti-info-circle"></i> This is a test order — no payment is taken. Online payments (Razorpay) are coming next. Your order will appear under “My Orders”.</div>
+  <div class="fm-note"><i class="ti ti-info-circle"></i> Online payments run in <b>test mode</b> — use Razorpay's test card <b>4111 1111 1111 1111</b>, any future expiry &amp; any CVV. No real money is charged. Your order appears under “My Orders”.</div>
 </div></div></div>
 
 <!-- INFO MODAL -->
@@ -864,6 +866,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 /* ===== SUPABASE ===== */
 var SB_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
 var SB_KEY = "sb_publishable_RHk3oC44xMVZCYLC2r3slw_ZcAL-hNF";
+var RZP_KEY = "rzp_test_SyiFfzjbAWB9DX";  // Razorpay TEST public key (safe in client code)
 var db = null;
 try { db = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.warn("Supabase init", e); }
 
@@ -1267,9 +1270,53 @@ function placeOrder(){
   var sub=cart.reduce(function(s,i){return s+i.price*i.qty;},0), ship=sub>=999?0:99, total=sub+ship;
   var order={customer_name:name,customer_email:email,customer_phone:phone,address:addr,city:city,state:state,pin:pin,
     items:cart.map(function(it){return {name:it.name,brand:it.brand,price:it.price,qty:it.qty};}),total:total,status:"pending",payment_method:pay,payment_id:null};
-  var btn=el("coBtn"); btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Placing…';
-  function done(){ cart=[]; save("twipid_cart",cart); updateCart(); closeCheckout(); btn.disabled=false; btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order';
-    showInfo("ti-circle-check","Order placed! 🎉","Thanks "+name.split(" ")[0]+"! Your test order is in. You'll find it under “My Orders”. Online payments are coming soon."); }
+  var btn=el("coBtn");
+
+  // ===== ONLINE PAYMENT (Razorpay test mode) =====
+  if(pay==="Razorpay"){
+    if(!window.Razorpay || !RZP_KEY){ err.textContent="Online payment isn't available right now — please choose Cash on Delivery."; err.classList.add("show"); return; }
+    var itemCount=cart.reduce(function(s,i){return s+i.qty;},0);
+    var options={
+      key:RZP_KEY,
+      amount:Math.round(total*100),
+      currency:"INR",
+      name:"twipid",
+      description:itemCount+" item"+(itemCount!==1?"s":"")+" \u00b7 twipid order",
+      image:"https://twipid.com/og-image.png",
+      prefill:{name:name,email:email,contact:phone},
+      notes:{address:addr+", "+city+", "+state+" "+pin},
+      theme:{color:"#0ca678"},
+      handler:function(response){
+        order.payment_id=response.razorpay_payment_id;
+        order.payment_method="Razorpay (test)";
+        order.status="processing";
+        btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Confirming…';
+        saveOrder(order, function(){
+          showInfo("ti-circle-check","Payment successful! 🎉","Thanks "+name.split(" ")[0]+"! Your order is confirmed (test payment). Payment ID: "+response.razorpay_payment_id+". You'll find it under “My Orders”.");
+        });
+      },
+      modal:{ondismiss:function(){}}
+    };
+    try{
+      var rzp=new Razorpay(options);
+      rzp.on("payment.failed",function(resp){
+        err.textContent="Payment failed: "+((resp.error&&resp.error.description)||"please try again or use Cash on Delivery."); err.classList.add("show");
+      });
+      rzp.open();
+    }catch(e){ err.textContent="Couldn't open the payment window. Please try again."; err.classList.add("show"); }
+    return;
+  }
+
+  // ===== CASH ON DELIVERY (test) =====
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Placing…';
+  order.payment_method="COD (Test)"; order.status="pending";
+  saveOrder(order, function(){
+    showInfo("ti-circle-check","Order placed! 🎉","Thanks "+name.split(" ")[0]+"! Your test order is in (Cash on Delivery). You'll find it under “My Orders”.");
+  });
+}
+function saveOrder(order, onSuccess){
+  var btn=el("coBtn");
+  function done(){ cart=[]; save("twipid_cart",cart); updateCart(); closeCheckout(); btn.disabled=false; btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order'; if(onSuccess)onSuccess(); }
   if(db){ db.from("orders").insert([order]).then(function(r){ if(r.error){ console.warn(r.error); } done(); }).catch(function(){ done(); }); }
   else { done(); }
 }
@@ -1301,10 +1348,24 @@ function switchAuth(mode){
   el("authSub").textContent=mode==="signup"?"Join twipid to track orders and save favourites.":"Sign in to track orders and save favourites.";
   el("authBtn").textContent=mode==="signup"?"Create Account":"Sign In";
   el("authFoot").innerHTML=mode==="signup"?'Already have an account? <a onclick="switchAuth(\'signin\')">Sign in</a>':'New to twipid? <a onclick="switchAuth(\'signup\')">Create an account</a>';
+  var fr=el("forgotRow"); if(fr) fr.style.display=mode==="signup"?"none":"block";
   el("authErr").classList.remove("show");
+}
+function doForgot(){
+  var email=el("authEmail").value.trim(), err=el("authErr");
+  err.style.color="";
+  if(!email||!email.includes("@")){ err.textContent="Enter your email above first, then tap Forgot password."; err.classList.add("show"); return; }
+  if(!db){ err.textContent="Not connected to the server. Try again shortly."; err.classList.add("show"); return; }
+  err.classList.remove("show");
+  db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + "/reset.html" }).then(function(r){
+    if(r.error){ err.textContent=r.error.message; err.classList.add("show"); return; }
+    if(typeof toast==="function") toast("Password reset link sent — check your email 📧");
+    else { err.style.color="var(--brand-deep)"; err.textContent="Reset link sent — check your email."; err.classList.add("show"); }
+  }).catch(function(){ err.textContent="Couldn't send reset link. Try again."; err.classList.add("show"); });
 }
 function doAuth(){
   var email=el("authEmail").value.trim(), pass=el("authPass").value, name=el("authName").value.trim(), err=el("authErr"), btn=el("authBtn");
+  err.style.color="";
   if(!email||!email.includes("@")){ err.textContent="Please enter a valid email."; err.classList.add("show"); return; }
   if(!pass||pass.length<6){ err.textContent="Password must be at least 6 characters."; err.classList.add("show"); return; }
   if(authMode==="signup"&&!name){ err.textContent="Please enter your name."; err.classList.add("show"); return; }
