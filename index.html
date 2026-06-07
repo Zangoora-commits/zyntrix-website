@@ -272,10 +272,13 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-img i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-img img{width:100%;height:100%;object-fit:cover}
 .modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
-.modal-body{padding:32px;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
-.modal-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.92);border:none;cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;z-index:3;transition:all .16s;padding:0}
+.modal-body{padding:0;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
+.modal-topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:13px 14px 13px 28px;border-bottom:1px solid var(--line)}
+.modal-topbar-name{font-family:var(--fd);font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.modal-content{padding:22px 28px 28px;display:flex;flex-direction:column;flex:1}
+.modal-close{position:static;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
 .modal-close .ti{font-size:18px;line-height:1}
-.modal-close:hover{background:#fff;color:var(--orange)}
+.modal-close:hover{background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
 .modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
 .modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:12px}
 .modal-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px}
@@ -377,8 +380,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-stock{margin-bottom:18px}
 
 /* GALLERY */
-.gallery-thumbs{display:flex;gap:9px;padding:14px;position:absolute;bottom:0;left:0;right:0;justify-content:center;flex-wrap:wrap}
-.gthumb{width:46px;height:46px;border-radius:9px;border:2px solid transparent;background:#fff;cursor:pointer;overflow:hidden;box-shadow:var(--shadow-sm);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.gallery-thumbs{display:flex;gap:8px;padding:12px 14px;position:absolute;bottom:0;left:0;right:0;justify-content:center;flex-wrap:wrap;background:linear-gradient(to top,rgba(12,22,17,.5),transparent)}
+.gthumb{width:50px;height:50px;border-radius:10px;border:2px solid rgba(255,255,255,.75);background:#fff;cursor:pointer;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.gthumb.on{border-color:var(--brand);transform:translateY(-2px)}
 .gthumb img{width:100%;height:100%;object-fit:cover}
 .gthumb.on{border-color:var(--brand)}
 .gthumb:hover{transform:translateY(-2px)}
@@ -507,7 +511,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .nav-search{display:none}
   .modal{grid-template-columns:1fr;max-height:90vh;display:block;overflow-y:auto}
   .modal-img{min-height:auto;height:240px}
-  .modal-body{max-height:none;overflow:visible;padding:24px}
+  .modal-body{max-height:none;overflow:visible;padding:0}
+  .modal-content{padding:20px}
+  .modal-topbar{padding-left:20px}
   .modal-close{z-index:5}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
@@ -760,8 +766,10 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 
 <!-- PRODUCT MODAL -->
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()"><div class="modal">
-  <div class="modal-img" id="modalImg"><button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button><i class="ti ti-box pic" id="modalIcon"></i><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
+  <div class="modal-img" id="modalImg"><i class="ti ti-box pic" id="modalIcon"></i><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
+    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
+    <div class="modal-content">
     <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-name" id="modalName">Product</div>
     <div class="modal-rating"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
@@ -800,6 +808,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div id="relatedWrap" style="margin-top:20px;display:none">
       <h5 style="font-family:var(--fd);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink2);margin-bottom:13px">You may also like</h5>
       <div class="strip-h" id="relatedStrip"></div>
+    </div>
     </div>
   </div>
 </div></div>
@@ -896,7 +905,7 @@ function keyOf(p){return p.id?("id"+p.id):p.name;}
 function ratingOf(p){ var k=keyOf(p); if(reviewCache[k]&&reviewCache[k].count) return reviewCache[k].avg; return p.rating||4.7; }
 function reviewCountOf(p){ var k=keyOf(p); if(reviewCache[k]&&reviewCache[k].count!=null) return reviewCache[k].count; return p.reviews||0; }
 function starString(r){ var full=Math.round(r); return "★★★★★".slice(0,full)+"☆☆☆☆☆".slice(0,5-full); }
-function imagesOf(p){ var arr=[]; if(Array.isArray(p.images)) arr=p.images.slice(); else if(p.images) arr=String(p.images).split(",").map(function(s){return s.trim();}); if(p.image_url) arr.unshift(p.image_url); return arr.filter(Boolean).map(function(u){return String(u).replace(/^http:/i,"https:");}); }
+function imagesOf(p){ var arr=[]; if(Array.isArray(p.images)) arr=p.images.slice(); else if(p.images) arr=String(p.images).split("|").map(function(s){return s.trim();}); if(p.image_url) arr.unshift(p.image_url); return arr.filter(Boolean).map(function(u){return String(u).replace(/^http:/i,"https:");}); }
 function stockOf(p){ return (p.stock===undefined||p.stock===null)?null:Number(p.stock); }
 
 /* ===== INIT ===== */
@@ -1018,7 +1027,7 @@ function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFil
 function openModal(i){ var p=view[i]; if(!p) return; openModalByProduct(p); }
 function openModalByProduct(p){
   modalProduct=p; modalQtyVal=1; el("modalQtyN").textContent="1"; pickedStars=0; paintStars(0);
-  el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; el("modalNow").textContent=inr(p.price);
+  el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
   var was=el("modalWas"), off=el("modalOff");
   if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+Math.round((1-p.price/p.orig_price)*100)+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
   // rating
@@ -1246,111 +1255,18 @@ function placeOrder(){
   var name=el("coName").value.trim(), phone=el("coPhone").value.trim(), email=el("coEmail").value.trim(),
       addr=el("coAddr").value.trim(), city=el("coCity").value.trim(), state=el("coState").value.trim(), pin=el("coPin").value.trim(), pay=el("coPay").value;
   var err=el("coErr");
-
-  if(!name||!phone||!email||!addr||!city||!state||!pin){
-    err.textContent="Please fill in all the delivery details.";
-    err.classList.add("show");
-    return;
-  }
-
-  if(!/^\d{10}$/.test(phone)){
-    err.textContent="Please enter a valid 10-digit phone number.";
-    err.classList.add("show");
-    return;
-  }
-
-  if(!email.includes("@")){
-    err.textContent="Please enter a valid email.";
-    err.classList.add("show");
-    return;
-  }
-
+  if(!name||!phone||!email||!addr||!city||!state||!pin){ err.textContent="Please fill in all the delivery details."; err.classList.add("show"); return; }
+  if(!/^\d{10}$/.test(phone)){ err.textContent="Please enter a valid 10-digit phone number."; err.classList.add("show"); return; }
+  if(!email.includes("@")){ err.textContent="Please enter a valid email."; err.classList.add("show"); return; }
   err.classList.remove("show");
-
-  var sub=cart.reduce(function(s,i){ return s+i.price*i.qty; },0),
-      ship=sub>=999?0:99,
-      total=sub+ship;
-
-  var order={
-    customer_name:name,
-    customer_email:email,
-    customer_phone:phone,
-    address:addr,
-    city:city,
-    state:state,
-    pin:pin,
-    items:cart.map(function(it){
-      return {
-        name:it.name,
-        brand:it.brand,
-        price:it.price,
-        qty:it.qty
-      };
-    }),
-    total:total,
-    status:"pending",
-    payment_method:pay,
-    payment_id:null
-  };
-
-  var btn=el("coBtn");
-  btn.disabled=true;
-  btn.innerHTML='<i class="ti ti-loader"></i> Placing…';
-
-  function done(){
-    cart=[];
-    save("twipid_cart",cart);
-    updateCart();
-    closeCheckout();
-    btn.disabled=false;
-    btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order';
-    showInfo(
-      "ti-circle-check",
-      "Order placed! 🎉",
-      "Thanks "+name.split(" ")[0]+"! Your test order is in. You'll find it under “My Orders”. Online payments are coming soon."
-    );
-  }
-
-  if (db) {
-    db.from("orders")
-      .insert([order])
-      .select()
-      .single()
-      .then(async function (r) {
-        if (r.error) {
-          console.warn("Order insert error:", r.error);
-          btn.disabled = false;
-          btn.innerHTML = '<i class="ti ti-circle-check"></i> Place Order';
-          err.textContent = "Could not place order. Please try again.";
-          err.classList.add("show");
-          return;
-        }
-
-        var newOrder = r.data;
-
-        const { data: shiprocketData, error: shiprocketError } =
-          await db.functions.invoke("create-shiprocket-order", {
-            body: { orderId: newOrder.id }
-          });
-
-        if (shiprocketError) {
-          console.warn("Shiprocket function error:", shiprocketError);
-        } else {
-          console.log("Shiprocket success:", shiprocketData);
-        }
-
-        done();
-      })
-      .catch(function (e) {
-        console.warn("Place order catch error:", e);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ti ti-circle-check"></i> Place Order';
-        err.textContent = "Could not place order. Please try again.";
-        err.classList.add("show");
-      });
-  } else {
-    done();
-  }
+  var sub=cart.reduce(function(s,i){return s+i.price*i.qty;},0), ship=sub>=999?0:99, total=sub+ship;
+  var order={customer_name:name,customer_email:email,customer_phone:phone,address:addr,city:city,state:state,pin:pin,
+    items:cart.map(function(it){return {name:it.name,brand:it.brand,price:it.price,qty:it.qty};}),total:total,status:"pending",payment_method:pay,payment_id:null};
+  var btn=el("coBtn"); btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Placing…';
+  function done(){ cart=[]; save("twipid_cart",cart); updateCart(); closeCheckout(); btn.disabled=false; btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order';
+    showInfo("ti-circle-check","Order placed! 🎉","Thanks "+name.split(" ")[0]+"! Your test order is in. You'll find it under “My Orders”. Online payments are coming soon."); }
+  if(db){ db.from("orders").insert([order]).then(function(r){ if(r.error){ console.warn(r.error); } done(); }).catch(function(){ done(); }); }
+  else { done(); }
 }
 
 /* ===== AUTH ===== */
