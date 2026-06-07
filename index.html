@@ -1055,6 +1055,11 @@ function openModalByProduct(p){
   loadReviews(p);
   renderRelated(p);
   addRecent(p);
+  // Fresh start on every open: gallery on first image (handled above), details scrolled to top,
+  // default tab, quantity 1, star rating cleared, and review form emptied.
+  var mb=document.querySelector("#modalOv .modal-body"); if(mb) mb.scrollTop=0;
+  var rn=el("revName"), rt2=el("revTitle"), rb=el("revBody");
+  if(rn)rn.value=""; if(rt2)rt2.value=""; if(rb)rb.value="";
   el("modalOv").classList.add("open"); document.body.style.overflow="hidden";
 }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m)m.src=imgs[gi]; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
