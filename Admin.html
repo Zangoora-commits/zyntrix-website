@@ -632,9 +632,16 @@ var editingId    = null;
 var uploadImages = [];
 var allProducts  = [];
 var shownProducts = [];
-// Only these emails may access the admin panel. Add more inside the quotes, comma-separated.
-var ADMIN_EMAILS = ["susheel_ahuja@twipid.com", "sirajca.akhan@gmail.com"];
-function isAdminEmail(e){ return !!e && ADMIN_EMAILS.indexOf(String(e).trim().toLowerCase())>=0; }
+// Admin access is now controlled in the DATABASE (admin_users table + is_admin() function),
+// managed from the Supabase dashboard — no email list lives in this file anymore.
+function checkAdminAccess(onAllowed, onDenied){
+  if (isDemo || !db) { onAllowed(); return; }   // demo mode: allow
+  db.rpc("is_admin").then(function(res){
+    if (res && res.error) { onDenied("Couldn't verify admin access. Make sure the security setup SQL has been run in Supabase."); return; }
+    if (res && res.data === true) { onAllowed(); }
+    else { onDenied("This account doesn't have admin access."); }
+  }).catch(function(){ onDenied("Couldn't verify admin access. Please try again."); });
+}
 
 var DEMO_PRODUCTS = [
   {id:1, name:"ProAir X90 Headphones",       brand:"SoundVibe", category:"Audio",      price:7499,  orig_price:12000, stock:24, status:"active",       tag:"Hot",  icon:"ti-headphones"},
@@ -738,10 +745,8 @@ function checkSession() {
   if (!db) return;
   db.auth.getSession().then(function(r) {
     if (r.data && r.data.session) {
-      var u = r.data.session.user;
-      if (!isAdminEmail(u && u.email)) { db.auth.signOut(); return; }
-      currentUser = u;
-      showPanel();
+      currentUser = r.data.session.user;
+      checkAdminAccess(function(){ showPanel(); }, function(){ db.auth.signOut(); currentUser=null; });
     }
   }).catch(function(){});
 }
@@ -795,13 +800,13 @@ function doLogin() {
       return;
     }
     currentUser = r.data.user;
-    if (!isAdminEmail(currentUser && currentUser.email)) {
+    checkAdminAccess(function(){
+      showPanel();
+    }, function(msg){
       db.auth.signOut();
       currentUser = null;
-      if (errEl) { errEl.textContent="This account doesn't have admin access."; errEl.style.display="block"; }
-      return;
-    }
-    showPanel();
+      if (errEl) { errEl.textContent = msg; errEl.style.display="block"; }
+    });
   }).catch(function(e) {
     btnEl.disabled = false;
     btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
