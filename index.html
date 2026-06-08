@@ -1317,7 +1317,27 @@ function placeOrder(){
 function saveOrder(order, onSuccess){
   var btn=el("coBtn");
   function done(){ cart=[]; save("twipid_cart",cart); updateCart(); closeCheckout(); btn.disabled=false; btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order'; if(onSuccess)onSuccess(); }
-  if(db){ db.from("orders").insert([order]).then(function(r){ if(r.error){ console.warn(r.error); } done(); }).catch(function(){ done(); }); }
+  if(db){ db.from("orders")
+  .insert(order)
+  .select()
+  .single()
+  .then(async function(r){
+    if (r.error) {
+      console.warn("Order insert error", r.error)
+      done()
+      return
+    }
+
+    const newOrder = r.data
+
+    const fn = await db.functions.invoke("create-shiprocket-order", {
+      body: { orderId: newOrder.id }
+    })
+
+    console.log("Function invoke result", fn)
+
+    done()
+  }).catch(function(){ done(); }); }
   else { done(); }
 }
 
