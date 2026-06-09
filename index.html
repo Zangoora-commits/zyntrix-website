@@ -535,6 +535,64 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .footer-top{grid-template-columns:1fr 1fr}.partner-points{gap:14px}
   .drawer{width:100%}.fmodal-pad{padding:26px}
 }
+/* ===== HERO CAROUSEL ===== */
+.hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:6px}
+.hc-view{overflow:hidden;border-radius:24px}
+.hc-track{display:flex;transition:transform .7s cubic-bezier(.6,.02,.15,1)}
+.hc-slide{flex:0 0 100%;height:340px;position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
+.hc-slide::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5;pointer-events:none;z-index:3}
+.hc-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,20,14,.26),rgba(2,20,14,0) 55%);pointer-events:none;z-index:1}
+.hc-deco{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
+.hc-text{position:relative;z-index:4;padding:0 52px;max-width:56%}
+.hc-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:100px;letter-spacing:.4px;margin-bottom:16px}
+.hc-badge i{font-size:15px;color:var(--lime)}
+.hc-title{font-family:var(--fd);font-size:44px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1.03;margin-bottom:10px;text-shadow:0 3px 22px rgba(0,0,0,.26)}
+.hc-sub{font-size:16px;color:rgba(255,255,255,.94);font-weight:500;margin-bottom:24px;max-width:420px;line-height:1.45;text-shadow:0 1px 12px rgba(0,0,0,.22)}
+.hc-cta{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--ink);border:none;font-family:var(--fb);font-size:15px;font-weight:800;padding:13px 26px;border-radius:13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 8px 22px rgba(0,0,0,.2)}
+.hc-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
+.hc-cta .ti{transition:transform .2s}.hc-cta:hover .ti{transform:translateX(3px)}
+.hc-art{position:absolute;right:42px;top:50%;width:296px;height:296px;z-index:2;transform:translateY(-50%);animation:hcFloat 5.5s ease-in-out infinite}
+.hc-art svg{width:100%;height:100%;filter:drop-shadow(0 20px 32px rgba(0,0,0,.28))}
+.hc-slide .hc-badge,.hc-slide .hc-title,.hc-slide .hc-sub,.hc-slide .hc-cta{opacity:0}
+.hc-slide.active .hc-badge{animation:hcPop .55s .05s cubic-bezier(.2,1.3,.4,1) forwards}
+.hc-slide.active .hc-title{animation:hcRise .6s .14s cubic-bezier(.2,.7,.2,1) forwards}
+.hc-slide.active .hc-sub{animation:hcRise .6s .24s cubic-bezier(.2,.7,.2,1) forwards}
+.hc-slide.active .hc-cta{animation:hcRise .6s .34s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes hcRise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hcPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes hcFloat{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 13px))}}
+.hc-progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:rgba(255,255,255,.9);z-index:5}
+.hc-slide.active .hc-progress{animation:hcGrow 5s linear forwards}
+.hc:hover .hc-slide.active .hc-progress,.hc:hover .hc-art{animation-play-state:paused}
+@keyframes hcGrow{from{width:0}to{width:100%}}
+.hc-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:46px;height:46px;border-radius:50%;border:none;background:rgba(255,255,255,.92);color:var(--ink);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.2);transition:all .15s;opacity:.9}
+.hc-arrow:hover{opacity:1;transform:translateY(-50%) scale(1.08)}
+.hc-arrow.left{left:16px}.hc-arrow.right{right:16px}
+.hc-dots{position:absolute;bottom:18px;left:52px;z-index:6;display:flex;gap:8px}
+.hc-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;transition:all .3s}
+.hc-dot.on{background:#fff;width:26px;border-radius:5px}
+@media(max-width:768px){.hc-slide{height:300px}.hc-text{padding:0 30px;max-width:62%}.hc-title{font-size:32px}.hc-sub{font-size:14px;margin-bottom:18px}.hc-art{width:210px;height:210px;right:10px}.hc-arrow{width:38px;height:38px;font-size:18px}.hc-arrow.left{left:10px}.hc-arrow.right{right:10px}.hc-dots{left:30px;bottom:14px}}
+@media(max-width:480px){.hc-slide{height:280px}.hc-text{max-width:66%;padding:0 20px}.hc-title{font-size:25px}.hc-sub{font-size:12px}.hc-cta{font-size:13px;padding:11px 18px}.hc-art{width:160px;height:160px;right:0}}
+
+/* ===== NAV CATEGORIES DROPDOWN ===== */
+.cat-li{position:relative}
+.nav-links a .chev{font-size:16px;transition:transform .22s}
+.nav-links a.open .chev{transform:rotate(180deg)}
+.nav-links a.open{color:var(--brand-deep);background:var(--brand-tint)}
+.cat-panel{position:absolute;top:calc(100% + 12px);left:0;width:520px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 50px rgba(12,22,17,.16);padding:14px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .2s;z-index:120}
+.cat-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
+.cat-panel-head{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:6px 8px 10px}
+.cat-grid-dd{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cat-item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;cursor:pointer;transition:background .14s;border:none;background:none;text-align:left;width:100%;font-family:var(--fb)}
+.cat-item:hover{background:var(--paper)}
+.cat-ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.cat-itext{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cat-iname{display:block;font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.15}
+.cat-idesc{display:block;font-size:12px;color:var(--muted);line-height:1.2}
+.cat-foot{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+.cat-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:11px;border:none;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--fb);font-weight:800;font-size:14px;cursor:pointer}
+.cat-all:hover{background:#d8f2e9}
+@media(max-width:680px){.cat-panel{width:min(420px,calc(100vw - 28px))}.cat-grid-dd{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -554,7 +612,14 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <span class="logo-word"><span class="t">t</span><span class="rest">wipid</span></span>
   </a>
   <ul class="nav-links">
-    <li><a onclick="scrollToId('categories')">Categories</a></li>
+    <li class="cat-li">
+      <a id="catTrigger" onclick="toggleCat(event)"><i class="ti ti-category-2"></i> Categories <i class="ti ti-chevron-down chev"></i></a>
+      <div class="cat-panel" id="catPanel">
+        <div class="cat-panel-head">Shop by category</div>
+        <div class="cat-grid-dd" id="catGridDD"></div>
+        <div class="cat-foot"><button class="cat-all" onclick="catPick('all')"><i class="ti ti-layout-grid"></i> View all products</button></div>
+      </div>
+    </li>
     <li><a onclick="goShop()">Shop</a></li>
     <li><a onclick="scrollToId('partner')">Partners</a></li>
     <li><a onclick="scrollToId('about')">About</a></li>
@@ -593,15 +658,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <!-- CATEGORIES -->
 <section id="categories" class="first">
   <div class="sec-head"><span class="sec-tag">Browse by category</span><h2 class="sec-title">What are you looking for?</h2></div>
-  <div class="cat-grid">
-    <div class="cat-card" onclick="pickCategory('audio')"><div class="cat-icon" style="background:linear-gradient(135deg,#0ca678,#12b3a6)"><i class="ti ti-headphones"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Audio</div><div class="cat-count">Headphones & speakers</div></div>
-    <div class="cat-card" onclick="pickCategory('wearables')"><div class="cat-icon" style="background:linear-gradient(135deg,#ff7a3d,#f5a623)"><i class="ti ti-device-watch"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Wearables</div><div class="cat-count">Watches & bands</div></div>
-    <div class="cat-card" onclick="pickCategory('smart-home')"><div class="cat-icon" style="background:linear-gradient(135deg,#12b3a6,#0ca678)"><i class="ti ti-home-bolt"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Smart Home</div><div class="cat-count">Lights & security</div></div>
-    <div class="cat-card" onclick="pickCategory('gaming')"><div class="cat-icon" style="background:linear-gradient(135deg,#0ca678,#078560)"><i class="ti ti-device-gamepad-2"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Gaming</div><div class="cat-count">Controllers & gear</div></div>
-    <div class="cat-card" onclick="pickCategory('smartphones')"><div class="cat-icon" style="background:linear-gradient(135deg,#ff7a3d,#ff5d73)"><i class="ti ti-device-mobile"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Smartphones</div><div class="cat-count">Phones & tablets</div></div>
-    <div class="cat-card" onclick="pickCategory('cameras')"><div class="cat-icon" style="background:linear-gradient(135deg,#f5a623,#0ca678)"><i class="ti ti-camera"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Cameras</div><div class="cat-count">Action & security</div></div>
-    <div class="cat-card" onclick="pickCategory('computing')"><div class="cat-icon" style="background:linear-gradient(135deg,#078560,#12b3a6)"><i class="ti ti-cpu"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Computing</div><div class="cat-count">Accessories & gear</div></div>
-    <div class="cat-card" onclick="pickCategory('power')"><div class="cat-icon" style="background:linear-gradient(135deg,#ff7a3d,#0ca678)"><i class="ti ti-battery-charging"></i></div><i class="ti ti-arrow-up-right cat-arrow"></i><div class="cat-name">Power</div><div class="cat-count">Banks & chargers</div></div>
+  <div class="hc" id="hc">
+    <div class="hc-view"><div class="hc-track" id="hcTrack"></div></div>
+    <button class="hc-arrow left" onclick="hcPrev()" aria-label="Previous"><i class="ti ti-chevron-left"></i></button>
+    <button class="hc-arrow right" onclick="hcNext()" aria-label="Next"><i class="ti ti-chevron-right"></i></button>
+    <div class="hc-dots" id="hcDots"></div>
   </div>
 </section>
 
@@ -1465,6 +1526,83 @@ function closeInfo(){ el("infoOv").classList.remove("open"); if(!anyDrawerOpen()
 
 document.addEventListener("click",function(e){ var m=el("acctMenu"); if(m&&m.classList.contains("open")&&!e.target.closest(".nav-right")) closeAcct(); });
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModal(); closeCart(); closeWishlist(); closeOrders(); closeMenu(); closeInfo(); closeAuth(); closeCheckout(); closeAcct(); closeContent(); } });
+</script>
+<script>
+/* ===== Hero carousel + Categories dropdown (added) ===== */
+(function(){
+  var HC_ART={
+   audio:'<svg viewBox="0 0 260 260"><defs><linearGradient id="cupA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a5d53"/><stop offset=".5" stop-color="#1d2a24"/><stop offset="1" stop-color="#0a0f0c"/></linearGradient><radialGradient id="ringA" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#2ad0b0"/><stop offset="1" stop-color="#0ca678"/></radialGradient><linearGradient id="bandA" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0c1611"/><stop offset=".5" stop-color="#52665b"/><stop offset="1" stop-color="#0c1611"/></linearGradient><linearGradient id="glsA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path d="M54 158 V100 A76 76 0 0 1 206 100 V158" fill="none" stroke="url(#bandA)" stroke-width="20" stroke-linecap="round"/><rect x="30" y="118" width="60" height="108" rx="28" fill="url(#cupA)"/><ellipse cx="60" cy="172" rx="20" ry="38" fill="#0a0f0c"/><circle cx="60" cy="158" r="15" fill="none" stroke="url(#ringA)" stroke-width="4"/><path d="M40 130 q-7 32 8 70" stroke="url(#glsA)" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="170" y="118" width="60" height="108" rx="28" fill="url(#cupA)"/><ellipse cx="200" cy="172" rx="20" ry="38" fill="#0a0f0c"/><circle cx="200" cy="158" r="15" fill="none" stroke="url(#ringA)" stroke-width="4"/><path d="M180 130 q-7 32 8 70" stroke="url(#glsA)" stroke-width="6" fill="none" stroke-linecap="round"/></svg>',
+   wearables:'<svg viewBox="0 0 260 260"><defs><linearGradient id="caseW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f7f5"/><stop offset=".5" stop-color="#c2cec8"/><stop offset="1" stop-color="#8a9b92"/></linearGradient><linearGradient id="scrW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10201a"/><stop offset="1" stop-color="#04110b"/></linearGradient><linearGradient id="bandW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18271f"/><stop offset="1" stop-color="#0a120d"/></linearGradient></defs><path d="M100 66 L108 26 H152 L160 66 Z" fill="url(#bandW)"/><path d="M100 194 L108 234 H152 L160 194 Z" fill="url(#bandW)"/><rect x="80" y="56" width="100" height="148" rx="34" fill="url(#caseW)"/><rect x="178" y="116" width="9" height="24" rx="4" fill="#7d8c84"/><rect x="92" y="70" width="76" height="120" rx="26" fill="url(#scrW)"/><text x="130" y="126" text-anchor="middle" font-family="Sora,sans-serif" font-size="30" font-weight="800" fill="#fff">9:41</text><circle cx="130" cy="158" r="18" fill="none" stroke="#1c3329" stroke-width="5"/><circle cx="130" cy="158" r="18" fill="none" stroke="#d4ff3f" stroke-width="5" stroke-dasharray="85 28" stroke-linecap="round" transform="rotate(-90 130 158)"/></svg>',
+   offer:'<svg viewBox="0 0 260 260"><defs><linearGradient id="trkO" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e2ede8"/></linearGradient></defs><g stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".5"><line x1="12" y1="116" x2="44" y2="116"/><line x1="4" y1="144" x2="38" y2="144"/></g><rect x="40" y="92" width="114" height="88" rx="13" fill="url(#trkO)"/><path d="M154 118 h34 l26 26 v36 h-60 z" fill="#cfe2da"/><rect x="158" y="124" width="34" height="24" rx="5" fill="#a9cdbf"/><rect x="212" y="166" width="6" height="11" rx="2" fill="#ffd84d"/><circle cx="78" cy="188" r="21" fill="#0c1611"/><circle cx="78" cy="188" r="8" fill="#cbd6d0"/><circle cx="196" cy="188" r="21" fill="#0c1611"/><circle cx="196" cy="188" r="8" fill="#cbd6d0"/><g transform="translate(97 136)"><rect x="-22" y="-20" width="44" height="40" rx="5" fill="none" stroke="#0ca678" stroke-width="4"/><path d="M-22 -4 h44" stroke="#0ca678" stroke-width="4"/><path d="M0 -20 v40" stroke="#0ca678" stroke-width="4" opacity=".5"/></g></svg>',
+   "smart-home":'<svg viewBox="0 0 260 260"><defs><linearGradient id="spkS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#42554b"/><stop offset="1" stop-color="#141c17"/></linearGradient><radialGradient id="ledS" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#eaffba"/><stop offset=".55" stop-color="#d4ff3f"/><stop offset="1" stop-color="#9ad81f" stop-opacity="0"/></radialGradient></defs><ellipse cx="130" cy="88" rx="66" ry="22" fill="url(#ledS)"/><path d="M76 96 a54 18 0 0 0 108 0 l0 98 a54 22 0 0 1 -108 0 Z" fill="url(#spkS)"/><ellipse cx="130" cy="96" rx="54" ry="18" fill="#1d2a24"/><ellipse cx="130" cy="94" rx="40" ry="12" fill="#0a0f0c"/><g stroke="#2c3a33" stroke-width="2" opacity=".55" fill="none"><path d="M84 128 a48 16 0 0 0 92 0"/><path d="M84 150 a48 16 0 0 0 92 0"/><path d="M84 172 a48 16 0 0 0 92 0"/></g><circle cx="130" cy="94" r="6" fill="#2ad0b0"/></svg>',
+   smartphones:'<svg viewBox="0 0 260 260"><defs><linearGradient id="frmP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3a33"/><stop offset="1" stop-color="#0a0f0c"/></linearGradient><linearGradient id="wallP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0ca678"/><stop offset=".5" stop-color="#12b3a6"/><stop offset="1" stop-color="#ff7a3d"/></linearGradient></defs><rect x="82" y="32" width="96" height="196" rx="27" fill="url(#frmP)"/><rect x="89" y="39" width="82" height="182" rx="21" fill="url(#wallP)"/><circle cx="130" cy="51" r="4" fill="#0a0f0c"/><text x="130" y="102" text-anchor="middle" font-family="Sora,sans-serif" font-size="26" font-weight="800" fill="#fff" opacity=".95">9:41</text><g fill="#fff"><rect x="100" y="122" width="22" height="22" rx="7"/><rect x="138" y="122" width="22" height="22" rx="7" opacity=".92"/><rect x="100" y="152" width="22" height="22" rx="7" opacity=".82"/><rect x="138" y="152" width="22" height="22" rx="7" opacity=".82"/></g><rect x="98" y="188" width="64" height="22" rx="11" fill="#fff" opacity=".22"/></svg>',
+   power:'<svg viewBox="0 0 260 260"><defs><linearGradient id="bdyP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a5d53"/><stop offset=".5" stop-color="#1d2a24"/><stop offset="1" stop-color="#3a4c43"/></linearGradient></defs><rect x="86" y="44" width="88" height="172" rx="22" fill="url(#bdyP)"/><rect x="100" y="60" width="60" height="46" rx="10" fill="#0a0f0c"/><text x="130" y="92" text-anchor="middle" font-family="Sora,sans-serif" font-size="21" font-weight="800" fill="#d4ff3f">87%</text><path d="M137 118 l-23 36 h15 l-9 32 28 -44 h-16 z" fill="#d4ff3f"/><g fill="#5ee3b6"><rect x="104" y="198" width="15" height="6" rx="3"/><rect x="122" y="198" width="15" height="6" rx="3"/><rect x="140" y="198" width="15" height="6" rx="3" opacity=".4"/></g><rect x="170" y="120" width="10" height="15" rx="2" fill="#0a0f0c"/><rect x="170" y="144" width="10" height="11" rx="3" fill="#0a0f0c"/></svg>'
+  };
+  var HC_SLIDES=[
+   {cat:"audio",badge:"Up to 40% OFF",title:"Audio",sub:"Immersive sound and all-day comfort, from earbuds to studio cans.",bg:"radial-gradient(circle at 16% 22%,rgba(94,227,182,.6),transparent 46%),radial-gradient(circle at 90% 88%,rgba(212,255,63,.18),transparent 44%),linear-gradient(125deg,#0ca678,#04543d)"},
+   {cat:"wearables",badge:"Up to 35% OFF",title:"Wearables",sub:"Smartwatches and bands that track every move.",bg:"radial-gradient(circle at 18% 20%,rgba(255,180,120,.55),transparent 46%),radial-gradient(circle at 88% 85%,rgba(255,93,115,.3),transparent 46%),linear-gradient(125deg,#ff7a3d,#cf3f17)"},
+   {cat:"all",badge:"Limited time",title:"Free shipping over ₹999",sub:"Free delivery across India on every order above ₹999.",bg:"radial-gradient(circle at 16% 22%,rgba(94,227,182,.55),transparent 46%),radial-gradient(circle at 86% 86%,rgba(212,255,63,.25),transparent 44%),linear-gradient(125deg,#0b8f66,#045c43)",art:"offer"},
+   {cat:"smart-home",badge:"New arrivals",title:"Smart Home",sub:"Lights, plugs and speakers for a smarter space.",bg:"radial-gradient(circle at 18% 22%,rgba(94,227,182,.55),transparent 46%),radial-gradient(circle at 88% 84%,rgba(120,220,255,.25),transparent 46%),linear-gradient(125deg,#12b3a6,#0a6f67)"},
+   {cat:"smartphones",badge:"Up to 25% OFF",title:"Smartphones",sub:"Flagship features without the flagship price.",bg:"radial-gradient(circle at 16% 20%,rgba(255,150,170,.55),transparent 46%),radial-gradient(circle at 88% 86%,rgba(120,90,255,.28),transparent 46%),linear-gradient(125deg,#ff5d73,#c5263f)"},
+   {cat:"power",badge:"Up to 30% OFF",title:"Power",sub:"Power banks and fast chargers so you never run out.",bg:"radial-gradient(circle at 18% 22%,rgba(255,200,120,.6),transparent 46%),radial-gradient(circle at 88% 86%,rgba(212,255,63,.2),transparent 44%),linear-gradient(125deg,#ff9f43,#e2700f)"}
+  ];
+  var DD_CATS=[
+   {cat:"audio",name:"Audio",desc:"Headphones, earbuds, speakers",icon:"ti-headphones",bg:"#e6f7f1",fg:"#0ca678"},
+   {cat:"wearables",name:"Wearables",desc:"Smartwatches & bands",icon:"ti-device-watch",bg:"#fff0e8",fg:"#ff7a3d"},
+   {cat:"smart-home",name:"Smart Home",desc:"Lights, plugs, speakers",icon:"ti-bulb",bg:"#e4f6f4",fg:"#12b3a6"},
+   {cat:"gaming",name:"Gaming",desc:"Consoles & accessories",icon:"ti-device-gamepad-2",bg:"#e9f4ef",fg:"#078560"},
+   {cat:"smartphones",name:"Smartphones",desc:"Phones & accessories",icon:"ti-device-mobile",bg:"#ffeee9",fg:"#ff5d73"},
+   {cat:"cameras",name:"Cameras",desc:"Action cams & drones",icon:"ti-camera",bg:"#fdf4e2",fg:"#e0901a"},
+   {cat:"computing",name:"Computing",desc:"Laptops, mice, drives",icon:"ti-device-laptop",bg:"#e8f5f0",fg:"#0ca678"},
+   {cat:"power",name:"Power",desc:"Power banks & chargers",icon:"ti-battery-charging",bg:"#fff1e9",fg:"#ff7a3d"}
+  ];
+
+  function go(cat){ if(typeof pickCategory==="function"){ if(cat==="all"){ if(typeof removeCatFilter==="function"){removeCatFilter();} if(typeof scrollToId==="function"){scrollToId("products");} } else { pickCategory(cat); } } }
+
+  // ---- Carousel ----
+  var track=document.getElementById("hcTrack"), dotsBox=document.getElementById("hcDots"), hc=document.getElementById("hc"), idx=0;
+  if(track){
+    track.innerHTML=HC_SLIDES.map(function(s){
+      var art=HC_ART[s.art||s.cat]||"";
+      return '<div class="hc-slide" style="background:'+s.bg+'" data-cat="'+s.cat+'">'
+        +'<div class="hc-deco" style="width:300px;height:300px;right:-40px;top:-110px;background:rgba(255,255,255,.10)"></div>'
+        +'<div class="hc-deco" style="width:180px;height:180px;right:230px;bottom:-110px;background:rgba(212,255,63,.10)"></div>'
+        +'<div class="hc-art">'+art+'</div>'
+        +'<div class="hc-text"><span class="hc-badge"><i class="ti ti-discount-2"></i> '+s.badge+'</span>'
+        +'<div class="hc-title">'+s.title+'</div><div class="hc-sub">'+s.sub+'</div>'
+        +'<button class="hc-cta">Shop now <i class="ti ti-arrow-right"></i></button></div>'
+        +'<div class="hc-progress"></div></div>';
+    }).join("");
+    dotsBox.innerHTML=HC_SLIDES.map(function(_,i){return '<button class="hc-dot'+(i===0?' on':'')+'" data-i="'+i+'" aria-label="Slide '+(i+1)+'"></button>';}).join("");
+    var slides=track.children;
+    window.hcShow=function(i){ idx=(i+HC_SLIDES.length)%HC_SLIDES.length; track.style.transform="translateX(-"+(idx*100)+"%)"; Array.prototype.forEach.call(slides,function(sl,si){sl.classList.toggle("active",si===idx);}); Array.prototype.forEach.call(dotsBox.children,function(d,di){d.classList.toggle("on",di===idx);}); };
+    window.hcNext=function(){ window.hcShow(idx+1); };
+    window.hcPrev=function(){ window.hcShow(idx-1); };
+    Array.prototype.forEach.call(slides,function(sl){
+      var bar=sl.querySelector(".hc-progress");
+      bar.addEventListener("animationend",function(){ if(sl.classList.contains("active")) window.hcNext(); });
+      sl.addEventListener("click",function(){ go(sl.getAttribute("data-cat")); });
+    });
+    Array.prototype.forEach.call(dotsBox.children,function(d){ d.addEventListener("click",function(e){ e.stopPropagation(); window.hcShow(parseInt(d.getAttribute("data-i"),10)); }); });
+    var x0=null;
+    hc.addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
+    hc.addEventListener("touchend",function(e){ if(x0===null)return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){dx<0?window.hcNext():window.hcPrev();} x0=null; },{passive:true});
+    window.hcShow(0);
+  }
+
+  // ---- Categories dropdown ----
+  var ddGrid=document.getElementById("catGridDD"), panel=document.getElementById("catPanel"), trigger=document.getElementById("catTrigger");
+  if(ddGrid){
+    ddGrid.innerHTML=DD_CATS.map(function(c){
+      return '<button class="cat-item" data-cat="'+c.cat+'"><span class="cat-ic" style="background:'+c.bg+';color:'+c.fg+'"><i class="ti '+c.icon+'"></i></span><span class="cat-itext"><span class="cat-iname">'+c.name+'</span><span class="cat-idesc">'+c.desc+'</span></span></button>';
+    }).join("");
+    window.toggleCat=function(e){ if(e){e.stopPropagation();} var open=panel.classList.toggle("open"); trigger.classList.toggle("open",open); };
+    window.catPick=function(cat){ panel.classList.remove("open"); trigger.classList.remove("open"); go(cat); };
+    Array.prototype.forEach.call(ddGrid.children,function(b){ b.addEventListener("click",function(){ window.catPick(b.getAttribute("data-cat")); }); });
+    document.addEventListener("click",function(e){ if(!e.target.closest(".cat-li")){ panel.classList.remove("open"); trigger.classList.remove("open"); } });
+    document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ panel.classList.remove("open"); trigger.classList.remove("open"); } });
+  }
+})();
 </script>
 </body>
 </html>
