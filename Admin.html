@@ -1540,6 +1540,15 @@ function closeInfo(){ el("infoOv").classList.remove("open"); if(!anyDrawerOpen()
 
 document.addEventListener("click",function(e){ var m=el("acctMenu"); if(m&&m.classList.contains("open")&&!e.target.closest(".nav-right")) closeAcct(); });
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModal(); closeCart(); closeWishlist(); closeOrders(); closeMenu(); closeInfo(); closeAuth(); closeCheckout(); closeAcct(); closeContent(); } });
+
+<section class="admin-orders">
+  <div class="sec-head">
+    <h2>Orders</h2>
+    <p>Update customer and shipping status from one place.</p>
+  </div>
+  <div id="adminOrders"></div>
+</section>
+  
 </script>
 </body>
 </html>
