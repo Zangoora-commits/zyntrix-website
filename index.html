@@ -1304,23 +1304,121 @@ function anyDrawerOpen(){ return el("cart").classList.contains("open")||el("wish
 function maybeCloseOverlay(){ if(!anyDrawerOpen()&&!el("mobileMenu").classList.contains("open")){ el("overlay").classList.remove("open"); document.body.style.overflow=""; } }
 
 /* ===== ORDERS ===== */
+
+function prettyStatus(s){
+  const map = {
+    pending: 'Pending',
+    confirmed: 'Confirmed',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    out_for_delivery: 'Out for delivery',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled',
+    returned: 'Returned'
+  }
+  return map[s] || 'Pending'
+}
+
+function statusClass(s){
+  if (s === 'delivered') return 'st-delivered'
+  if (s === 'shipped' || s === 'out_for_delivery') return 'st-shipped'
+  if (s === 'cancelled' || s === 'returned') return 'st-cancelled'
+  if (s === 'processing' || s === 'confirmed') return 'st-processing'
+  return 'st-pending'
+}
+  
 function loadOrders(){
-  var body=el("ordersBody");
-  if(!currentUser){ el("ordersCount").textContent="—"; body.innerHTML='<div class="drawer-empty"><i class="ti ti-user-circle"></i><h4>Sign in to see orders</h4><p>Your order history appears here once you sign in and place an order.</p><button onclick="closeOrders();openAuth(\'signin\')">Sign In</button></div>'; return; }
-  body.innerHTML='<div class="drawer-empty"><i class="ti ti-loader"></i><h4>Loading…</h4></div>';
-  if(!db){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-cloud-off"></i><h4>Not connected</h4></div>'; return; }
-  db.from("orders").select("*").eq("customer_email",currentUser.email).order("created_at",{ascending:false})
+  var body = el("ordersBody");
+  if(!body) return;
+
+  if(!currentUser){
+    el("ordersCount").textContent = "";
+    body.innerHTML = `<div class="drawer-empty">
+      <i class="ti ti-user-circle"></i>
+      <h4>Sign in to see orders</h4>
+      <p>Your order history appears here once you sign in and place an order.</p>
+      <button onclick="closeOrders();openAuth('signin')">Sign In</button>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = `<div class="drawer-empty"><i class="ti ti-loader"></i><h4>Loading...</h4></div>`;
+
+  if(!db){
+    body.innerHTML = `<div class="drawer-empty">
+      <i class="ti ti-cloud-off"></i>
+      <h4>Not connected</h4>
+    </div>`;
+    return;
+  }
+
+  db.from("orders")
+    .select("*")
+    .eq("customer_email", currentUser.email)
+    .order("created_at", { ascending:false })
     .then(function(r){
-      var rows=(r.data||[]);
-      el("ordersCount").textContent=rows.length+" order"+(rows.length!==1?"s":"");
-      if(!rows.length){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-package"></i><h4>No orders yet</h4><p>When you place an order it\'ll show up here.</p><button onclick="closeOrders();goShop()">Start Shopping</button></div>'; return; }
-      body.innerHTML=rows.map(function(o){
-        var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
-        var list=(items||[]).map(function(it){return esc(it.name)+" ×"+it.qty;}).join(", ");
-        var d=o.created_at?new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
-        return '<div class="order-card"><div class="order-top"><div><div class="order-id">Order #'+(o.id||"—")+'</div><div class="order-date">'+d+'</div></div><span class="order-status">'+esc(o.status||"pending")+'</span></div><div class="order-items">'+(list||"—")+'</div><div class="order-tot">'+inr(o.total)+'</div></div>';
+      var rows = (r.data || []);
+      el("ordersCount").textContent = rows.length + " order" + (rows.length !== 1 ? "s" : "");
+
+      if(!rows.length){
+        body.innerHTML = `<div class="drawer-empty">
+          <i class="ti ti-package"></i>
+          <h4>No orders yet</h4>
+          <p>When you place an order it'll show up here.</p>
+          <button onclick="closeOrders();goShop()">Start Shopping</button>
+        </div>`;
+        return;
+      }
+
+      body.innerHTML = rows.map(function(o){
+        var items = o.items;
+        if(typeof items === "string"){
+          try{ items = JSON.parse(items); }catch(e){ items = []; }
+        }
+
+        var list = (items || []).map(function(it){
+          return esc(it.name) + " × " + it.qty;
+        }).join(", ");
+
+        var d = o.created_at
+          ? new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})
+          : "";
+
+        var upd = o.status_updated_at
+          ? new Date(o.status_updated_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})
+          : d;
+
+        return `
+          <div class="order-card">
+            <div class="order-top">
+              <div>
+                <div class="order-id">Order #${o.id || "-"}</div>
+                <div class="order-date">Placed ${d}</div>
+              </div>
+              <span class="order-status ${statusClass(o.status)}">${esc(prettyStatus(o.status))}</span>
+            </div>
+
+            <div class="order-items">${list}</div>
+
+            <div class="order-meta">
+              ${o.tracking_status ? `<div><strong>Shipping:</strong> ${esc(prettyStatus(o.tracking_status))}</div>` : ""}
+              ${o.courier_name ? `<div><strong>Courier:</strong> ${esc(o.courier_name)}</div>` : ""}
+              ${o.awb_code ? `<div><strong>AWB:</strong> ${esc(o.awb_code)}</div>` : ""}
+              ${o.tracking_url ? `<div><a href="${esc(o.tracking_url)}" target="_blank" rel="noopener noreferrer">Track shipment</a></div>` : ""}
+              <div><strong>Last update:</strong> ${esc(upd)}</div>
+            </div>
+
+            <div class="order-tot">${inr(o.total)}</div>
+          </div>
+        `;
       }).join("");
-    }).catch(function(){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-alert-triangle"></i><h4>Could not load orders</h4></div>'; });
+    })
+    .catch(function(){
+      body.innerHTML = `<div class="drawer-empty">
+        <i class="ti ti-alert-triangle"></i>
+        <h4>Could not load orders</h4>
+      </div>`;
+    });
 }
 
 /* ===== CHECKOUT ===== */
