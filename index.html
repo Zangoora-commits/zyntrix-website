@@ -543,7 +543,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-slide::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5;pointer-events:none;z-index:3}
 .hc-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,20,14,.26),rgba(2,20,14,0) 55%);pointer-events:none;z-index:1}
 .hc-deco{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
-.hc-text{position:relative;z-index:4;padding:0 52px;max-width:56%}
+.hc-text{position:relative;z-index:4;padding:0 52px;max-width:42%}
 .hc-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:100px;letter-spacing:.4px;margin-bottom:16px}
 .hc-badge i{font-size:15px;color:var(--lime)}
 .hc-title{font-family:var(--fd);font-size:44px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1.03;margin-bottom:10px;text-shadow:0 3px 22px rgba(0,0,0,.26)}
@@ -551,7 +551,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-cta{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--ink);border:none;font-family:var(--fb);font-size:15px;font-weight:800;padding:13px 26px;border-radius:13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 8px 22px rgba(0,0,0,.2)}
 .hc-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
 .hc-cta .ti{transition:transform .2s}.hc-cta:hover .ti{transform:translateX(3px)}
-.hc-art{position:absolute;right:42px;top:50%;width:296px;height:296px;z-index:2;transform:translateY(-50%);animation:hcFloat 5.5s ease-in-out infinite}
+.hc-art{position:absolute;right:64px;top:50%;width:300px;height:300px;z-index:2;transform:translateY(-50%);animation:hcFloat 5.5s ease-in-out infinite}
 .hc-art svg{width:100%;height:100%;filter:drop-shadow(0 20px 32px rgba(0,0,0,.28))}
 .hc-slide .hc-badge,.hc-slide .hc-title,.hc-slide .hc-sub,.hc-slide .hc-cta{opacity:0}
 .hc-slide.active .hc-badge{animation:hcPop .55s .05s cubic-bezier(.2,1.3,.4,1) forwards}
@@ -593,6 +593,18 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .cat-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:11px;border:none;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--fb);font-weight:800;font-size:14px;cursor:pointer}
 .cat-all:hover{background:#d8f2e9}
 @media(max-width:680px){.cat-panel{width:min(420px,calc(100vw - 28px))}.cat-grid-dd{grid-template-columns:1fr}}
+/* ===== Tappy mascot in carousel (between text and product) ===== */
+.hc-tappy{position:absolute;right:418px;bottom:0;width:255px;height:305px;z-index:3;pointer-events:none}
+.hc-tappy svg{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.18))}
+.ht-bob{transform-box:view-box;transform-origin:120px 250px;animation:htbob 3.4s ease-in-out infinite}
+.ht-eyes{transform-box:view-box;transform-origin:120px 138px;animation:htblink 3.9s infinite}
+.ht-pupils{animation:htglance 7s infinite}
+@keyframes htbob{0%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-9px) rotate(1.5deg)}100%{transform:translateY(0) rotate(-1.5deg)}}
+@keyframes htblink{0%,90%,100%{transform:scaleY(1)}94%,96%{transform:scaleY(.08)}}
+@keyframes htglance{0%,18%{transform:translateX(0)}28%,44%{transform:translateX(4.5px)}54%,70%{transform:translateX(-4.5px)}82%,100%{transform:translateX(0)}}
+.hc:hover .ht-bob,.hc:hover .ht-eyes,.hc:hover .ht-pupils{animation-play-state:paused}
+@media(max-width:1000px){.hc-tappy{right:300px;width:200px;height:250px}.hc-art{right:36px;width:230px;height:230px}}
+@media(max-width:860px){.hc-tappy{display:none}}
 </style>
 </head>
 <body>
@@ -1559,15 +1571,33 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
 
   function go(cat){ if(typeof pickCategory==="function"){ if(cat==="all"){ if(typeof removeCatFilter==="function"){removeCatFilter();} if(typeof scrollToId==="function"){scrollToId("products");} } else { pickCategory(cat); } } }
 
+  function tappySVG(i){var g='htg'+i,gl='htgl'+i,rm='htrm'+i;return '<svg viewBox="0 0 240 270" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs>'
+    +'<linearGradient id="'+g+'" x1="80" y1="40" x2="170" y2="220" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1dd99a"/><stop offset="1" stop-color="#0a7d5e"/></linearGradient>'
+    +'<radialGradient id="'+gl+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#d4ff3f" stop-opacity=".55"/><stop offset="1" stop-color="#d4ff3f" stop-opacity="0"/></radialGradient>'
+    +'<filter id="'+rm+'" x="-30%" y="-30%" width="160%" height="160%"><feMorphology operator="dilate" radius="3.5" in="SourceAlpha" result="d"/><feFlood flood-color="#ffffff" flood-opacity="0.92"/><feComposite in2="d" operator="in" result="r"/><feMerge><feMergeNode in="r"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+    +'</defs>'
+    +'<g class="ht-bob"><g filter="url(#'+rm+')">'
+    +'<path d="M120 52 V196 Q120 212 134 214" stroke="url(#'+g+')" stroke-width="28" fill="none" stroke-linecap="round"/>'
+    +'<path d="M70 86 H170" stroke="url(#'+g+')" stroke-width="22" fill="none" stroke-linecap="round"/>'
+    +'<g class="ht-eyes"><circle cx="106" cy="138" r="13" fill="#fff"/><circle cx="134" cy="138" r="13" fill="#fff"/>'
+    +'<g class="ht-pupils"><circle cx="109" cy="139" r="6" fill="#0c1611"/><circle cx="112" cy="135" r="2" fill="#fff"/><circle cx="137" cy="139" r="6" fill="#0c1611"/><circle cx="140" cy="135" r="2" fill="#fff"/></g></g>'
+    +'<path d="M111 164 q9 9 18 0" stroke="#0c1611" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    +'<circle cx="100" cy="155" r="5.5" fill="#ff9a7a" opacity="0.45"/><circle cx="140" cy="155" r="5.5" fill="#ff9a7a" opacity="0.45"/>'
+    +'</g>'
+    +'<circle cx="160" cy="216" r="22" fill="url(#'+gl+')"/><circle cx="160" cy="216" r="11" fill="#d4ff3f" stroke="#0a7d5e" stroke-width="4"/>'
+    +'</g></svg>';}
+
   // ---- Carousel ----
   var track=document.getElementById("hcTrack"), dotsBox=document.getElementById("hcDots"), hc=document.getElementById("hc"), idx=0;
   if(track){
-    track.innerHTML=HC_SLIDES.map(function(s){
+    track.innerHTML=HC_SLIDES.map(function(s,i){
       var art=HC_ART[s.art||s.cat]||"";
       return '<div class="hc-slide" style="background:'+s.bg+'" data-cat="'+s.cat+'">'
         +'<div class="hc-deco" style="width:300px;height:300px;right:-40px;top:-110px;background:rgba(255,255,255,.10)"></div>'
         +'<div class="hc-deco" style="width:180px;height:180px;right:230px;bottom:-110px;background:rgba(212,255,63,.10)"></div>'
         +'<div class="hc-art">'+art+'</div>'
+        +'<div class="hc-tappy">'+tappySVG(i)+'</div>'
         +'<div class="hc-text"><span class="hc-badge"><i class="ti ti-discount-2"></i> '+s.badge+'</span>'
         +'<div class="hc-title">'+s.title+'</div><div class="hc-sub">'+s.sub+'</div>'
         +'<button class="hc-cta">Shop now <i class="ti ti-arrow-right"></i></button></div>'
