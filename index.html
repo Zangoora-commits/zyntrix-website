@@ -341,27 +341,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .order-id{font-family:var(--fd);font-weight:700;font-size:13.5px}
 .order-date{font-size:11.5px;color:var(--muted)}
 .order-status{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;border-radius:100px;background:var(--brand-soft);color:var(--brand-deep);white-space:nowrap}
-
-.order-status.st-pending{background:#fff3cd;color:#8a6116}
-.order-status.st-processing{background:#e8f7ee;color:#0b7a52}
-.order-status.st-shipped{background:#e8f1ff;color:#2359b8}
-.order-status.st-delivered{background:#ddf8e8;color:#157347}
-.order-status.st-cancelled{background:#fdeaea;color:#b42318}
-
-.order-meta{
-  margin-top:10px;
-  font-size:12px;
-  color:var(--ink2);
-  line-height:1.65;
-  display:grid;
-  gap:4px;
-}
-
-.order-meta a{
-  color:var(--brand-deep);
-  font-weight:700;
-}
-
 .order-items{font-size:12.5px;color:var(--ink2);line-height:1.6}
 .order-tot{font-family:var(--fd);font-weight:800;font-size:15px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 
@@ -557,14 +536,14 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .drawer{width:100%}.fmodal-pad{padding:26px}
 }
 /* ===== HERO CAROUSEL ===== */
-.hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:6px}
-.hc-view{overflow:hidden;border-radius:24px}
+.hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:6px;max-width:100%}
+.hc-view{overflow:hidden;border-radius:24px;width:100%;max-width:100%}
 .hc-track{display:flex;transition:transform .7s cubic-bezier(.6,.02,.15,1)}
-.hc-slide{flex:0 0 100%;height:340px;position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
+.hc-slide{flex:0 0 100%;width:100%;min-width:0;height:340px;position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
 .hc-slide::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5;pointer-events:none;z-index:3}
 .hc-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,20,14,.26),rgba(2,20,14,0) 55%);pointer-events:none;z-index:1}
 .hc-deco{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
-.hc-text{position:relative;z-index:4;padding:0 52px;max-width:42%}
+.hc-text{position:relative;z-index:4;padding:0 52px;max-width:42%;min-width:0}
 .hc-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:100px;letter-spacing:.4px;margin-bottom:16px}
 .hc-badge i{font-size:15px;color:var(--lime)}
 .hc-title{font-family:var(--fd);font-size:44px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1.03;margin-bottom:10px;text-shadow:0 3px 22px rgba(0,0,0,.26)}
@@ -572,8 +551,10 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-cta{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--ink);border:none;font-family:var(--fb);font-size:15px;font-weight:800;padding:13px 26px;border-radius:13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 8px 22px rgba(0,0,0,.2)}
 .hc-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
 .hc-cta .ti{transition:transform .2s}.hc-cta:hover .ti{transform:translateX(3px)}
-.hc-art{position:absolute;right:64px;top:50%;width:300px;height:300px;z-index:2;transform:translateY(-50%);animation:hcFloat 5.5s ease-in-out infinite}
+.hc-art{position:absolute;right:64px;bottom:0;width:300px;height:300px;z-index:2;animation:hcFloat 5.5s ease-in-out infinite}
 .hc-art svg{width:100%;height:100%;filter:drop-shadow(0 20px 32px rgba(0,0,0,.28))}
+.hc-tappy{position:absolute;right:380px;bottom:0;width:240px;height:300px;z-index:3;pointer-events:none}
+.hc-tappy svg{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.18))}
 .hc-slide .hc-badge,.hc-slide .hc-title,.hc-slide .hc-sub,.hc-slide .hc-cta{opacity:0}
 .hc-slide.active .hc-badge{animation:hcPop .55s .05s cubic-bezier(.2,1.3,.4,1) forwards}
 .hc-slide.active .hc-title{animation:hcRise .6s .14s cubic-bezier(.2,.7,.2,1) forwards}
@@ -581,7 +562,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-slide.active .hc-cta{animation:hcRise .6s .34s cubic-bezier(.2,.7,.2,1) forwards}
 @keyframes hcRise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes hcPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-@keyframes hcFloat{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 13px))}}
+@keyframes hcFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .hc-progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:rgba(255,255,255,.9);z-index:5}
 .hc-slide.active .hc-progress{animation:hcGrow 5s linear forwards}
 .hc:hover .hc-slide.active .hc-progress,.hc:hover .hc-art{animation-play-state:paused}
@@ -592,8 +573,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-dots{position:absolute;bottom:18px;left:52px;z-index:6;display:flex;gap:8px}
 .hc-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;transition:all .3s}
 .hc-dot.on{background:#fff;width:26px;border-radius:5px}
-@media(max-width:768px){.hc-slide{height:300px}.hc-text{padding:0 30px;max-width:62%}.hc-title{font-size:32px}.hc-sub{font-size:14px;margin-bottom:18px}.hc-art{width:210px;height:210px;right:10px}.hc-arrow{width:38px;height:38px;font-size:18px}.hc-arrow.left{left:10px}.hc-arrow.right{right:10px}.hc-dots{left:30px;bottom:14px}}
-@media(max-width:480px){.hc-slide{height:280px}.hc-text{max-width:66%;padding:0 20px}.hc-title{font-size:25px}.hc-sub{font-size:12px}.hc-cta{font-size:13px;padding:11px 18px}.hc-art{width:160px;height:160px;right:0}}
+@media(min-width:481px) and (max-width:768px){.hc-slide{height:330px}.hc-text{padding:0 16px;max-width:38%}.hc-title{font-size:30px}.hc-sub{font-size:13px;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.hc-tappy{right:150px;width:158px;height:212px;bottom:8px}.hc-art{right:16px;width:172px;height:172px;bottom:26px}.hc-arrow{top:12px;bottom:auto;transform:none;width:38px;height:38px;font-size:18px}.hc-arrow.left{left:auto;right:56px}.hc-arrow.right{right:12px}.hc-dots{left:18px;bottom:14px}}
+@media(max-width:480px){.hc-slide{height:292px}.hc-text{max-width:40%;padding:0 12px}.hc-title{font-size:20px;letter-spacing:-.4px;margin-bottom:6px;line-height:1.06}.hc-sub{font-size:11px;margin-bottom:10px;max-width:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.hc-cta{font-size:12px;padding:9px 14px}.hc-tappy{right:100px;width:114px;height:150px;bottom:6px}.hc-art{right:12px;width:126px;height:126px;bottom:20px}.hc-badge{font-size:10px;padding:5px 10px;margin-bottom:8px}.hc-arrow{top:10px;bottom:auto;transform:none;width:30px;height:30px;font-size:15px}.hc-arrow.left{left:auto;right:46px}.hc-arrow.right{right:10px}.hc-dots{left:12px;bottom:9px}}
 
 /* ===== NAV CATEGORIES DROPDOWN ===== */
 .cat-li{position:relative}
@@ -615,8 +596,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .cat-all:hover{background:#d8f2e9}
 @media(max-width:680px){.cat-panel{width:min(420px,calc(100vw - 28px))}.cat-grid-dd{grid-template-columns:1fr}}
 /* ===== Tappy mascot in carousel (between text and product) ===== */
-.hc-tappy{position:absolute;right:418px;bottom:0;width:255px;height:305px;z-index:3;pointer-events:none}
-.hc-tappy svg{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.18))}
 .ht-bob{transform-box:view-box;transform-origin:120px 250px;animation:htbob 3.4s ease-in-out infinite}
 .ht-eyes{transform-box:view-box;transform-origin:120px 138px;animation:htblink 3.9s infinite}
 .ht-pupils{animation:htglance 7s infinite}
@@ -624,8 +603,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 @keyframes htblink{0%,90%,100%{transform:scaleY(1)}94%,96%{transform:scaleY(.08)}}
 @keyframes htglance{0%,18%{transform:translateX(0)}28%,44%{transform:translateX(4.5px)}54%,70%{transform:translateX(-4.5px)}82%,100%{transform:translateX(0)}}
 .hc:hover .ht-bob,.hc:hover .ht-eyes,.hc:hover .ht-pupils{animation-play-state:paused}
-@media(max-width:1000px){.hc-tappy{right:300px;width:200px;height:250px}.hc-art{right:36px;width:230px;height:230px}}
-@media(max-width:860px){.hc-tappy{display:none}}
+@media(min-width:769px) and (max-width:1200px){.hc-slide{height:330px}.hc-text{max-width:36%;padding:0 30px}.hc-tappy{right:250px;width:210px;height:285px}.hc-art{right:40px;width:228px;height:228px;bottom:18px}.hc-arrow{top:16px;bottom:auto;transform:none}.hc-arrow.left{left:auto;right:64px}.hc-arrow.right{right:16px}}
+@media(max-width:600px){.hc-deco{display:none}}
 </style>
 </head>
 <body>
@@ -1325,121 +1304,23 @@ function anyDrawerOpen(){ return el("cart").classList.contains("open")||el("wish
 function maybeCloseOverlay(){ if(!anyDrawerOpen()&&!el("mobileMenu").classList.contains("open")){ el("overlay").classList.remove("open"); document.body.style.overflow=""; } }
 
 /* ===== ORDERS ===== */
-
-function prettyStatus(s){
-  const map = {
-    pending: 'Pending',
-    confirmed: 'Confirmed',
-    processing: 'Processing',
-    shipped: 'Shipped',
-    out_for_delivery: 'Out for delivery',
-    delivered: 'Delivered',
-    cancelled: 'Cancelled',
-    returned: 'Returned'
-  }
-  return map[s] || 'Pending'
-}
-
-function statusClass(s){
-  if (s === 'delivered') return 'st-delivered'
-  if (s === 'shipped' || s === 'out_for_delivery') return 'st-shipped'
-  if (s === 'cancelled' || s === 'returned') return 'st-cancelled'
-  if (s === 'processing' || s === 'confirmed') return 'st-processing'
-  return 'st-pending'
-}
-  
 function loadOrders(){
-  var body = el("ordersBody");
-  if(!body) return;
-
-  if(!currentUser){
-    el("ordersCount").textContent = "";
-    body.innerHTML = `<div class="drawer-empty">
-      <i class="ti ti-user-circle"></i>
-      <h4>Sign in to see orders</h4>
-      <p>Your order history appears here once you sign in and place an order.</p>
-      <button onclick="closeOrders();openAuth('signin')">Sign In</button>
-    </div>`;
-    return;
-  }
-
-  body.innerHTML = `<div class="drawer-empty"><i class="ti ti-loader"></i><h4>Loading...</h4></div>`;
-
-  if(!db){
-    body.innerHTML = `<div class="drawer-empty">
-      <i class="ti ti-cloud-off"></i>
-      <h4>Not connected</h4>
-    </div>`;
-    return;
-  }
-
-  db.from("orders")
-    .select("*")
-    .eq("customer_email", currentUser.email)
-    .order("created_at", { ascending:false })
+  var body=el("ordersBody");
+  if(!currentUser){ el("ordersCount").textContent="—"; body.innerHTML='<div class="drawer-empty"><i class="ti ti-user-circle"></i><h4>Sign in to see orders</h4><p>Your order history appears here once you sign in and place an order.</p><button onclick="closeOrders();openAuth(\'signin\')">Sign In</button></div>'; return; }
+  body.innerHTML='<div class="drawer-empty"><i class="ti ti-loader"></i><h4>Loading…</h4></div>';
+  if(!db){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-cloud-off"></i><h4>Not connected</h4></div>'; return; }
+  db.from("orders").select("*").eq("customer_email",currentUser.email).order("created_at",{ascending:false})
     .then(function(r){
-      var rows = (r.data || []);
-      el("ordersCount").textContent = rows.length + " order" + (rows.length !== 1 ? "s" : "");
-
-      if(!rows.length){
-        body.innerHTML = `<div class="drawer-empty">
-          <i class="ti ti-package"></i>
-          <h4>No orders yet</h4>
-          <p>When you place an order it'll show up here.</p>
-          <button onclick="closeOrders();goShop()">Start Shopping</button>
-        </div>`;
-        return;
-      }
-
-      body.innerHTML = rows.map(function(o){
-        var items = o.items;
-        if(typeof items === "string"){
-          try{ items = JSON.parse(items); }catch(e){ items = []; }
-        }
-
-        var list = (items || []).map(function(it){
-          return esc(it.name) + " × " + it.qty;
-        }).join(", ");
-
-        var d = o.created_at
-          ? new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})
-          : "";
-
-        var upd = o.status_updated_at
-          ? new Date(o.status_updated_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})
-          : d;
-
-        return `
-          <div class="order-card">
-            <div class="order-top">
-              <div>
-                <div class="order-id">Order #${o.id || "-"}</div>
-                <div class="order-date">Placed ${d}</div>
-              </div>
-              <span class="order-status ${statusClass(o.status)}">${esc(prettyStatus(o.status))}</span>
-            </div>
-
-            <div class="order-items">${list}</div>
-
-            <div class="order-meta">
-              ${o.tracking_status ? `<div><strong>Shipping:</strong> ${esc(prettyStatus(o.tracking_status))}</div>` : ""}
-              ${o.courier_name ? `<div><strong>Courier:</strong> ${esc(o.courier_name)}</div>` : ""}
-              ${o.awb_code ? `<div><strong>AWB:</strong> ${esc(o.awb_code)}</div>` : ""}
-              ${o.tracking_url ? `<div><a href="${esc(o.tracking_url)}" target="_blank" rel="noopener noreferrer">Track shipment</a></div>` : ""}
-              <div><strong>Last update:</strong> ${esc(upd)}</div>
-            </div>
-
-            <div class="order-tot">${inr(o.total)}</div>
-          </div>
-        `;
+      var rows=(r.data||[]);
+      el("ordersCount").textContent=rows.length+" order"+(rows.length!==1?"s":"");
+      if(!rows.length){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-package"></i><h4>No orders yet</h4><p>When you place an order it\'ll show up here.</p><button onclick="closeOrders();goShop()">Start Shopping</button></div>'; return; }
+      body.innerHTML=rows.map(function(o){
+        var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
+        var list=(items||[]).map(function(it){return esc(it.name)+" ×"+it.qty;}).join(", ");
+        var d=o.created_at?new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
+        return '<div class="order-card"><div class="order-top"><div><div class="order-id">Order #'+(o.id||"—")+'</div><div class="order-date">'+d+'</div></div><span class="order-status">'+esc(o.status||"pending")+'</span></div><div class="order-items">'+(list||"—")+'</div><div class="order-tot">'+inr(o.total)+'</div></div>';
       }).join("");
-    })
-    .catch(function(){
-      body.innerHTML = `<div class="drawer-empty">
-        <i class="ti ti-alert-triangle"></i>
-        <h4>Could not load orders</h4>
-      </div>`;
-    });
+    }).catch(function(){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-alert-triangle"></i><h4>Could not load orders</h4></div>'; });
 }
 
 /* ===== CHECKOUT ===== */
