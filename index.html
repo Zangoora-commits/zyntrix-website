@@ -343,6 +343,45 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .order-status{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;border-radius:100px;background:var(--brand-soft);color:var(--brand-deep);white-space:nowrap}
 .order-items{font-size:12.5px;color:var(--ink2);line-height:1.6}
 .order-tot{font-family:var(--fd);font-weight:800;font-size:15px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.order-status.st-place{background:#fff4e5;color:#b4690e}
+.order-status.st-confirm{background:#e7f0ff;color:#1b5fc4}
+.order-status.st-ship{background:#ece8ff;color:#5a3ec8}
+.order-status.st-deliver{background:var(--brand-soft);color:var(--brand-deep)}
+.order-status.st-cancel{background:#fde8e8;color:#c5303a}
+.otrack{display:flex;align-items:flex-start;margin:2px 2px 16px}
+.ostep{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;width:46px}
+.ostep label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.2px;text-align:center}
+.odot{width:22px;height:22px;border-radius:50%;background:var(--line2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.ostep.done .odot{background:var(--brand)}.ostep.done label{color:var(--ink2)}
+.ostep.now .odot{background:var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}.ostep.now label{color:var(--brand-deep)}
+.oline{flex:1;height:2px;background:var(--line2);margin-top:10px}
+.otrack-cancel{font-size:12px;font-weight:600;color:#c5303a;background:#fde8e8;border-radius:10px;padding:9px 12px;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.oitems{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
+.oitem{display:flex;align-items:center;gap:11px;padding:8px;border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:all .15s}
+.oitem:hover{border-color:var(--brand);background:var(--paper)}
+.oitem-img{width:46px;height:46px;border-radius:10px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--brand);flex-shrink:0;overflow:hidden}
+.oitem-img img{width:100%;height:100%;object-fit:cover}
+.oitem-info{flex:1;min-width:0}
+.oitem-name{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oitem-brand{font-size:11px;color:var(--muted);margin-top:1px}
+.oitem-meta{text-align:right;flex-shrink:0}
+.oitem-qty{font-size:11px;color:var(--muted)}
+.oitem-line{font-size:13px;font-weight:800;font-family:var(--fd);margin-top:1px}
+.oitem-arr{color:var(--muted);font-size:16px;flex-shrink:0}
+.osum{border-top:1px dashed var(--line2);padding-top:11px;margin-bottom:12px}
+.osum-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2);margin-bottom:5px}
+.osum-tot{font-family:var(--fd);font-weight:800;font-size:15px;color:var(--ink);border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
+.oaddr{margin-bottom:10px}
+.oaddr summary{font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;display:flex;align-items:center;gap:6px;list-style:none}
+.oaddr summary::-webkit-details-marker{display:none}
+.oaddr-body{font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px;padding-left:20px}
+.opay{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.oactions{display:flex;gap:9px}
+.obtn{flex:1;border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px;font-size:12.5px;font-weight:700;color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;font-family:var(--fb)}
+.obtn:hover{border-color:var(--brand);color:var(--brand-deep)}
+.obtn.primary{background:var(--brand-soft);border-color:transparent;color:var(--brand-deep)}
+.obtn.primary:hover{background:var(--brand);color:#fff}
 
 /* SORT + REFINE BAR */
 .shop-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
@@ -1312,16 +1351,68 @@ function loadOrders(){
   db.from("orders").select("*").eq("customer_email",currentUser.email).order("created_at",{ascending:false})
     .then(function(r){
       var rows=(r.data||[]);
+      window._orders=rows;
       el("ordersCount").textContent=rows.length+" order"+(rows.length!==1?"s":"");
       if(!rows.length){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-package"></i><h4>No orders yet</h4><p>When you place an order it\'ll show up here.</p><button onclick="closeOrders();goShop()">Start Shopping</button></div>'; return; }
-      body.innerHTML=rows.map(function(o){
-        var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
-        var list=(items||[]).map(function(it){return esc(it.name)+" ×"+it.qty;}).join(", ");
-        var d=o.created_at?new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
-        return '<div class="order-card"><div class="order-top"><div><div class="order-id">Order #'+(o.id||"—")+'</div><div class="order-date">'+d+'</div></div><span class="order-status">'+esc(o.status||"pending")+'</span></div><div class="order-items">'+(list||"—")+'</div><div class="order-tot">'+inr(o.total)+'</div></div>';
-      }).join("");
+      body.innerHTML=rows.map(function(o){ return orderCard(o); }).join("");
     }).catch(function(){ body.innerHTML='<div class="drawer-empty"><i class="ti ti-alert-triangle"></i><h4>Could not load orders</h4></div>'; });
 }
+
+function orderStep(s){ s=(s||"").toString().toLowerCase();
+  if(s.indexOf("cancel")>=0||s.indexOf("refund")>=0) return -1;
+  if(s.indexOf("deliver")>=0) return 3;
+  if(s.indexOf("ship")>=0||s.indexOf("dispatch")>=0||s.indexOf("transit")>=0||s.indexOf("out for")>=0) return 2;
+  if(s.indexOf("confirm")>=0||s.indexOf("process")>=0||s.indexOf("pack")>=0||s.indexOf("paid")>=0) return 1;
+  return 0;
+}
+function orderCard(o){
+  var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} } items=items||[];
+  var d=o.created_at?new Date(o.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
+  var pay=(o.payment_method==="online"||o.payment_id)?"Online":"Cash on Delivery";
+  var sub=items.reduce(function(s,it){return s+(Number(it.price)||0)*(Number(it.qty)||1);},0);
+  var tot=Number(o.total)||sub, ship=Math.max(0,tot-sub);
+  var step=orderStep(o.status), cancelled=step<0;
+  var stClass=cancelled?"st-cancel":(step>=3?"st-deliver":step>=2?"st-ship":step>=1?"st-confirm":"st-place");
+  var steps=["Placed","Confirmed","Shipped","Delivered"];
+  var track=cancelled
+    ? '<div class="otrack-cancel"><i class="ti ti-circle-x"></i> This order was cancelled</div>'
+    : '<div class="otrack">'+steps.map(function(lbl,i){
+        var cls=i<step?"done":(i===step?"now":"");
+        var ic=i<step?'<i class="ti ti-check"></i>':(i===step?'<i class="ti ti-point-filled"></i>':'');
+        return '<div class="ostep '+cls+'"><span class="odot">'+ic+'</span><label>'+lbl+'</label></div>';
+      }).join('<span class="oline"></span>')+'</div>';
+  var itemRows=items.map(function(it){
+    var media=it.image_url?'<img src="'+esc(String(it.image_url).replace(/^http:/i,"https:"))+'" alt="">':'<i class="ti '+esc(it.icon||"ti-box")+'"></i>';
+    var line=(Number(it.price)||0)*(Number(it.qty)||1);
+    return '<div class="oitem" onclick="openOrderProduct(\''+esc(slug(it.name)).replace(/'/g,"")+'\')">'
+      +'<div class="oitem-img">'+media+'</div>'
+      +'<div class="oitem-info"><div class="oitem-name">'+esc(it.name)+'</div><div class="oitem-brand">'+esc(it.brand||"")+' · '+inr(it.price)+'</div></div>'
+      +'<div class="oitem-meta"><div class="oitem-qty">Qty '+(it.qty||1)+'</div><div class="oitem-line">'+inr(line)+'</div></div>'
+      +'<i class="ti ti-chevron-right oitem-arr"></i></div>';
+  }).join("");
+  var addr=esc(o.customer_name||"")+', '+esc(o.address||"")+', '+esc(o.city||"")+', '+esc(o.state||"")+' '+esc(o.pin||"")+(o.customer_phone?(' · '+esc(o.customer_phone)):"");
+  return '<div class="order-card">'
+    +'<div class="order-top"><div><div class="order-id">Order #'+(o.id||"—")+'</div><div class="order-date">'+d+' · '+pay+'</div></div><span class="order-status '+stClass+'">'+esc(o.status||"pending")+'</span></div>'
+    +track
+    +'<div class="oitems">'+itemRows+'</div>'
+    +'<div class="osum"><div class="osum-row"><span>Subtotal</span><span>'+inr(sub)+'</span></div><div class="osum-row"><span>Shipping</span><span>'+(ship>0?inr(ship):'<b style="color:var(--brand-deep)">Free</b>')+'</span></div><div class="osum-row osum-tot"><span>Total</span><span>'+inr(tot)+'</span></div></div>'
+    +'<details class="oaddr"><summary><i class="ti ti-map-pin"></i> Delivery address</summary><div class="oaddr-body">'+addr+'</div></details>'
+    +(o.payment_id?'<div class="opay"><i class="ti ti-receipt"></i> Payment ID: '+esc(o.payment_id)+'</div>':'')
+    +'<div class="oactions"><button class="obtn primary" onclick="reorderOrder('+(o.id||0)+')"><i class="ti ti-refresh"></i> Reorder</button><button class="obtn" onclick="orderHelp('+(o.id||0)+')"><i class="ti ti-headset"></i> Help</button></div>'
+    +'</div>';
+}
+function openOrderProduct(s){ var p=window._findProduct&&window._findProduct(s); if(p){ closeOrders(); openModalByProduct(p); } else { showToast("Product details unavailable"); } }
+function reorderOrder(id){
+  var o=(window._orders||[]).find(function(x){return String(x.id)===String(id);}); if(!o)return;
+  var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
+  (items||[]).forEach(function(it){
+    var k=it.name, ex=cart.find(function(x){return x.key===k;});
+    if(ex) ex.qty+=(it.qty||1);
+    else cart.push({key:k,name:it.name,brand:it.brand,price:it.price,icon:it.icon||"ti-box",image_url:it.image_url||null,category:it.category||null,qty:it.qty||1});
+  });
+  save("twipid_cart",cart); updateCart(); closeOrders(); openCart(); showToast("Items added to cart");
+}
+function orderHelp(id){ var msg="Hi twipid! I need help with my order #"+id; window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank"); }
 
 /* ===== CHECKOUT ===== */
 function startCheckout(){
@@ -1342,7 +1433,7 @@ function placeOrder(){
   err.classList.remove("show");
   var sub=cart.reduce(function(s,i){return s+i.price*i.qty;},0), ship=sub>=999?0:99, total=sub+ship;
   var order={customer_name:name,customer_email:email,customer_phone:phone,address:addr,city:city,state:state,pin:pin,
-    items:cart.map(function(it){return {name:it.name,brand:it.brand,price:it.price,qty:it.qty};}),total:total,status:"pending",payment_method:pay,payment_id:null};
+    items:cart.map(function(it){return {name:it.name,brand:it.brand,price:it.price,qty:it.qty,image_url:it.image_url||null,icon:it.icon||"ti-box",category:it.category||null};}),total:total,status:"pending",payment_method:pay,payment_id:null};
   var btn=el("coBtn");
 
   // ===== ONLINE PAYMENT (Razorpay test mode) =====
