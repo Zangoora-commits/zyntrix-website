@@ -394,6 +394,18 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .obtn:hover{border-color:var(--brand);color:var(--brand-deep)}
 .obtn.primary{background:var(--brand-soft);border-color:transparent;color:var(--brand-deep)}
 .obtn.primary:hover{background:var(--brand);color:#fff}
+.retform{display:none;margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--paper)}
+.retform-h{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.retform-h span{font-weight:600;color:var(--muted);font-size:11px}
+.retsel,.rettxt{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-family:var(--fb);font-size:12.5px;color:var(--ink);background:#fff;margin-bottom:9px;outline:none}
+.retsel:focus,.rettxt:focus{border-color:var(--brand)}
+.rettxt{resize:vertical}
+.retsubmit{width:100%}
+.ret-ok{font-size:12.5px;font-weight:600;color:var(--brand-deep);display:flex;align-items:center;gap:7px;padding:4px 0;line-height:1.4}
+.retref{margin-bottom:9px}
+.retref-row{display:flex;justify-content:space-between;font-family:var(--fd);font-weight:800;font-size:14px;color:var(--ink);padding:8px 0;border-top:1px dashed var(--line2);margin-bottom:4px}
+.retref-note{font-size:11px;color:var(--muted);display:flex;align-items:flex-start;gap:5px;line-height:1.45}
+.retref-note.ok{color:var(--brand-deep)}
 
 /* SORT + REFINE BAR */
 .shop-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
@@ -787,7 +799,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <div class="features"><div class="features-inner">
   <div class="feat"><div class="feat-ic" style="color:var(--brand)"><i class="ti ti-shield-check"></i></div><div><h4>Verified Brands</h4><p>Every partner is vetted. We list only what we'd buy ourselves.</p></div></div>
   <div class="feat"><div class="feat-ic" style="color:var(--orange)"><i class="ti ti-truck-delivery"></i></div><div><h4>24hr Dispatch</h4><p>Order before 3PM and it ships the same day with live tracking.</p></div></div>
-  <div class="feat"><div class="feat-ic" style="color:var(--teal)"><i class="ti ti-refresh"></i></div><div><h4>15-Day Returns</h4><p>Changed your mind? Easy, no-questions-asked returns.</p></div></div>
+  <div class="feat"><div class="feat-ic" style="color:var(--teal)"><i class="ti ti-refresh"></i></div><div><h4>15-Day Returns</h4><p>Easy returns within 15 days — free pickup if it's defective or wrong.</p></div></div>
   <div class="feat"><div class="feat-ic" style="color:var(--amber)"><i class="ti ti-headset"></i></div><div><h4>Human Support</h4><p>Real people, 7 days a week, 9AM–9PM IST.</p></div></div>
 </div></div>
 
@@ -1437,6 +1449,9 @@ function orderCard(o){
       +'<i class="ti ti-chevron-right oitem-arr"></i></div>';
   }).join("");
   var addr=esc(o.customer_name||"")+', '+esc(o.address||"")+', '+esc(o.city||"")+', '+esc(o.state||"")+' '+esc(o.pin||"")+(o.customer_phone?(' · '+esc(o.customer_phone)):"");
+  var oid=o.id||0;
+  var ageDays=o.created_at?Math.floor((Date.now()-new Date(o.created_at).getTime())/86400000):999;
+  var canReturn=!cancelled && ageDays<=15;
   return '<div class="order-card">'
     +'<div class="order-top"><div><div class="order-id">Order #'+(o.id||"—")+'</div><div class="order-date">'+d+' · '+pay+'</div></div><span class="order-status '+stClass+'">'+esc(o.status||"pending")+'</span></div>'
     +track
@@ -1444,7 +1459,14 @@ function orderCard(o){
     +'<div class="osum">'+breakupRows(priceBreakup(items,o.total))+'</div>'
     +'<details class="oaddr"><summary><i class="ti ti-map-pin"></i> Delivery address</summary><div class="oaddr-body">'+addr+'</div></details>'
     +(o.payment_id?'<div class="opay"><i class="ti ti-receipt"></i> Payment ID: '+esc(o.payment_id)+'</div>':'')
-    +'<div class="oactions"><button class="obtn primary" onclick="reorderOrder('+(o.id||0)+')"><i class="ti ti-refresh"></i> Reorder</button><button class="obtn" onclick="orderHelp('+(o.id||0)+')"><i class="ti ti-headset"></i> Help</button></div>'
+    +'<div class="oactions"><button class="obtn primary" onclick="reorderOrder('+oid+')"><i class="ti ti-refresh"></i> Reorder</button>'+(canReturn?'<button class="obtn" onclick="toggleReturn('+oid+')"><i class="ti ti-arrow-back-up"></i> Return</button>':'')+'<button class="obtn" onclick="orderHelp('+oid+')"><i class="ti ti-headset"></i> Help</button></div>'
+    +(canReturn?('<div class="retform" id="ret'+oid+'">'
+      +'<div class="retform-h"><i class="ti ti-arrow-back-up"></i> Request a return <span>· within 15 days</span></div>'
+      +'<select class="retsel" id="retreason'+oid+'" onchange="updateRefund('+oid+','+tot+')"><option value="">Why are you returning?</option><option>Defective or damaged</option><option>Wrong item received</option><option>Not as described</option><option>Missing parts/accessories</option><option>Changed my mind</option><option>Other</option></select>'
+      +'<textarea class="rettxt" id="retnote'+oid+'" rows="2" placeholder="Add any details that help us (optional)"></textarea>'
+      +'<div class="retref" id="retref'+oid+'"></div>'
+      +'<button class="obtn primary retsubmit" onclick="submitReturn('+oid+')"><i class="ti ti-send"></i> Submit return request</button>'
+      +'</div>'):'')
     +'</div>';
 }
 function openOrderProduct(s){ var p=window._findProduct&&window._findProduct(s); if(p){ closeOrders(); openModalByProduct(p); } else { showToast("Product details unavailable"); } }
@@ -1459,6 +1481,38 @@ function reorderOrder(id){
   save("twipid_cart",cart); updateCart(); closeOrders(); openCart(); showToast("Items added to cart");
 }
 function orderHelp(id){ var msg="Hi twipid! I need help with my order #"+id; window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank"); }
+function toggleReturn(id){ var f=el("ret"+id); if(f) f.style.display=(f.style.display==="block"?"none":"block"); }
+function returnFee(reason){ return (reason==="Changed my mind")?99:0; }
+function updateRefund(id,total){
+  var rs=el("retreason"+id), box=el("retref"+id); if(!box) return;
+  var reason=rs?rs.value:"";
+  if(!reason){ box.innerHTML=""; return; }
+  var fee=returnFee(reason), refund=Math.max(0,(Number(total)||0)-fee);
+  if(fee>0) box.innerHTML='<div class="retref-row"><span>Expected refund</span><span>'+inr(refund)+'</span></div><div class="retref-note"><i class="ti ti-info-circle"></i> A ₹99 pickup fee applies for change-of-mind returns, deducted from your refund.</div>';
+  else box.innerHTML='<div class="retref-row"><span>Expected refund</span><span>'+inr(refund)+'</span></div><div class="retref-note ok"><i class="ti ti-truck-delivery"></i> Free pickup &amp; full refund for this reason.</div>';
+}
+function submitReturn(id){
+  var rs=el("retreason"+id), nt=el("retnote"+id);
+  var reason=rs?rs.value:""; if(!reason){ showToast("Please choose a reason"); return; }
+  var note=nt?nt.value.trim():"";
+  var o=(window._orders||[]).find(function(x){return String(x.id)===String(id);})||{};
+  var fee=returnFee(reason), refund=Math.max(0,(Number(o.total)||0)-fee);
+  var box=el("ret"+id); if(box) box.innerHTML='<div class="ret-ok"><i class="ti ti-loader"></i> Submitting…</div>';
+  var fullNote=(note?note+" ":"")+"[fee ₹"+fee+" · expected refund ₹"+refund+"]";
+  var payload={order_id:id,customer_email:(currentUser&&currentUser.email)||o.customer_email||null,customer_name:o.customer_name||null,reason:reason,comments:fullNote,status:"requested"};
+  if(db&&db.from){
+    db.from("returns").insert([payload]).then(function(r){
+      if(r&&r.error){ returnFallback(id,reason,note); }
+      else if(box){ box.innerHTML='<div class="ret-ok"><i class="ti ti-circle-check"></i> Return requested for '+inr(refund)+'. We\'ll email pickup details shortly.</div>'; showToast("Return request submitted"); }
+    }).catch(function(){ returnFallback(id,reason,note); });
+  } else { returnFallback(id,reason,note); }
+}
+function returnFallback(id,reason,note){
+  var box=el("ret"+id);
+  var msg="Hi twipid! I'd like to return order #"+id+". Reason: "+reason+(note?(". Details: "+note):"");
+  window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank");
+  if(box) box.innerHTML='<div class="ret-ok"><i class="ti ti-brand-whatsapp"></i> Opening WhatsApp to finish your return request…</div>';
+}
 
 /* ===== CHECKOUT ===== */
 function startCheckout(){
@@ -1651,7 +1705,7 @@ var CONTENT = {
   faq:{ic:"ti-help-circle",title:"Frequently Asked Questions",html:
     '<details class="faq-q"><summary>How long does delivery take?</summary><div class="faq-a">Most orders are dispatched within 24 hours and delivered in 2–5 business days, depending on your location. You\'ll get tracking details by email once your order ships.</div></details>'
     +'<details class="faq-q"><summary>What payment methods do you accept?</summary><div class="faq-a">We\'re launching with UPI, all major debit/credit cards, RuPay and Cash on Delivery. Online payments are being finalised — for now you can place test orders.</div></details>'
-    +'<details class="faq-q"><summary>Can I return a product?</summary><div class="faq-a">Yes — we offer easy 15-day returns on most items. The product should be unused and in its original packaging. See our Returns page for full details.</div></details>'
+    +'<details class="faq-q"><summary>Can I return a product?</summary><div class="faq-a">Yes — within 15 days of delivery on most items, unused and in original packaging. Returns are free when the item is defective, damaged or wrong; for change-of-mind returns a flat ₹99 pickup fee applies. See our Returns page for full details.</div></details>'
     +'<details class="faq-q"><summary>Do products come with a warranty?</summary><div class="faq-a">Every product carries the manufacturer\'s warranty (typically 1 year). The exact period is listed on each product page.</div></details>'
     +'<details class="faq-q"><summary>Is it safe to shop on twipid?</summary><div class="faq-a">Absolutely. Your connection is secured with SSL, payments are processed by trusted gateways, and we never store your card details.</div></details>'
     +'<details class="faq-q"><summary>How do I track my order?</summary><div class="faq-a">Sign in and open “My Orders” from the account menu, or use the Track Order link in the footer. You\'ll see live status for every order.</div></details>'},
@@ -1661,10 +1715,11 @@ var CONTENT = {
     +'<h4>Tracking</h4><p>Once your order ships, you\'ll receive a tracking link by email. You can also check status anytime under “My Orders”.</p>'
     +'<h4>Areas we serve</h4><p>We currently ship across India. International shipping isn\'t available yet — but it\'s on our roadmap.</p>'},
   returns:{ic:"ti-refresh",title:"Returns & Refunds",html:
-    '<h4>15-day easy returns</h4><p>Changed your mind? You can return most products within 15 days of delivery for a full refund or exchange.</p>'
-    +'<h4>Conditions</h4><ul><li>The item must be unused and in its original packaging</li><li>All accessories, tags and freebies should be included</li><li>Certain items (e.g. earphones, for hygiene) may be non-returnable — this is noted on the product</li></ul>'
-    +'<h4>How to start a return</h4><p>Open “My Orders”, pick the order, and tap Request Return — or message us on WhatsApp and we\'ll arrange a pickup.</p>'
-    +'<h4>Refund timeline</h4><p>Once we receive and inspect the item, refunds are processed within 5–7 business days to your original payment method.</p>'},
+    '<h4>15-day returns</h4><p>You can request a return within 15 days of delivery on most products. The item must be unused, in its original packaging, with all accessories, tags and freebies included.</p>'
+    +'<h4>Return shipping — who pays</h4><ul><li><b>Free pickup &amp; full refund</b> if the item is defective, damaged, the wrong product, missing parts, or not as described — that\'s on us.</li><li>For <b>“changed my mind”</b> returns (no longer needed, bought elsewhere, etc.), a flat <b>₹99 return shipping fee</b> is deducted from your refund.</li></ul>'
+    +'<h4>How to start a return</h4><p>Open “My Orders”, pick the order, tap <b>Return</b>, and choose a reason — you\'ll see your expected refund before you submit. Our courier partner then picks the item up from your address.</p>'
+    +'<h4>Your refund</h4><ul><li><b>Online (prepaid) orders</b> — refunded to your original payment method.</li><li><b>Cash on Delivery</b> — refunded to your UPI/bank account (we\'ll collect details), or as store credit if you prefer.</li><li>Refunds are processed within <b>5–7 business days</b> after we receive and inspect the returned item.</li></ul>'
+    +'<h4>Non-returnable items</h4><p>For hygiene and safety, in-ear earphones/earbuds once the seal is opened, and any item marked non-returnable on its product page, cannot be returned unless they arrive defective or damaged.</p>'},
   contact:{ic:"ti-headset",title:"Contact Us",html:
     '<p>We\'d love to hear from you. Reach out any way that suits you — real humans, 7 days a week, 9AM–9PM IST.</p>'
     +'<div class="contact-grid">'
