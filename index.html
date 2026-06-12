@@ -92,6 +92,13 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-
 .acct-menu a{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s}
 .acct-menu a:hover{background:var(--brand-tint);color:var(--brand-deep)}
 .acct-menu a i{font-size:18px}
+.ava{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;display:block}
+.ava-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.ava-ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:var(--fd);font-size:16px;text-transform:uppercase;z-index:1;line-height:1}
+.icon-btn.has-ava{padding:0;overflow:hidden;border-radius:50%;border-color:transparent}
+.acct-head{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+.acct-ava{width:42px;height:42px;border-radius:50%;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--paper);color:var(--muted);font-size:20px;position:relative}
+.acct-ava .ava-ini{font-size:18px}
 .acct-menu a.danger:hover{background:var(--orange-soft);color:var(--orange)}
 
 /* SECTIONS */
@@ -682,14 +689,14 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   </ul>
   <div class="nav-right">
     <div class="nav-search"><i class="ti ti-search"></i><input type="text" id="navSearch" placeholder="Search products..." oninput="searchProds(this.value)"></div>
-    <button class="icon-btn" aria-label="Account" onclick="onAccountClick()"><i class="ti ti-user"></i></button>
+    <button class="icon-btn" id="acctBtn" aria-label="Account" onclick="onAccountClick()"><i class="ti ti-user"></i></button>
     <button class="icon-btn" aria-label="Wishlist" onclick="openWishlist()"><i class="ti ti-heart"></i><span class="badge wish" id="wishBadge" style="display:none">0</span></button>
     <button class="icon-btn" onclick="openCart()" aria-label="Cart"><i class="ti ti-shopping-bag"></i><span class="badge" id="cartBadge" style="display:none">0</span></button>
     <button class="btn-partner" onclick="scrollToId('partner')">Become a Partner</button>
     <button class="menu-toggle" onclick="openMenu()" aria-label="Menu"><i class="ti ti-menu-2"></i></button>
     <!-- account dropdown -->
     <div class="acct-menu" id="acctMenu">
-      <div class="acct-head"><div class="nm" id="acctName">—</div><div class="em" id="acctEmail">—</div></div>
+      <div class="acct-head"><div class="acct-ava" id="acctAva"><i class="ti ti-user"></i></div><div style="min-width:0"><div class="nm" id="acctName">—</div><div class="em" id="acctEmail">—</div></div></div>
       <a onclick="openOrders()"><i class="ti ti-package"></i> My Orders</a>
       <a onclick="closeAcct();openWishlist()"><i class="ti ti-heart"></i> My Wishlist</a>
       <a class="danger" onclick="doLogout()"><i class="ti ti-logout"></i> Log Out</a>
@@ -1545,14 +1552,28 @@ function saveOrder(order, onSuccess){
 }
 
 /* ===== AUTH ===== */
+function avatarHue(s){ s=(s||"").toString(); var h=0; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))%360; } return h; }
+function avatarHTML(u){
+  var nm=(u.user_metadata&&u.user_metadata.full_name)||((u.email||"").split("@")[0])||"U";
+  var photo=(u.user_metadata&&(u.user_metadata.avatar_url||u.user_metadata.picture))||null;
+  var hue=avatarHue(u.email||nm);
+  var ini='<span class="ava-ini" style="background:linear-gradient(135deg,hsl('+hue+',60%,52%),hsl('+((hue+40)%360)+',58%,42%))">'+esc(nm.charAt(0).toUpperCase())+'</span>';
+  var inner = photo ? ('<img class="ava-img" src="'+esc(String(photo).replace(/^http:/i,"https:"))+'" alt="" onerror="this.remove()">'+ini) : ini;
+  return '<span class="ava">'+inner+'</span>';
+}
 function setUser(u){
   currentUser=u;
-  var mm=el("mmAccount");
+  var mm=el("mmAccount"), btn=el("acctBtn"), ava=el("acctAva");
   if(u){
     var nm=(u.user_metadata&&u.user_metadata.full_name)||u.email.split("@")[0];
     el("acctName").textContent=nm; el("acctEmail").textContent=u.email;
+    var av=avatarHTML(u);
+    if(btn){ btn.innerHTML=av; btn.classList.add("has-ava"); }
+    if(ava){ ava.innerHTML=av; }
     if(mm){ mm.innerHTML='<i class="ti ti-user"></i> '+esc(nm); mm.setAttribute("onclick","closeMenu();openOrders()"); }
   } else {
+    if(btn){ btn.innerHTML='<i class="ti ti-user"></i>'; btn.classList.remove("has-ava"); }
+    if(ava){ ava.innerHTML='<i class="ti ti-user"></i>'; }
     if(mm){ mm.innerHTML='<i class="ti ti-user"></i> Sign In'; mm.setAttribute("onclick","closeMenu();onAccountClick()"); }
   }
 }
