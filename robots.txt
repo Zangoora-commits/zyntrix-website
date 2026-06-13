@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Keep admin and account-reset pages out of search results
+Disallow: /admin.html
+Disallow: /reset.html
+
+Sitemap: https://twipid.com/sitemap.xml
