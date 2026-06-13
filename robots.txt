@@ -5,4 +5,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /reset.html
 
-Sitemap: https://twipid.com/sitemap.xml
+Sitemap: https://www.twipid.com/sitemap.xml

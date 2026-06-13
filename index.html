@@ -8,21 +8,21 @@
 <meta name="description" content="twipid is India's curated tech marketplace — handpicked audio, wearables, smart home, gaming and more from trusted brands. Fast dispatch, easy returns, honest prices.">
 <meta name="keywords" content="tech, gadgets, electronics, headphones, smartwatch, India, online shopping, twipid">
 <meta name="theme-color" content="#0ca678">
-<link rel="canonical" href="https://twipid.com/">
+<link rel="canonical" href="https://www.twipid.com/">
 <!-- Open Graph / social share -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="twipid">
 <meta property="og:title" content="twipid — tech, curated for you">
 <meta property="og:description" content="India's curated tech marketplace. Handpicked gadgets from trusted brands, delivered fast.">
-<meta property="og:url" content="https://twipid.com/">
-<meta property="og:image" content="https://twipid.com/og-image.png">
+<meta property="og:url" content="https://www.twipid.com/">
+<meta property="og:image" content="https://www.twipid.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="twipid — tech, curated for you">
 <meta name="twitter:description" content="India's curated tech marketplace. Handpicked gadgets, delivered fast.">
 <!-- Favicon (inline SVG tap tile) -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect x='4' y='4' width='36' height='36' rx='12' fill='%230ca678'/%3E%3Cpath d='M22 12 V28 Q22 31.5 25.5 30.5' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cline x1='15' y1='17.5' x2='29' y2='17.5' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='31' cy='31' r='6' fill='%23d4ff3f'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='10' fill='%230ca678'/%3E%3Cpath d='M22 12 V28 Q22 31.5 25.5 30.5' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cline x1='15' y1='17.5' x2='29' y2='17.5' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='31' cy='31' r='6' fill='%23d4ff3f'/%3E%3C/svg%3E">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"OnlineStore","name":"twipid","url":"https://twipid.com/","description":"India's curated tech marketplace.","currenciesAccepted":"INR"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"OnlineStore","name":"twipid","url":"https://www.twipid.com/","description":"India's curated tech marketplace.","currenciesAccepted":"INR"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -1265,7 +1265,7 @@ function submitReview(){
 /* ===== SHARE ===== */
 function shareProduct(where){
   if(!modalProduct) return;
-  var url="https://twipid.com/#product="+encodeURIComponent(slug(modalProduct.name));
+  var url="https://www.twipid.com/#product="+encodeURIComponent(slug(modalProduct.name));
   var text=modalProduct.name+" on twipid — "+inr(modalProduct.price);
   if(where==="copy"){ navigator.clipboard.writeText(url).then(function(){showToast("Link copied!");},function(){showToast(url);}); return; }
   var u;
@@ -1546,7 +1546,7 @@ function placeOrder(){
       currency:"INR",
       name:"twipid",
       description:itemCount+" item"+(itemCount!==1?"s":"")+" \u00b7 twipid order",
-      image:"https://twipid.com/og-image.png",
+      image:"https://www.twipid.com/og-image.png",
       prefill:{name:name,email:email,contact:phone},
       notes:{address:addr+", "+city+", "+state+" "+pin},
       theme:{color:"#0ca678"},
