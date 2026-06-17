@@ -903,7 +903,7 @@ function renderOrders(){
     return okS && (!q || hay.indexOf(q)>=0);
   });
   if(!list.length){ tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-shopping-cart"></i><h3>No orders found</h3><p>Orders placed on your store will appear here.</p></div></td></tr>'; return; }
-  var statusClass={pending:"status-pending",processing:"status-processing",shipped:"status-shipped",delivered:"status-delivered",cancelled:"status-pending"};
+  var statusClass={requested:"status-pending",approved:"status-processing",pickup_scheduled:"status-processing","picked up":"status-shipped",refunded:"status-delivered",rejected:"status-pending"};
   tbody.innerHTML = list.map(function(o){
     var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
     var itemStr=(items||[]).map(function(it){return (it.name||"item")+" × "+(it.qty||1);}).join(", ")||"—";
