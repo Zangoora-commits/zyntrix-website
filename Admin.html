@@ -996,8 +996,8 @@ function updateReturnStatus(id,status){
     if(x) x.status=status;
 
     if(status === "approved"){
-      const { data, error } = await supabase.functions.invoke("create-shiprocket-return", {
-  body: { return_id: "wzkyubggsckobvcqlgj" }
+      const { data, error: fnError } = await supabase.functions.invoke("create-shiprocket-return", {
+  body: { return_id: id }
 });
 
 console.log({ data, error });
