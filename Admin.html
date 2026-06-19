@@ -995,21 +995,19 @@ function updateReturnStatus(id,status){
     var x=allReturns.find(function(y){return y.id==id;});
     if(x) x.status=status;
 
-    if(status === "approved"){
-      const { data, error: fnError } = await supabase.functions.invoke("create-shiprocket-return", {
-  body: { return_id: id }
-});
+    if (status === "approved") {
+  const { data, error: fnError } = await supabase.functions.invoke("create-shiprocket-return", {
+    body: { return_id: id }
+  });
 
-console.log({ data, error });
+  console.log("create-shiprocket-return", { data, fnError });
 
-      console.log("create-shiprocket-return", { data, fnError });
-
-      if(fnError){
-        toast("Approved, but reverse pickup creation failed: " + fnError.message, "error");
-      } else {
-        toast("Return approved and reverse pickup requested", "success");
-      }
-    } else {
+  if (fnError) {
+    toast("Approved, but reverse pickup creation failed: " + fnError.message, "error");
+  } else {
+    toast("Return approved and reverse pickup requested", "success");
+  }
+} else {
       toast("Return #"+id+" → "+status,"success");
     }
 
