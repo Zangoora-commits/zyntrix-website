@@ -1641,6 +1641,11 @@ function saveOrder(order, onSuccess){
 
     console.log("Function invoke result", fn)
 
+    // fire-and-forget: send confirmation + warehouse alert (never blocks the order)
+    db.functions.invoke("send-order-email", { body: { orderId: newOrder.id } })
+      .then(function(res){ console.log("Order email queued", res); })
+      .catch(function(e){ console.warn("Order email error", e); });
+
     done()
   }).catch(function(){ done(); }); }
   else { done(); }
