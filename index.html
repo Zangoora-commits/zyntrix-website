@@ -1654,11 +1654,7 @@ function saveOrder(order, onSuccess){
         } catch (e) {
           console.warn("Shiprocket function error:", e);
         }
-        console.log("About to trigger SMS/WhatsApp", {
-  orderId: newOrder.id,
-  phone: newOrder.customerphone,
-  message: msg
-});
+        
         db.functions.invoke("send-order-email", {
           body: { orderId: newOrder.id }
         })
@@ -1673,6 +1669,12 @@ function saveOrder(order, onSuccess){
           "Hi " + (newOrder.customername || "there") +
           ", your twipid order #" + newOrder.id +
           " has been placed successfully.";
+
+        console.log("About to trigger SMS/WhatsApp", {
+  orderId: newOrder.id,
+  phone: newOrder.customerphone,
+  message: msg
+});
 
         db.functions.invoke("send-order-message", {
           body: {
