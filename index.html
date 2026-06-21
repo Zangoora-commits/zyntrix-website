@@ -1620,26 +1620,94 @@ function placeOrder(){
   });
 }
 function saveOrder(order, onSuccess){
-  var btn=el("coBtn");
-  function done(){ cart=[]; save("twipid_cart",cart); updateCart(); closeCheckout(); btn.disabled=false; btn.innerHTML='<i class="ti ti-circle-check"></i> Place Order'; if(onSuccess)onSuccess(); }
-  if(db){ db.from("orders")
-  .insert(order)
-  .select()
-  .single()
-  .then(async function(r){
-    if (r.error) {
-      console.warn("Order insert error", r.error)
-      done()
-      return
-    }
+  var btn = el("coBtn");
 
-    const newOrder = r.data
+  function done(){
+    cart = [];
+    save("twipidcart", cart);
+    updateCart();
+    closeCheckout();
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-circle-check"></i> Place Order';
+    if(onSuccess) onSuccess();
+  }
 
-    const fn = await db.functions.invoke("create-shiprocket-order", {
-      body: { orderId: newOrder.id }
-    })
+  if(db){
+    db.from("orders")
+      .insert(order)
+      .select()
+      .single()
+      .then(async function(r){
+        if (r.error){
+          console.warn("Order insert error:", r.error);
+          done();
+          return;
+        }
 
-    console.log("Function invoke result", fn)
+        const newOrder = r.data;
+
+        try {
+          const fn = await db.functions.invoke("create-shiprocket-order", {
+            body: { orderId: newOrder.id }
+          });
+          console.log("Function invoke result:", fn);
+        } catch (e) {
+          console.warn("Shiprocket function error:", e);
+        }
+
+        db.functions.invoke("send-order-email", {
+          body: { orderId: newOrder.id }
+        })
+        .then(function(res){
+          console.log("Order email queued:", res);
+        })
+        .catch(function(e){
+          console.warn("Order email error:", e);
+        });
+
+        var msg =
+          "Hi " + (newOrder.customername || "there") +
+          ", your twipid order #" + newOrder.id +
+          " has been placed successfully.";
+
+        db.functions.invoke("send-order-message", {
+          body: {
+            channel: "sms",
+            to: newOrder.customerphone,
+            message: msg
+          }
+        })
+        .then(function(res){
+          console.log("SMS queued:", res);
+        })
+        .catch(function(e){
+          console.warn("SMS error:", e);
+        });
+
+        db.functions.invoke("send-order-message", {
+          body: {
+            channel: "whatsapp",
+            to: newOrder.customerphone,
+            message: msg
+          }
+        })
+        .then(function(res){
+          console.log("WhatsApp queued:", res);
+        })
+        .catch(function(e){
+          console.warn("WhatsApp error:", e);
+        });
+
+        done();
+      })
+      .catch(function(e){
+        console.warn("Order save crash:", e);
+        done();
+      });
+  } else {
+    done();
+  }
+}
 
     // fire-and-forget: send confirmation + warehouse alert (never blocks the order)
     db.functions.invoke("send-order-email", { body: { orderId: newOrder.id } })
