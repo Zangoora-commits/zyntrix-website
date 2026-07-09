@@ -1619,7 +1619,7 @@ function placeOrder(){
     showInfo("ti-circle-check","Order placed! ðŸŽ‰","Thanks "+name.split(" ")[0]+"! Your test order is in (Cash on Delivery). You'll find it under â€œMy Ordersâ€.");
   });
 }
-async function saveOrder(order, onSuccess){
+function saveOrder(order, onSuccess){
   var btn = el("coBtn");
 
   function done(){
