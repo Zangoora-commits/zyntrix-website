@@ -1619,7 +1619,7 @@ function placeOrder(){
     showInfo("ti-circle-check","Order placed! ðŸŽ‰","Thanks "+name.split(" ")[0]+"! Your test order is in (Cash on Delivery). You'll find it under â€œMy Ordersâ€.");
   });
 }
-function saveOrder(order, onSuccess){
+async function saveOrder(order, onSuccess){
   var btn = el("coBtn");
 
   function done(){
@@ -1632,85 +1632,112 @@ function saveOrder(order, onSuccess){
     if(onSuccess) onSuccess();
   }
 
-  if(db){
-    db.from("orders")
+  if(!db){
+    done();
+    return;
+  }
+
+  try {
+    const r = await db
+      .from("orders")
       .insert(order)
       .select()
-      .single()
-      .then(async function(r){
-        if (r.error){
-          console.warn("Order insert error:", r.error);
-          done();
-          return;
-        }
+      .single();
 
-        const newOrder = r.data;
+    if (r.error) {
+      console.warn("Order insert error:", r.error);
+      done();
+      return;
+    }
 
-try {
-  const fn = await db.functions.invoke("create-shiprocket-order", {
-    body: { orderId: newOrder.id }
-  });
-  console.log("Function invoke result:", fn);
-} catch (e) {
-  console.warn("Shiprocket function error:", e);
-}
+    const newOrder = r.data;
 
-var msg =
-  "Hi " + (newOrder.customer_name || "there") +
-  ", your twipid order #" + newOrder.id +
-  " has been placed successfully.";
-
-console.log("About to trigger SMS/WhatsApp", {
-  orderId: newOrder.id,
-  phone: newOrder.customer_phone,
-  message: msg
-});
-
-db.functions.invoke("send-order-message", {
-  body: {
-    channel: "sms",
-    to: newOrder.customer_phone,
-    message: msg
-  }
-})
-.then(function(res){
-  console.log("SMS queued:", res);
-})
-.catch(function(e){
-  console.warn("SMS error:", e);
-});
-
-db.functions.invoke("send-order-message", {
-  body: {
-    channel: "whatsapp",
-    to: newOrder.customer_phone,
-    message: msg
-  }
-})
-.then(function(res){
-  console.log("WhatsApp queued:", res);
-})
-.catch(function(e){
-  console.warn("WhatsApp error:", e);
-});
-
-db.functions.invoke("send-order-email", {
-  body: { orderId: newOrder.id }
-})
-.then(function(res){
-  console.log("Order email queued:", res);
-})
-.catch(function(e){
-  console.warn("Order email error:", e);
-});
-
-        done();
-      })
-      .catch(function(e){
-        console.warn("Order save crash:", e);
-        done();
+    // Optional: keep Shiprocket disabled until messaging works
+    /*
+    try {
+      const shiprocketRes = await db.functions.invoke("create-shiprocket-order", {
+        body: { orderId: newOrder.id }
       });
-  } else {
+      console.log("Shiprocket invoke result:", shiprocketRes);
+
+      if (shiprocketRes.error) {
+        console.warn("Shiprocket invoke error:", shiprocketRes.error);
+      }
+    } catch (e) {
+      console.warn("Shiprocket function crash:", e);
+    }
+    */
+
+    var rawPhone = String(newOrder.customer_phone || "").replace(/\D/g, "");
+    var phoneE164 = rawPhone.length === 10 ? "+91" + rawPhone : "+" + rawPhone.replace(/^\+/, "");
+    var whatsappTo = "whatsapp:" + phoneE164;
+
+    var msg =
+      "Hi " + (newOrder.customer_name || "there") +
+      ", your twipid order #" + newOrder.id +
+      " has been placed successfully.";
+
+    console.log("About to trigger SMS/WhatsApp", {
+      orderId: newOrder.id,
+      customer_name: newOrder.customer_name,
+      customer_phone: newOrder.customer_phone,
+      phoneE164: phoneE164,
+      whatsappTo: whatsappTo,
+      message: msg
+    });
+
+    try {
+      const smsRes = await db.functions.invoke("send-order-message", {
+        body: {
+          channel: "sms",
+          to: phoneE164,
+          message: msg,
+          orderId: newOrder.id
+        }
+      });
+      console.log("SMS invoke result:", smsRes);
+
+      if (smsRes.error) {
+        console.warn("SMS invoke error:", smsRes.error);
+      }
+    } catch (e) {
+      console.warn("SMS function crash:", e);
+    }
+
+    try {
+      const waRes = await db.functions.invoke("send-order-message", {
+        body: {
+          channel: "whatsapp",
+          to: whatsappTo,
+          message: msg,
+          orderId: newOrder.id
+        }
+      });
+      console.log("WhatsApp invoke result:", waRes);
+
+      if (waRes.error) {
+        console.warn("WhatsApp invoke error:", waRes.error);
+      }
+    } catch (e) {
+      console.warn("WhatsApp function crash:", e);
+    }
+
+    try {
+      const emailRes = await db.functions.invoke("send-order-email", {
+        body: { orderId: newOrder.id }
+      });
+      console.log("Order email queued:", emailRes);
+
+      if (emailRes.error) {
+        console.warn("Order email error:", emailRes.error);
+      }
+    } catch (e) {
+      console.warn("Order email function crash:", e);
+    }
+
+    done();
+  } catch (e) {
+    console.warn("Order save crash:", e);
     done();
   }
 }
