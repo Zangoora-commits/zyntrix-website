@@ -1748,10 +1748,9 @@ function saveOrder(order, onSuccess){
       .catch(function(e){ console.warn("Order email error", e); });
 
     done()
-  }).catch(function(){ done(); }); }
+  catch(function(){ done(); }); 
   else { done(); }
-}
-  }
+
 /* ===== AUTH ===== */
 function avatarHue(s){ s=(s||"").toString(); var h=0; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))%360; } return h; }
 function avatarHTML(u){
