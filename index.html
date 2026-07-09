@@ -1656,20 +1656,20 @@ try {
 }
 
 var msg =
-  "Hi " + (newOrder.customername || "there") +
+  "Hi " + (newOrder.customer_name || "there") +
   ", your twipid order #" + newOrder.id +
   " has been placed successfully.";
 
 console.log("About to trigger SMS/WhatsApp", {
   orderId: newOrder.id,
-  phone: newOrder.customerphone,
+  phone: newOrder.customer_phone,
   message: msg
 });
 
 db.functions.invoke("send-order-message", {
   body: {
     channel: "sms",
-    to: newOrder.customerphone,
+    to: newOrder.customer_phone,
     message: msg
   }
 })
@@ -1683,7 +1683,7 @@ db.functions.invoke("send-order-message", {
 db.functions.invoke("send-order-message", {
   body: {
     channel: "whatsapp",
-    to: newOrder.customerphone,
+    to: newOrder.customer_phone,
     message: msg
   }
 })
