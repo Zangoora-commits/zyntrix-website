@@ -224,6 +224,14 @@ input,select,textarea,button{font-family:var(--font-body)}
 .config-banner i{color:var(--amber);font-size:18px;flex-shrink:0;margin-top:1px}
 .config-banner-text{color:#fcd34d;line-height:1.6}
 .config-banner-text a{color:var(--cyan);cursor:pointer;text-decoration:underline}
+
+.sz-chk{display:inline-flex;align-items:center;gap:6px;border:1px solid #e5e7eb;background:#fff;border-radius:9px;padding:7px 11px;font-size:13px;font-weight:600;cursor:pointer;user-select:none}
+.sz-chk input{cursor:pointer;margin:0}
+.sz-chk:has(input:checked){border-color:#0ca678;background:rgba(12,166,120,.07);color:#0a7d5e}
+.szs-item{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:6px 9px}
+.szs-item b{font-size:12.5px;min-width:26px}
+.szs-item input{width:62px;border:1px solid #e5e7eb;border-radius:6px;padding:5px 7px;font-size:13px;outline:none}
+.szs-item input:focus{border-color:#0ca678}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 </head>
@@ -613,6 +621,69 @@ input,select,textarea,button{font-family:var(--font-body)}
           <textarea class="field-textarea" id="pDesc" placeholder="Write a detailed product description. Include key features, what's in the box, compatibility, and why customers should buy it..."></textarea>
           <label class="field-label">Specs (comma separated)</label>
           <input class="field-input" type="text" id="pSpecs" placeholder="ANC, 40hr Battery, Bluetooth 5.3, Hi-Res Audio, Foldable">
+        </div>
+      </div>
+
+      <!-- ===== CLOTHING / APPAREL ===== -->
+      <div class="modal-grid full">
+        <div style="border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:16px;background:#fafafa">
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px">Clothing options</div>
+          <div style="font-size:12.5px;color:#6b7280;margin-bottom:14px">Leave blank for non-clothing products. One listing per colour — e.g. "Retro Tee — Olive".</div>
+
+          <label class="field-label">Sizes available</label>
+          <div id="pSizeRow" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+            <label class="sz-chk"><input type="checkbox" value="XS" onchange="syncSizeStock()"> XS</label>
+            <label class="sz-chk"><input type="checkbox" value="S"  onchange="syncSizeStock()"> S</label>
+            <label class="sz-chk"><input type="checkbox" value="M"  onchange="syncSizeStock()"> M</label>
+            <label class="sz-chk"><input type="checkbox" value="L"  onchange="syncSizeStock()"> L</label>
+            <label class="sz-chk"><input type="checkbox" value="XL" onchange="syncSizeStock()"> XL</label>
+            <label class="sz-chk"><input type="checkbox" value="XXL" onchange="syncSizeStock()"> XXL</label>
+            <label class="sz-chk"><input type="checkbox" value="3XL" onchange="syncSizeStock()"> 3XL</label>
+            <label class="sz-chk"><input type="checkbox" value="Free Size" onchange="syncSizeStock()"> Free Size</label>
+          </div>
+
+          <label class="field-label">Stock per size</label>
+          <div id="pSizeStock" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px">
+            <span style="font-size:12.5px;color:#9ca3af">Tick sizes above to set stock for each.</span>
+          </div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:14px">These add up to the total Stock Quantity automatically.</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div>
+              <label class="field-label">Colour name</label>
+              <input class="field-input" type="text" id="pColor" placeholder="Olive">
+            </div>
+            <div>
+              <label class="field-label">Colour swatch</label>
+              <input class="field-input" type="text" id="pColorHex" placeholder="#6e7b3e">
+            </div>
+            <div>
+              <label class="field-label">Style group</label>
+              <input class="field-input" type="text" id="pStyleGroup" placeholder="retro-utility-tee">
+            </div>
+          </div>
+          <div style="font-size:12px;color:#6b7280;margin:6px 0 14px">Give every colour of the same garment the <b>same</b> style group — the store links them as swatches.</div>
+
+          <label class="field-label">Size guide — one line per size: <code>Size,Chest,Length,Shoulder</code> (inches)</label>
+          <textarea class="field-textarea" id="pSizeGuide" style="min-height:110px;font-family:monospace;font-size:13px" placeholder="S,36,26,14&#10;M,38,27,15&#10;L,40,28,16&#10;XL,42,29,17"></textarea>
+        </div>
+      </div>
+
+      <!-- ===== SHIPPING & TAX ===== -->
+      <div class="modal-grid full">
+        <div style="border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:16px;background:#fafafa">
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px">Shipping &amp; tax</div>
+          <div style="font-size:12.5px;color:#6b7280;margin-bottom:14px">Shiprocket needs weight and dimensions to price the shipment and print the label. Leave these blank and the courier bills you the difference later.</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+            <div><label class="field-label">Weight (grams) *</label><input class="field-input" type="number" id="pWeight" placeholder="220"></div>
+            <div><label class="field-label">Length (cm)</label><input class="field-input" type="number" id="pDimL" placeholder="30"></div>
+            <div><label class="field-label">Breadth (cm)</label><input class="field-input" type="number" id="pDimB" placeholder="24"></div>
+            <div><label class="field-label">Height (cm)</label><input class="field-input" type="number" id="pDimH" placeholder="3"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+            <div><label class="field-label">HSN code</label><input class="field-input" type="text" id="pHsn" placeholder="6109 (t-shirts)"></div>
+            <div><label class="field-label">GST rate %</label><input class="field-input" type="number" id="pGstRate" placeholder="5"></div>
+          </div>
         </div>
       </div>
       <div class="modal-grid full">
@@ -1083,9 +1154,11 @@ function filterProds(q) {
 function openAddProduct() {
   editingId = null;
   setText("modalTitle","Add New Product");
-  ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission"].forEach(function(id){
+  ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission",
+   "pColor","pColorHex","pStyleGroup","pSizeGuide","pWeight","pDimL","pDimB","pDimH","pHsn","pGstRate"].forEach(function(id){
     var e=el(id); if(e){ e.value=""; e.style.borderColor=""; }
   });
+  setSizeChecks([]); syncSizeStock({});
   var pc=el("pCategory"); if(pc) pc.value="";
   var ps=el("pStatus");   if(ps) ps.value="active";
   var pt=el("pTag");      if(pt) pt.value="";
@@ -1104,7 +1177,10 @@ function editProduct(i) {
   var fields = {pName:p.name, pBrand:p.brand, pCategory:p.category, pPrice:p.price,
     pOrigPrice:p.orig_price, pStock:p.stock, pSku:p.sku||"", pStatus:p.status||"active",
     pTag:p.tag||"", pShortDesc:p.short_desc||"", pDesc:p.desc||"",
-    pSpecs:specsStr, pCommission:p.commission||"", pVideo:p.video||""};
+    pSpecs:specsStr, pCommission:p.commission||"", pVideo:p.video||"",
+    pColor:p.color||"", pColorHex:p.color_hex||"", pStyleGroup:p.style_group||"",
+    pSizeGuide:p.size_guide||"", pWeight:p.weight_g||"", pDimL:p.dim_l_cm||"",
+    pDimB:p.dim_b_cm||"", pDimH:p.dim_h_cm||"", pHsn:p.hsn||"", pGstRate:p.gst_rate||""};
   Object.keys(fields).forEach(function(fid){
     var e=el(fid); if(e){ var v=fields[fid]; e.value=(v===undefined||v===null)?"":v; e.style.borderColor=""; }
   });
@@ -1115,6 +1191,12 @@ function editProduct(i) {
     else if(p.images) existing=existing.concat(String(p.images).split("|").map(function(s){return s.trim();}));
     existing.filter(Boolean).forEach(function(u){ var im=document.createElement("img"); im.className="preview-img"; im.src=String(u).replace(/^http:/i,"https:"); ip.appendChild(im); });
   }
+  // apparel: restore size ticks + per-size stock
+  var pSizes = Array.isArray(p.sizes) ? p.sizes : (p.sizes ? String(p.sizes).replace(/[{}"]/g,"").split(",").map(function(s){return s.trim();}).filter(Boolean) : []);
+  setSizeChecks(pSizes);
+  var pss = p.size_stock;
+  if(typeof pss === "string"){ try{ pss = JSON.parse(pss); }catch(e){ pss = {}; } }
+  syncSizeStock(pss || {});
   uploadImages=[]; uploadedImageUrls=[]; editingImageUrl=p.image_url||null; editingImages=p.images||null;
   var pm=el("productModal"); if(pm) pm.classList.add("open");
   } catch(err){ toast("Couldn't open editor: "+err.message,"error"); console.error("editProduct error:",err); }
@@ -1157,6 +1239,50 @@ function handleImageUpload(input) {
 }
 
 // ── SAVE PRODUCT ──────────────────────────────────
+
+/* ===== APPAREL: size chips + per-size stock ===== */
+function getCheckedSizes(){
+  var row = el("pSizeRow"); if(!row) return [];
+  return Array.prototype.slice.call(row.querySelectorAll("input[type=checkbox]"))
+    .filter(function(c){return c.checked;}).map(function(c){return c.value;});
+}
+function readSizeStock(){
+  var box = el("pSizeStock"); if(!box) return {};
+  var out = {};
+  Array.prototype.slice.call(box.querySelectorAll("input[data-size]")).forEach(function(i){
+    out[i.getAttribute("data-size")] = Number(i.value)||0;
+  });
+  return out;
+}
+function syncSizeStock(preset){
+  var box = el("pSizeStock"); if(!box) return;
+  var sizes = getCheckedSizes();
+  var existing = preset || readSizeStock();
+  if(!sizes.length){
+    box.innerHTML = '<span style="font-size:12.5px;color:#9ca3af">Tick sizes above to set stock for each.</span>';
+    return;
+  }
+  box.innerHTML = sizes.map(function(s){
+    var v = (existing && existing[s]!==undefined) ? existing[s] : 0;
+    return '<div class="szs-item"><b>'+s+'</b><input type="number" min="0" data-size="'+s+'" value="'+v+'" oninput="rollUpStock()"></div>';
+  }).join("");
+  rollUpStock();
+}
+function rollUpStock(){
+  var sizes = getCheckedSizes();
+  if(!sizes.length) return;
+  var ss = readSizeStock(), total = 0;
+  Object.keys(ss).forEach(function(k){ total += Number(ss[k])||0; });
+  var st = el("pStock"); if(st) st.value = total;
+}
+function setSizeChecks(sizes){
+  var row = el("pSizeRow"); if(!row) return;
+  sizes = sizes || [];
+  Array.prototype.slice.call(row.querySelectorAll("input[type=checkbox]")).forEach(function(c){
+    c.checked = sizes.indexOf(c.value) > -1;
+  });
+}
+
 function saveProduct() {
   try {
   // Read all fields directly
@@ -1174,6 +1300,19 @@ function saveProduct() {
   var specs    = val("pSpecs").trim();
   var commission=val("pCommission").trim();
   var video    = val("pVideo").trim();
+  // apparel + shipping/tax
+  var sizes      = getCheckedSizes();
+  var sizeStock  = sizes.length ? readSizeStock() : {};
+  var color      = val("pColor").trim();
+  var colorHex   = val("pColorHex").trim();
+  var styleGroup = val("pStyleGroup").trim();
+  var sizeGuide  = val("pSizeGuide").trim();
+  var weight     = val("pWeight").trim();
+  var dimL       = val("pDimL").trim();
+  var dimB       = val("pDimB").trim();
+  var dimH       = val("pDimH").trim();
+  var hsn        = val("pHsn").trim();
+  var gstRate    = val("pGstRate").trim();
 
   // Reset borders
   ["pName","pBrand","pPrice","pCategory"].forEach(function(id){
@@ -1207,7 +1346,19 @@ function saveProduct() {
     specs:      specs ? specs.split(",").map(function(s){return s.trim();}).filter(Boolean) : [],
     commission: Number(commission) || 0,
     video:      video,
-    icon:       "ti-box"
+    icon:       "ti-box",
+    sizes:       sizes.length ? sizes : null,
+    size_stock:  sizes.length ? sizeStock : {},
+    color:       color || null,
+    color_hex:   colorHex || null,
+    style_group: styleGroup || null,
+    size_guide:  sizeGuide || null,
+    weight_g:    weight ? Number(weight) : null,
+    dim_l_cm:    dimL ? Number(dimL) : null,
+    dim_b_cm:    dimB ? Number(dimB) : null,
+    dim_h_cm:    dimH ? Number(dimH) : null,
+    hsn:         hsn || null,
+    gst_rate:    gstRate ? Number(gstRate) : null
   };
   // Build the image gallery: newly uploaded images replace the gallery; otherwise keep existing.
   var gallery;
