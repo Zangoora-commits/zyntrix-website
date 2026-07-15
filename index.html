@@ -698,134 +698,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .ship-nudge.done .sn-t{color:var(--brand-deep)}
 
 
-/* ===== APPAREL: sizes, colours, size guide ===== */
-var selectedSize = null;
-
-function sizesOf(p){
-  if(!p) return [];
-  var s = p.sizes;
-  if(Array.isArray(s)) return s.filter(Boolean);
-  if(typeof s === "string" && s.trim()){
-    return s.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
-  }
-  return [];
-}
-function sizeStockOf(p){
-  if(!p) return {};
-  var ss = p.size_stock;
-  if(typeof ss === "string"){ try{ ss = JSON.parse(ss); }catch(e){ ss = {}; } }
-  return ss && typeof ss === "object" ? ss : {};
-}
-function stockForSize(p, size){
-  var ss = sizeStockOf(p);
-  if(size && ss[size] !== undefined) return Number(ss[size])||0;
-  return null;
-}
-function isApparel(p){ return sizesOf(p).length > 0; }
-
-function renderSizes(p){
-  var wrap = el("sizeWrap"), chips = el("sizeChips");
-  if(!wrap || !chips) return;
-  var sizes = sizesOf(p);
-  selectedSize = null;
-  var low = el("sizeLow"), errEl = el("sizeErr");
-  if(low) low.style.display="none";
-  if(errEl) errEl.style.display="none";
-  if(!sizes.length){ wrap.style.display="none"; return; }
-  wrap.style.display="";
-  var ss = sizeStockOf(p), hasStockMap = Object.keys(ss).length > 0;
-  chips.innerHTML = sizes.map(function(s){
-    var st = hasStockMap ? (Number(ss[s])||0) : null;
-    var oos = (st !== null && st <= 0);
-    return '<button class="size-chip'+(oos?' oos':'')+'" data-size="'+esc(s)+'"'
-      + (oos?' disabled aria-label="'+esc(s)+' out of stock"':' onclick="pickSize(this)"')
-      + '>'+esc(s)+'</button>';
-  }).join("");
-  // hide guide button if no guide
-  var gb = el("sizeGuideBtn");
-  if(gb) gb.style.display = (p.size_guide && String(p.size_guide).trim()) ? "" : "none";
-  // if every size is out of stock, disable buying
-  var allOut = hasStockMap && sizes.every(function(s){ return (Number(ss[s])||0) <= 0; });
-  if(allOut){
-    var ab=el("modalAddBtn"), bb=el("modalBuyBtn");
-    if(ab){ ab.disabled=true; ab.style.opacity=".5"; ab.style.cursor="not-allowed"; }
-    if(bb) bb.disabled=true;
-    var sEl=el("modalStock");
-    if(sEl) sEl.innerHTML='<span class="stock-pill stock-out"><i class="ti ti-x" style="font-size:12px"></i> Out of stock</span>';
-    syncStickyBuy();
-  }
-}
-function pickSize(btn){
-  var chips = el("sizeChips"); if(!chips) return;
-  Array.prototype.slice.call(chips.querySelectorAll(".size-chip")).forEach(function(c){ c.classList.remove("on"); });
-  btn.classList.add("on");
-  selectedSize = btn.getAttribute("data-size");
-  var errEl = el("sizeErr"); if(errEl) errEl.style.display="none";
-  var low = el("sizeLow");
-  var st = stockForSize(modalProduct, selectedSize);
-  if(low){
-    if(st !== null && st > 0 && st <= 5){ low.textContent = "Only "+st+" left in size "+selectedSize; low.style.display="block"; }
-    else low.style.display="none";
-  }
-  // cap quantity at available stock for this size
-  if(st !== null && st > 0 && modalQtyVal > st){ modalQtyVal = st; el("modalQtyN").textContent = modalQtyVal; }
-}
-function requireSize(){
-  if(!modalProduct || !isApparel(modalProduct)) return true;
-  if(selectedSize) return true;
-  var errEl = el("sizeErr");
-  if(errEl){ errEl.style.display="block"; }
-  var wrap = el("sizeWrap");
-  if(wrap) wrap.scrollIntoView({behavior:"smooth",block:"center"});
-  showToast("Please select a size");
-  return false;
-}
-
-/* ----- colour swatches (siblings by style_group) ----- */
-function renderColors(p){
-  var wrap = el("colorWrap"), chips = el("colorChips"), nm = el("colorName");
-  if(!wrap || !chips) return;
-  if(!p.style_group || !p.color){ wrap.style.display="none"; return; }
-  var sibs = products.filter(function(x){ return x.style_group === p.style_group && x.color; });
-  if(sibs.length < 2){
-    // single colourway: still show the name if present
-    if(p.color){ wrap.style.display=""; if(nm) nm.textContent=p.color;
-      chips.innerHTML = '<button class="color-chip on" style="background:'+esc(p.color_hex||"#ccc")+'" title="'+esc(p.color)+'"></button>';
-    } else wrap.style.display="none";
-    return;
-  }
-  wrap.style.display="";
-  if(nm) nm.textContent = p.color;
-  chips.innerHTML = sibs.map(function(s){
-    var on = (keyOf(s) === keyOf(p));
-    return '<button class="color-chip'+(on?" on":"")+'" style="background:'+esc(s.color_hex||"#ccc")+'" title="'+esc(s.color)+'" '
-      + (on?'':'onclick="switchColor(\''+esc(String(keyOf(s)).replace(/'/g,"")) +'\')"') + '></button>';
-  }).join("");
-}
-function switchColor(k){
-  var p = products.find(function(x){ return String(keyOf(x)) === String(k); });
-  if(p) openModalByProduct(p);
-}
-
-/* ----- size guide ----- */
-function openSizeGuide(){
-  if(!modalProduct) return;
-  var raw = String(modalProduct.size_guide||"").trim();
-  var body = el("sgBody"), sub = el("sgSub");
-  if(!raw){ showToast("No size guide for this product yet"); return; }
-  var rows = raw.split(/\r?\n/).map(function(l){ return l.split(",").map(function(c){return c.trim();}); }).filter(function(r){ return r.length && r[0]; });
-  if(!rows.length){ showToast("No size guide for this product yet"); return; }
-  if(sub) sub.textContent = (modalProduct.name||"") + " · all measurements in inches";
-  var html = '<table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th><th>Shoulder</th></tr></thead><tbody>';
-  rows.forEach(function(r){
-    html += '<tr><td>'+esc(r[0]||"")+'</td><td>'+esc(r[1]||"—")+'</td><td>'+esc(r[2]||"—")+'</td><td>'+esc(r[3]||"—")+'</td></tr>';
-  });
-  html += '</tbody></table>';
-  if(body) body.innerHTML = html;
-  el("sgOv").classList.add("open");
-}
-function closeSizeGuide(){ var o=el("sgOv"); if(o) o.classList.remove("open"); }
-
 /* ===== BUY NOW ===== */
 .modal-buynow{width:100%;margin-top:9px;background:var(--ink);color:#fff;border:none;border-radius:12px;padding:13px 18px;font-family:var(--fb);font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s}
 .modal-buynow:hover{background:var(--brand-deep)}
@@ -1510,6 +1382,134 @@ function modalToggleWish(){ if(!modalProduct) return; toggleWishObj(modalProduct
 
 
 /* ===== BUY NOW ===== */
+/* ===== APPAREL: sizes, colours, size guide ===== */
+var selectedSize = null;
+
+function sizesOf(p){
+  if(!p) return [];
+  var s = p.sizes;
+  if(Array.isArray(s)) return s.filter(Boolean);
+  if(typeof s === "string" && s.trim()){
+    return s.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+  }
+  return [];
+}
+function sizeStockOf(p){
+  if(!p) return {};
+  var ss = p.size_stock;
+  if(typeof ss === "string"){ try{ ss = JSON.parse(ss); }catch(e){ ss = {}; } }
+  return ss && typeof ss === "object" ? ss : {};
+}
+function stockForSize(p, size){
+  var ss = sizeStockOf(p);
+  if(size && ss[size] !== undefined) return Number(ss[size])||0;
+  return null;
+}
+function isApparel(p){ return sizesOf(p).length > 0; }
+
+function renderSizes(p){
+  var wrap = el("sizeWrap"), chips = el("sizeChips");
+  if(!wrap || !chips) return;
+  var sizes = sizesOf(p);
+  selectedSize = null;
+  var low = el("sizeLow"), errEl = el("sizeErr");
+  if(low) low.style.display="none";
+  if(errEl) errEl.style.display="none";
+  if(!sizes.length){ wrap.style.display="none"; return; }
+  wrap.style.display="";
+  var ss = sizeStockOf(p), hasStockMap = Object.keys(ss).length > 0;
+  chips.innerHTML = sizes.map(function(s){
+    var st = hasStockMap ? (Number(ss[s])||0) : null;
+    var oos = (st !== null && st <= 0);
+    return '<button class="size-chip'+(oos?' oos':'')+'" data-size="'+esc(s)+'"'
+      + (oos?' disabled aria-label="'+esc(s)+' out of stock"':' onclick="pickSize(this)"')
+      + '>'+esc(s)+'</button>';
+  }).join("");
+  // hide guide button if no guide
+  var gb = el("sizeGuideBtn");
+  if(gb) gb.style.display = (p.size_guide && String(p.size_guide).trim()) ? "" : "none";
+  // if every size is out of stock, disable buying
+  var allOut = hasStockMap && sizes.every(function(s){ return (Number(ss[s])||0) <= 0; });
+  if(allOut){
+    var ab=el("modalAddBtn"), bb=el("modalBuyBtn");
+    if(ab){ ab.disabled=true; ab.style.opacity=".5"; ab.style.cursor="not-allowed"; }
+    if(bb) bb.disabled=true;
+    var sEl=el("modalStock");
+    if(sEl) sEl.innerHTML='<span class="stock-pill stock-out"><i class="ti ti-x" style="font-size:12px"></i> Out of stock</span>';
+    syncStickyBuy();
+  }
+}
+function pickSize(btn){
+  var chips = el("sizeChips"); if(!chips) return;
+  Array.prototype.slice.call(chips.querySelectorAll(".size-chip")).forEach(function(c){ c.classList.remove("on"); });
+  btn.classList.add("on");
+  selectedSize = btn.getAttribute("data-size");
+  var errEl = el("sizeErr"); if(errEl) errEl.style.display="none";
+  var low = el("sizeLow");
+  var st = stockForSize(modalProduct, selectedSize);
+  if(low){
+    if(st !== null && st > 0 && st <= 5){ low.textContent = "Only "+st+" left in size "+selectedSize; low.style.display="block"; }
+    else low.style.display="none";
+  }
+  // cap quantity at available stock for this size
+  if(st !== null && st > 0 && modalQtyVal > st){ modalQtyVal = st; el("modalQtyN").textContent = modalQtyVal; }
+}
+function requireSize(){
+  if(!modalProduct || !isApparel(modalProduct)) return true;
+  if(selectedSize) return true;
+  var errEl = el("sizeErr");
+  if(errEl){ errEl.style.display="block"; }
+  var wrap = el("sizeWrap");
+  if(wrap && wrap.scrollIntoView) { try{ wrap.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){} }
+  showToast("Please select a size");
+  return false;
+}
+
+/* ----- colour swatches (siblings by style_group) ----- */
+function renderColors(p){
+  var wrap = el("colorWrap"), chips = el("colorChips"), nm = el("colorName");
+  if(!wrap || !chips) return;
+  if(!p.style_group || !p.color){ wrap.style.display="none"; return; }
+  var sibs = products.filter(function(x){ return x.style_group === p.style_group && x.color; });
+  if(sibs.length < 2){
+    // single colourway: still show the name if present
+    if(p.color){ wrap.style.display=""; if(nm) nm.textContent=p.color;
+      chips.innerHTML = '<button class="color-chip on" style="background:'+esc(p.color_hex||"#ccc")+'" title="'+esc(p.color)+'"></button>';
+    } else wrap.style.display="none";
+    return;
+  }
+  wrap.style.display="";
+  if(nm) nm.textContent = p.color;
+  chips.innerHTML = sibs.map(function(s){
+    var on = (keyOf(s) === keyOf(p));
+    return '<button class="color-chip'+(on?" on":"")+'" style="background:'+esc(s.color_hex||"#ccc")+'" title="'+esc(s.color)+'" '
+      + (on?'':'onclick="switchColor(\''+esc(String(keyOf(s)).replace(/'/g,"")) +'\')"') + '></button>';
+  }).join("");
+}
+function switchColor(k){
+  var p = products.find(function(x){ return String(keyOf(x)) === String(k); });
+  if(p) openModalByProduct(p);
+}
+
+/* ----- size guide ----- */
+function openSizeGuide(){
+  if(!modalProduct) return;
+  var raw = String(modalProduct.size_guide||"").trim();
+  var body = el("sgBody"), sub = el("sgSub");
+  if(!raw){ showToast("No size guide for this product yet"); return; }
+  var rows = raw.split(/\r?\n/).map(function(l){ return l.split(",").map(function(c){return c.trim();}); }).filter(function(r){ return r.length && r[0]; });
+  if(!rows.length){ showToast("No size guide for this product yet"); return; }
+  if(sub) sub.textContent = (modalProduct.name||"") + " · all measurements in inches";
+  var html = '<table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th><th>Shoulder</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    html += '<tr><td>'+esc(r[0]||"")+'</td><td>'+esc(r[1]||"—")+'</td><td>'+esc(r[2]||"—")+'</td><td>'+esc(r[3]||"—")+'</td></tr>';
+  });
+  html += '</tbody></table>';
+  if(body) body.innerHTML = html;
+  el("sgOv").classList.add("open");
+}
+function closeSizeGuide(){ var o=el("sgOv"); if(o) o.classList.remove("open"); }
+
 function modalBuyNow(){
   if(!modalProduct) return;
   if(el("modalAddBtn").disabled) return;
