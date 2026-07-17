@@ -48,8 +48,8 @@
   --r:18px;--r-sm:12px;--r-xs:9px;
   --fd:'Sora',sans-serif;--fb:'Manrope',sans-serif;
 }
-html{font-size:16px;scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100%;position:relative}
 ::-webkit-scrollbar{width:11px}::-webkit-scrollbar-track{background:var(--paper)}
 ::-webkit-scrollbar-thumb{background:#cbd5cf;border-radius:6px;border:3px solid var(--paper)}
 a{text-decoration:none;color:inherit}img{max-width:100%;display:block}button{font-family:inherit}
@@ -623,8 +623,43 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-dots{position:absolute;bottom:18px;left:52px;z-index:6;display:flex;gap:8px}
 .hc-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;transition:all .3s}
 .hc-dot.on{background:#fff;width:26px;border-radius:5px}
-@media(min-width:481px) and (max-width:768px){.hc-slide{height:330px}.hc-text{padding:0 16px;max-width:38%}.hc-title{font-size:30px}.hc-sub{font-size:13px;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.hc-tappy{right:150px;width:158px;height:212px;bottom:8px}.hc-art{right:16px;width:172px;height:172px;bottom:26px}.hc-arrow{top:12px;bottom:auto;transform:none;width:38px;height:38px;font-size:18px}.hc-arrow.left{left:auto;right:56px}.hc-arrow.right{right:12px}.hc-dots{left:18px;bottom:14px}}
-@media(max-width:480px){.hc-slide{height:292px}.hc-text{max-width:40%;padding:0 12px}.hc-title{font-size:20px;letter-spacing:-.4px;margin-bottom:6px;line-height:1.06}.hc-sub{font-size:11px;margin-bottom:10px;max-width:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.hc-cta{font-size:12px;padding:9px 14px}.hc-tappy{right:100px;width:114px;height:150px;bottom:6px}.hc-art{right:12px;width:126px;height:126px;bottom:20px}.hc-badge{font-size:10px;padding:5px 10px;margin-bottom:8px}.hc-arrow{top:10px;bottom:auto;transform:none;width:30px;height:30px;font-size:15px}.hc-arrow.left{left:auto;right:46px}.hc-arrow.right{right:10px}.hc-dots{left:12px;bottom:9px}}
+/* ===== HERO — TABLET (481–768px) ===== */
+@media(min-width:481px) and (max-width:768px){
+  .hc-slide{height:360px}
+  .hc-text{padding:0 28px;max-width:56%}
+  .hc-title{font-size:clamp(24px,4.6vw,32px);letter-spacing:-.8px}
+  .hc-sub{font-size:13.5px;margin-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hc-cta{font-size:13.5px;padding:11px 20px}
+  .hc-tappy{display:none}
+  .hc-art{right:-10px;width:200px;height:200px;bottom:22px;opacity:.95}
+  .hc-arrow{width:38px;height:38px;font-size:18px}
+  .hc-dots{left:28px;bottom:16px}
+}
+
+/* ===== HERO — PHONE (≤480px) =====
+   Full-bleed editorial layout: art bleeds off the right edge, copy sits
+   bottom-left over a scrim at FULL width — no more 64% squeeze. */
+@media(max-width:480px){
+  .hc-slide{height:380px;display:block;padding:0}
+  .hc-slide::before{background:linear-gradient(to top,rgba(2,20,14,.82) 0%,rgba(2,20,14,.34) 42%,rgba(2,20,14,0) 68%)}
+  .hc-text{position:absolute;left:0;right:0;bottom:0;max-width:none;width:100%;padding:0 18px 40px;z-index:4}
+  .hc-title{font-size:clamp(25px,7.4vw,32px);letter-spacing:-.9px;line-height:1.05;margin-bottom:7px}
+  .hc-sub{font-size:13px;margin-bottom:16px;max-width:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;opacity:.92}
+  .hc-badge{font-size:10.5px;padding:5px 11px;margin-bottom:10px}
+  .hc-cta{font-size:13.5px;padding:12px 20px;width:auto}
+  .hc-art{right:-34px;top:14px;bottom:auto;width:190px;height:190px;opacity:.92;animation-duration:7s}
+  .hc-tappy{display:none}
+  /* arrows off — swipe instead */
+  .hc-arrow{display:none}
+  .hc-dots{left:18px;right:18px;bottom:14px;justify-content:flex-start;gap:6px}
+  .hc-dot{width:7px;height:7px}
+  .hc-dot.on{width:22px}
+}
+@media(max-width:360px){
+  .hc-slide{height:352px}
+  .hc-art{width:158px;height:158px;right:-28px}
+  .hc-title{font-size:23px}
+}
 /* ===== NAV CATEGORIES DROPDOWN ===== */
 .cat-li{position:relative}
 .nav-links a .chev{font-size:16px;transition:transform .22s}
@@ -803,8 +838,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .prod-filters::-webkit-scrollbar{display:none}
   .fbtn{flex-shrink:0;padding:8px 14px;font-size:13px}
   .refine-panel.open{grid-template-columns:1fr;padding:16px;gap:16px}
-  .hc-tappy{display:none!important}
-  .hc-text{max-width:62%}
   .footer-bottom{flex-direction:column;text-align:center;gap:14px}
   .footer-bottom .fmeta{justify-content:center;flex-wrap:wrap;gap:12px}
   .footer-inner{padding:40px 18px 30px}
@@ -815,11 +848,33 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 }
 @media(max-width:480px){
   .sec-title{font-size:19px}
-  .hc-text{max-width:64%;padding:0 14px}
-  .hc-art{width:112px;height:112px;right:10px;bottom:16px}
   .news{padding:34px 20px}
   .footer-top{grid-template-columns:1fr 1fr;gap:24px}
 }
+
+/* swipe affordance */
+.hc-view{touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.hc-track.dragging{transition:none}
+.hc-dot{transition:width .3s cubic-bezier(.4,0,.2,1),background .3s}
+@media(hover:none){ .hc-slide{cursor:default} }
+
+.fcount{display:inline-block;font-size:11px;font-weight:800;opacity:.5;margin-left:3px}
+.fbtn.active .fcount{opacity:.7}
+
+/* ===== MODAL ACCORDIONS (progressive disclosure) ===== */
+.acc{border-bottom:1px solid var(--line)}
+.acc:first-child{border-top:1px solid var(--line)}
+.acc-h{width:100%;background:none;border:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 2px;font-family:var(--fb);font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;text-align:left}
+.acc-h span{display:inline-flex;align-items:center;gap:9px}
+.acc-h>span>i{font-size:17px;color:var(--brand)}
+.acc-x{font-size:17px;color:var(--muted);transition:transform .25s;flex-shrink:0}
+.acc.open .acc-x{transform:rotate(180deg)}
+.acc-b{max-height:0;overflow:hidden;transition:max-height .3s cubic-bezier(.4,0,.2,1)}
+.acc-b.open{max-height:1400px}
+.acc-b>*{padding-bottom:14px}
+.acc-p p{font-size:13px;color:var(--ink2);line-height:1.65;margin-bottom:7px}
+.acc-p p:last-child{margin-bottom:0}
+.acc-p b{color:var(--ink);font-weight:700}
 </style>
 </head>
 <body>
@@ -938,14 +993,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   <div class="sec-head sec-head-row"><div><span class="sec-tag">Handpicked for you</span><h2 class="sec-title" id="prodTitle">Featured Products</h2></div></div>
   <div class="prod-filters" id="prodFilters">
     <button class="fbtn active" data-cat="all" onclick="pickFilter(this,'all')">All</button>
-    <button class="fbtn" data-cat="audio" onclick="pickFilter(this,'audio')">Audio</button>
-    <button class="fbtn" data-cat="wearables" onclick="pickFilter(this,'wearables')">Wearables</button>
-    <button class="fbtn" data-cat="smart-home" onclick="pickFilter(this,'smart-home')">Smart Home</button>
-    <button class="fbtn" data-cat="gaming" onclick="pickFilter(this,'gaming')">Gaming</button>
-    <button class="fbtn" data-cat="smartphones" onclick="pickFilter(this,'smartphones')">Smartphones</button>
-    <button class="fbtn" data-cat="cameras" onclick="pickFilter(this,'cameras')">Cameras</button>
-    <button class="fbtn" data-cat="computing" onclick="pickFilter(this,'computing')">Computing</button>
-    <button class="fbtn" data-cat="power" onclick="pickFilter(this,'power')">Power</button>
   </div>
   <div class="shop-controls">
     <div class="refine-left">
@@ -1109,8 +1156,29 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     </div>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
-      <p class="modal-desc" id="modalDesc"></p>
-      <div class="modal-specs" id="modalSpecs"></div>
+      <div class="acc" id="accDesc">
+        <button class="acc-h" onclick="toggleAcc('accDesc')" aria-expanded="true">
+          <span><i class="ti ti-file-description"></i> Description</span><i class="ti ti-chevron-down acc-x"></i>
+        </button>
+        <div class="acc-b open"><p class="modal-desc" id="modalDesc"></p></div>
+      </div>
+      <div class="acc" id="accSpecs">
+        <button class="acc-h" onclick="toggleAcc('accSpecs')" aria-expanded="false">
+          <span><i class="ti ti-list-details"></i> Highlights</span><i class="ti ti-chevron-down acc-x"></i>
+        </button>
+        <div class="acc-b"><div class="modal-specs" id="modalSpecs"></div></div>
+      </div>
+      <div class="acc" id="accShip">
+        <button class="acc-h" onclick="toggleAcc('accShip')" aria-expanded="false">
+          <span><i class="ti ti-truck-delivery"></i> Shipping &amp; Returns</span><i class="ti ti-chevron-down acc-x"></i>
+        </button>
+        <div class="acc-b"><div class="acc-p">
+          <p><b>Dispatch</b> — orders placed before 3PM ship the same day.</p>
+          <p><b>Delivery</b> — 2–5 business days across India. Free over ₹999.</p>
+          <p><b>Returns</b> — 15 days from delivery. Free pickup if the item is defective or wrong.</p>
+          <p><b>Payment</b> — UPI, cards, netbanking and Cash on Delivery.</p>
+        </div></div>
+      </div>
     </div>
     <div class="mpane" id="paneReviews">
       <div class="rev-summary" id="revSummary"></div>
@@ -1260,10 +1328,10 @@ function imagesOf(p){ var arr=[]; if(Array.isArray(p.images)) arr=p.images.slice
 function stockOf(p){ return (p.stock===undefined||p.stock===null)?null:Number(p.stock); }
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", function(){
-  render(); updateCart(); updateWishBadge(); buildBrandChips(); renderRecent();
+  buildCategoryChips(); render(); updateCart(); updateWishBadge(); buildBrandChips(); renderRecent();
   if(db){
     db.from("products").select("*").eq("status","active").order("created_at",{ascending:false})
-      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; render(); buildBrandChips(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
+      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); render(); buildBrandChips(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
     db.auth.getSession().then(function(r){ if(r.data&&r.data.session){ setUser(r.data.session.user); } }).catch(function(){});
     db.auth.onAuthStateChange(function(_e,s){ setUser(s?s.user:null); });
   } else { handleDeepLink(); }
@@ -1413,9 +1481,34 @@ function applyRefine(){
 }
 function clearRefine(){ priceMin=priceMax=null; brandFilter=[]; typeFilter=[]; occasionFilter=[]; sizeFilter=[]; colorFilter=[]; ratingMin=null; inStockOnly=false; buildFilters(); updateRefineCount(); render(); }
 /* ===== FILTERS ===== */
-function pickFilter(btn,cat){ window._tagFilter=null; activeFilter=cat; setActiveBtn(cat); el("prodTitle").textContent=cat==="all"?"Featured Products":(btn?btn.textContent:"")+" Products"; render(); }
+function pickFilter(btn,cat){
+  window._tagFilter=null; activeFilter=cat; setActiveBtn(cat);
+  el("prodTitle").textContent = cat==="all" ? "Featured Products" : prettyCat(cat);
+  render();
+}
+function prettyCat(c){
+  var MAP={"smart-home":"Smart Home","t-shirts":"T-Shirts","tshirts":"T-Shirts"};
+  var k=String(c||"").toLowerCase();
+  if(MAP[k]) return MAP[k];
+  return String(c||"").replace(/[-_]+/g," ").replace(/\b\w/g,function(m){return m.toUpperCase();});
+}
+function buildCategoryChips(){
+  var box=el("prodFilters"); if(!box) return;
+  var counts={};
+  products.forEach(function(p){
+    var c=p.category; if(!c) return;
+    var k=String(c).toLowerCase().trim();
+    counts[k]=(counts[k]||0)+1;
+  });
+  var cats=Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a] || a.localeCompare(b); });
+  var html='<button class="fbtn'+(activeFilter==="all"?" active":"")+'" data-cat="all" onclick="pickFilter(this,\'all\')">All <span class="fcount">'+products.length+'</span></button>';
+  html += cats.map(function(c){
+    return '<button class="fbtn'+(activeFilter===c?" active":"")+'" data-cat="'+esc(c)+'" onclick="pickFilter(this,\''+esc(c).replace(/'/g,"")+'\')">'+esc(prettyCat(c))+' <span class="fcount">'+counts[c]+'</span></button>';
+  }).join("");
+  box.innerHTML=html;
+}
 function setActiveBtn(cat){ document.querySelectorAll(".fbtn").forEach(function(b){ b.classList.toggle("active", b.dataset.cat===cat); }); }
-function pickCategory(cat){ window._tagFilter=null; activeFilter=cat; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn(cat); var a=document.querySelector('.fbtn[data-cat="'+cat+'"]'); el("prodTitle").textContent=a?a.textContent+" Products":"Products"; render(); scrollToId("products"); }
+function pickCategory(cat){ window._tagFilter=null; activeFilter=cat; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn(cat); el("prodTitle").textContent=prettyCat(cat); render(); scrollToId("products"); }
 function goShop(){ window._tagFilter=null; activeFilter="all"; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn("all"); el("prodTitle").textContent="All Products"; render(); scrollToId("products"); }
 function showNewArrivals(){ window._tagFilter="new"; activeFilter="all"; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="New Arrivals"; render(); scrollToId("products"); }
 function showBestSellers(){ window._tagFilter="hot"; activeFilter="all"; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="Best Sellers"; render(); scrollToId("products"); }
@@ -1446,9 +1539,13 @@ function openModalByProduct(p){
   var ot=imgWrap.querySelector(".modal-tag"); if(ot)ot.remove();
   if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; imgWrap.appendChild(t); }
   var specs=Array.isArray(p.specs)?p.specs:(p.specs?String(p.specs).split(","):[]);
-  el("modalSpecs").innerHTML=specs.filter(Boolean).map(function(s){return '<span class="modal-spec">'+esc(s.trim())+'</span>';}).join("");
+  var specHtml=specs.filter(Boolean).map(function(s){return '<span class="modal-spec">'+esc(s.trim())+'</span>';}).join("");
+  el("modalSpecs").innerHTML=specHtml;
+  var accS=el("accSpecs"); if(accS) accS.style.display = specHtml ? "" : "none";
+  var accD=el("accDesc"); if(accD) accD.style.display = (p.desc||p.short_desc) ? "" : "none";
   el("modalWish").classList.toggle("on", wish.some(function(w){return w.key===keyOf(p);}));
   switchModalTab("details");
+  resetAccordions();
   loadReviews(p);
   renderRelated(p);
   addRecent(p);
@@ -1492,6 +1589,23 @@ function paintPZoom(){
 }
 function pzStep(d){ if(!pzList.length)return; pzIdx=(pzIdx+d+pzList.length)%pzList.length; paintPZoom(); }
 function closePZoom(){ var o=el("pzOv"); if(o) o.classList.remove("open"); }
+function toggleAcc(id){
+  var box=el(id); if(!box) return;
+  var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
+  var open=body.classList.toggle("open");
+  box.classList.toggle("open", open);
+  if(head) head.setAttribute("aria-expanded", open?"true":"false");
+}
+function resetAccordions(){
+  ["accDesc","accSpecs","accShip"].forEach(function(id,i){
+    var box=el(id); if(!box) return;
+    var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
+    var open=(i===0);
+    body.classList.toggle("open", open);
+    box.classList.toggle("open", open);
+    if(head) head.setAttribute("aria-expanded", open?"true":"false");
+  });
+}
 function switchModalTab(which){
   el("tabDetails").classList.toggle("active",which==="details");
   el("tabReviews").classList.toggle("active",which==="reviews");
@@ -2758,6 +2872,43 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     var slides=track.children;
     window.hcShow=function(i){ idx=(i+HC_SLIDES.length)%HC_SLIDES.length; track.style.transform="translateX(-"+(idx*100)+"%)"; Array.prototype.forEach.call(slides,function(sl,si){sl.classList.toggle("active",si===idx);}); Array.prototype.forEach.call(dotsBox.children,function(d,di){d.classList.toggle("on",di===idx);}); };
     window.hcNext=function(){ window.hcShow(idx+1); };
+
+    /* ---- swipe / drag ---- */
+    (function(){
+      var view = track.parentNode, x0=null, y0=null, dx=0, locked=null, w=0;
+      function start(e){
+        var t = e.touches ? e.touches[0] : e;
+        x0=t.clientX; y0=t.clientY; dx=0; locked=null;
+        w = view.offsetWidth || 1;
+        track.classList.add("dragging");
+      }
+      function move(e){
+        if(x0===null) return;
+        var t = e.touches ? e.touches[0] : e;
+        var mx = t.clientX - x0, my = t.clientY - y0;
+        if(locked===null){
+          if(Math.abs(mx) > 8 || Math.abs(my) > 8) locked = Math.abs(mx) > Math.abs(my) ? "x" : "y";
+        }
+        if(locked!=="x") return;
+        if(e.cancelable) e.preventDefault();
+        dx = mx;
+        // rubber-band at the edges
+        var pct = (dx / w) * 100;
+        track.style.transform = "translateX(calc(-" + (idx*100) + "% + " + pct + "%))";
+      }
+      function end(){
+        if(x0===null) return;
+        track.classList.remove("dragging");
+        var threshold = Math.max(40, w * 0.18);
+        if(locked==="x" && Math.abs(dx) > threshold){ window.hcShow(dx < 0 ? idx+1 : idx-1); }
+        else { window.hcShow(idx); }
+        x0=y0=null; dx=0; locked=null;
+      }
+      view.addEventListener("touchstart", start, {passive:true});
+      view.addEventListener("touchmove",  move,  {passive:false});
+      view.addEventListener("touchend",   end,   {passive:true});
+      view.addEventListener("touchcancel",end,   {passive:true});
+    })();
     window.hcPrev=function(){ window.hcShow(idx-1); };
     Array.prototype.forEach.call(slides,function(sl){
       var bar=sl.querySelector(".hc-progress");
