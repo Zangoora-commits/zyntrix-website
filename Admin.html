@@ -7,7 +7,6 @@
 <title>twipid Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -24,7 +23,6 @@ input,select,textarea,button{font-family:var(--font-body)}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
 /* ── LOGIN SCREEN ─────────────────────────────────────────── */
 #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);position:relative;overflow:hidden}
 .login-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(26,32,53,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(26,32,53,.4) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 75%)}
@@ -48,11 +46,9 @@ input,select,textarea,button{font-family:var(--font-body)}
 .setup-note{background:rgba(6,214,245,.06);border:1px solid rgba(6,214,245,.15);padding:14px;margin-top:20px;font-size:12px;color:var(--muted);line-height:1.6}
 .setup-note strong{color:var(--cyan);display:block;margin-bottom:4px;font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase}
 .setup-note code{background:rgba(255,255,255,.05);padding:1px 5px;font-family:var(--font-mono);font-size:11px;color:var(--text)}
-
 /* ── MAIN LAYOUT ──────────────────────────────────────────── */
 #adminPanel{display:none;min-height:100vh;background:var(--bg)}
 .admin-layout{display:flex;min-height:100vh}
-
 /* SIDEBAR */
 .sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
@@ -73,7 +69,6 @@ input,select,textarea,button{font-family:var(--font-body)}
 .user-email{font-size:11px;color:var(--muted);font-family:var(--font-mono)}
 .btn-logout{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px;font-size:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase}
 .btn-logout:hover{border-color:var(--red);color:var(--red)}
-
 /* MAIN CONTENT */
 .main-content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
 .topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:40}
@@ -84,11 +79,9 @@ input,select,textarea,button{font-family:var(--font-body)}
 .topbar-btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
 .topbar-btn.primary:hover{background:#1d4ed8}
 .content-area{padding:28px;flex:1}
-
 /* ── PAGE SECTIONS ─────────────────────────────────────────── */
 .page{display:none}
 .page.active{display:block}
-
 /* DASHBOARD */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
 .stat-card{background:var(--card);border:1px solid var(--border);padding:20px}
@@ -111,13 +104,13 @@ input,select,textarea,button{font-family:var(--font-body)}
 .status-processing{background:rgba(37,99,235,.1);color:var(--cyan);border:1px solid rgba(37,99,235,.2)}
 .status-shipped{background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2)}
 .status-delivered{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.status-cancelled{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
 .activity-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start;font-size:13px}
 .activity-item:last-child{border-bottom:none}
 .activity-icon{width:28px;height:28px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px}
 .activity-text{flex:1;color:var(--muted);line-height:1.5}
 .activity-text strong{color:var(--text)}
 .activity-time{font-family:var(--font-mono);font-size:10px;color:var(--hint)}
-
 /* PRODUCTS PAGE */
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .page-title{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:-0.5px}
@@ -144,7 +137,6 @@ input,select,textarea,button{font-family:var(--font-body)}
 .action-btn:hover{border-color:var(--border2);color:var(--text)}
 .action-btn.danger:hover{border-color:var(--red);color:var(--red)}
 .action-btn.success:hover{border-color:var(--green);color:var(--green)}
-
 /* ADD/EDIT PRODUCT MODAL */
 .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .modal-backdrop.open{display:flex}
@@ -177,20 +169,17 @@ input,select,textarea,button{font-family:var(--font-body)}
 .btn-cancel:hover{border-color:var(--border2);color:var(--text)}
 .btn-save{background:var(--blue);color:#fff;border:none;padding:10px 24px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:8px}
 .btn-save:hover{background:#1d4ed8}
-
 /* ORDERS PAGE */
 .orders-table{width:100%;border-collapse:collapse;font-size:13px}
 .orders-table th{text-align:left;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400}
 .orders-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
 .orders-table tr:hover td{background:rgba(255,255,255,.015)}
-
 /* USERS PAGE */
 .users-table{width:100%;border-collapse:collapse;font-size:13px}
 .users-table th{text-align:left;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400}
 .users-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
 .users-table tr:hover td{background:rgba(255,255,255,.015)}
 .user-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;font-weight:500;flex-shrink:0}
-
 /* SETTINGS */
 .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .settings-card{background:var(--card);border:1px solid var(--border);padding:24px}
@@ -206,25 +195,21 @@ input,select,textarea,button{font-family:var(--font-body)}
 .toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
 .toggle input:checked+.toggle-slider{background:var(--blue)}
 .toggle input:checked+.toggle-slider::before{transform:translateX(18px)}
-
 /* TOAST */
 .toast-admin{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:12px 18px;font-size:12px;font-family:var(--font-mono);border-left:3px solid var(--cyan);opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;z-index:9999;letter-spacing:.5px}
 .toast-admin.show{opacity:1;transform:translateY(0)}
 .toast-admin.error{border-left-color:var(--red)}
 .toast-admin.success{border-left-color:var(--green)}
-
 /* EMPTY STATE */
 .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
 .empty-state i{font-size:40px;color:var(--hint);margin-bottom:12px;display:block}
 .empty-state h3{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:6px;color:var(--text)}
 .empty-state p{font-size:13px;line-height:1.6;max-width:340px;margin:0 auto}
-
 /* SUPABASE CONFIG BANNER */
 .config-banner{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);padding:14px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;font-size:13px}
 .config-banner i{color:var(--amber);font-size:18px;flex-shrink:0;margin-top:1px}
 .config-banner-text{color:#fcd34d;line-height:1.6}
 .config-banner-text a{color:var(--cyan);cursor:pointer;text-decoration:underline}
-
 .sz-chk{display:inline-flex;align-items:center;gap:6px;border:1px solid #e5e7eb;background:#fff;border-radius:9px;padding:7px 11px;font-size:13px;font-weight:600;cursor:pointer;user-select:none}
 .sz-chk input{cursor:pointer;margin:0}
 .sz-chk:has(input:checked){border-color:#0ca678;background:rgba(12,166,120,.07);color:#0a7d5e}
@@ -236,7 +221,6 @@ input,select,textarea,button{font-family:var(--font-body)}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 </head>
 <body>
-
 <!-- ═══════════════════════════════════════════
      LOGIN SCREEN
 ════════════════════════════════════════════ -->
@@ -250,7 +234,6 @@ input,select,textarea,button{font-family:var(--font-body)}
     <div class="login-badge">Admin Control Panel</div>
     <div class="login-title">Welcome back</div>
     <p class="login-sub">Sign in with your owner or admin account</p>
-
     <div class="form-group">
       <label class="form-label">Email Address</label>
       <input class="form-input" type="email" id="loginEmail" placeholder="admin@twipid.com">
@@ -263,20 +246,17 @@ input,select,textarea,button{font-family:var(--font-body)}
       <i class="ti ti-lock-open"></i> Sign In to Admin Panel
     </button>
     <div class="login-error" id="loginError"></div>
-
     <div class="setup-note">
       <strong>⚙ Supabase Setup Required</strong>
       Replace <code>YOUR_SUPABASE_URL</code> and <code>YOUR_SUPABASE_ANON_KEY</code> in the script below with your actual Supabase project credentials. See the setup guide for instructions.
     </div>
   </div>
 </div>
-
 <!-- ═══════════════════════════════════════════
      ADMIN PANEL
 ════════════════════════════════════════════ -->
 <div id="adminPanel">
   <div class="admin-layout">
-
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-logo">
@@ -286,32 +266,26 @@ input,select,textarea,button{font-family:var(--font-body)}
           <div class="sidebar-role" id="sidebarRole">Owner</div>
         </div>
       </div>
-
       <nav class="sidebar-nav">
         <div class="nav-section-label">Overview</div>
         <div class="nav-item active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-
         <div class="nav-section-label">Catalogue</div>
         <div class="nav-item" onclick="showPage('products',this)"><i class="ti ti-box"></i> Products <span class="nav-badge" id="prodCount">0</span></div>
         <div class="nav-item" onclick="showPage('categories',this)"><i class="ti ti-category"></i> Categories</div>
         <div class="nav-item" onclick="showPage('media',this)"><i class="ti ti-photo"></i> Media Library</div>
         <div class="nav-item" onclick="showPage('reviews',this)"><i class="ti ti-star"></i> Reviews <span class="nav-badge" id="revCount">0</span></div>
-
         <div class="nav-section-label">Commerce</div>
         <div class="nav-item" onclick="showPage('orders',this)"><i class="ti ti-shopping-cart"></i> Orders <span class="nav-badge" id="orderCount" style="background:var(--amber)">0</span></div>
         <div class="nav-item" onclick="showPage('returns',this)"><i class="ti ti-arrow-back-up"></i> Returns <span class="nav-badge" id="returnCount" style="background:var(--amber)">0</span></div>
         <div class="nav-item" onclick="showPage('delivery',this)"><i class="ti ti-truck"></i> Delivery</div>
         <div class="nav-item" onclick="showPage('promos',this)"><i class="ti ti-tag"></i> Promo Codes</div>
-
         <div class="nav-section-label">Users</div>
         <div class="nav-item" onclick="showPage('users',this)"><i class="ti ti-users"></i> Customers</div>
         <div class="nav-item" onclick="showPage('partners',this)"><i class="ti ti-building-store"></i> Partners</div>
-
         <div class="nav-section-label">System</div>
         <div class="nav-item" onclick="showPage('settings',this)"><i class="ti ti-settings"></i> Settings</div>
         <div class="nav-item" onclick="window.open('index.html','_blank')"><i class="ti ti-external-link"></i> View Store</div>
       </nav>
-
       <div class="sidebar-user">
         <div class="user-info">
           <div class="user-avatar" id="userAvatar">A</div>
@@ -323,7 +297,6 @@ input,select,textarea,button{font-family:var(--font-body)}
         <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout" style="font-size:14px"></i> Sign Out</button>
       </div>
     </aside>
-
     <!-- MAIN -->
     <div class="main-content">
       <div class="topbar">
@@ -333,9 +306,7 @@ input,select,textarea,button{font-family:var(--font-body)}
           <div class="topbar-btn primary" id="topbarAction" onclick="openAddProduct()"><i class="ti ti-plus" style="font-size:14px"></i> Add Product</div>
         </div>
       </div>
-
       <div class="content-area">
-
         <!-- CONFIG BANNER -->
         <div class="config-banner" id="configBanner">
           <i class="ti ti-alert-triangle"></i>
@@ -343,7 +314,6 @@ input,select,textarea,button{font-family:var(--font-body)}
             <strong>Supabase not configured yet.</strong> This panel is running in demo mode with sample data. To connect your real database, add your Supabase URL and API key in the script section. <a onclick="showPage('settings',null)">Go to Settings →</a>
           </div>
         </div>
-
         <!-- ── DASHBOARD ── -->
         <div class="page active" id="page-dashboard">
           <div class="stats-row">
@@ -389,7 +359,6 @@ input,select,textarea,button{font-family:var(--font-body)}
             </div>
           </div>
         </div>
-
         <!-- ── PRODUCTS ── -->
         <div class="page" id="page-products">
           <div class="page-header">
@@ -409,8 +378,7 @@ input,select,textarea,button{font-family:var(--font-body)}
             </table>
           </div>
         </div>
-
-        <!-- ── ORDERS ── -->
+        <!-- ── REVIEWS ── -->
         <div class="page" id="page-reviews">
   <div class="card">
     <div class="card-head">
@@ -433,7 +401,6 @@ input,select,textarea,button{font-family:var(--font-body)}
     <div id="adminRevList"><div class="empty-state">Loading…</div></div>
   </div>
 </div>
-
 <div class="page" id="page-orders">
           <div class="page-header"><div class="page-title">Orders</div><button class="btn-secondary" onclick="loadOrders()" style="margin-left:auto"><i class="ti ti-refresh"></i> Refresh</button></div>
           <div class="search-filter-row">
@@ -449,7 +416,6 @@ input,select,textarea,button{font-family:var(--font-body)}
             </table>
           </div>
         </div>
-
         <!-- ── RETURNS ── -->
         <div class="page" id="page-returns">
           <div class="page-header"><div class="page-title">Returns</div><button class="btn-secondary" onclick="loadReturns()" style="margin-left:auto"><i class="ti ti-refresh"></i> Refresh</button></div>
@@ -466,7 +432,6 @@ input,select,textarea,button{font-family:var(--font-body)}
             </table>
           </div>
         </div>
-
         <!-- ── USERS ── -->
         <div class="page" id="page-users">
           <div class="page-header"><div class="page-title">Customers</div></div>
@@ -480,7 +445,6 @@ input,select,textarea,button{font-family:var(--font-body)}
             </table>
           </div>
         </div>
-
         <!-- ── DELIVERY ── -->
 <div class="page" id="page-delivery">
   <div class="page-header"><div class="page-title">Delivery Settings</div></div>
@@ -488,41 +452,32 @@ input,select,textarea,button{font-family:var(--font-body)}
     <div class="settings-card">
       <div class="settings-title">Shiprocket Integration</div>
       <div class="settings-sub">Connect your Shiprocket account for automated pickup and tracking.</div>
-
       <label class="field-label">Shiprocket Email</label>
       <input class="field-input" id="shiprocketEmail" type="email" placeholder="your@email.com">
-
       <label class="field-label">Shiprocket Password</label>
       <input class="field-input" id="shiprocketPassword" type="password" placeholder="••••••••">
-
       <button class="btn-save" onclick="saveShiprocketConfig()" style="width:100%;justify-content:center">
         <i class="ti ti-link" style="font-size:14px"></i> Connect Shiprocket
       </button>
     </div>
-
     <div class="settings-card">
       <div class="settings-title">Pickup Address</div>
       <div class="settings-sub">Courier will come here to collect orders.</div>
-
       <label class="field-label">Full Address</label>
       <input class="field-input" id="pickupAddress" type="text" placeholder="Flat / House no., Street">
-
       <label class="field-label">City</label>
       <input class="field-input" id="pickupCity" type="text" placeholder="Delhi">
-
       <label class="field-label">PIN Code</label>
       <input class="field-input" id="pickupPin" type="text" placeholder="110001">
-
       <label class="field-label">State</label>
       <input class="field-input" id="pickupState" type="text" placeholder="Delhi">
-
       <button class="btn-save" onclick="savePickupAddress()" style="width:100%;justify-content:center">
         <i class="ti ti-map-pin" style="font-size:14px"></i> Save Address
       </button>
     </div>
   </div>
 </div>
-        
+
         <!-- ── SETTINGS ── -->
         <div class="page" id="page-settings">
           <div class="page-header"><div class="page-title">Settings</div></div>
@@ -564,19 +519,15 @@ input,select,textarea,button{font-family:var(--font-body)}
             </div>
           </div>
         </div>
-
         <!-- Placeholder pages -->
         <div class="page" id="page-categories"><div class="empty-state"><i class="ti ti-category"></i><h3>Categories</h3><p>Manage your product categories. Connect Supabase to enable this feature.</p></div></div>
         <div class="page" id="page-media"><div class="empty-state"><i class="ti ti-photo"></i><h3>Media Library</h3><p>All uploaded product images and videos. Connect Supabase Storage to enable this.</p></div></div>
         <div class="page" id="page-promos"><div class="empty-state"><i class="ti ti-tag"></i><h3>Promo Codes</h3><p>Create and manage discount codes. Connect Supabase to enable this feature.</p></div></div>
         <div class="page" id="page-partners"><div class="empty-state"><i class="ti ti-building-store"></i><h3>Brand Partners</h3><p>Manage your dropship partner brands and their product feeds.</p></div></div>
-
       </div>
     </div>
   </div>
 </div>
-
-
 <!-- CONNECTION ALERT MODAL -->
 <div class="alert-overlay" id="alertOverlay">
   <div class="alert-box">
@@ -587,7 +538,6 @@ input,select,textarea,button{font-family:var(--font-body)}
     <div id="alertActions"></div>
   </div>
 </div>
-
 <!-- ADD / EDIT PRODUCT MODAL -->
 <div class="modal-backdrop" id="productModal">
   <div class="modal-box">
@@ -647,13 +597,11 @@ input,select,textarea,button{font-family:var(--font-body)}
           <input class="field-input" type="text" id="pSpecs" placeholder="ANC, 40hr Battery, Bluetooth 5.3, Hi-Res Audio, Foldable">
         </div>
       </div>
-
       <!-- ===== CLOTHING / APPAREL ===== -->
       <div class="modal-grid full">
         <div style="border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:16px;background:#fafafa">
           <div style="font-weight:800;font-size:14px;margin-bottom:4px">Clothing options</div>
           <div style="font-size:12.5px;color:#6b7280;margin-bottom:14px">Leave blank for non-clothing products. One listing per colour — e.g. "Retro Tee — Olive".</div>
-
           <label class="field-label">Sizes available</label>
           <div id="pSizeRow" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">
             <label class="sz-chk"><input type="checkbox" value="XS" onchange="syncSizeStock()"> XS</label>
@@ -665,13 +613,11 @@ input,select,textarea,button{font-family:var(--font-body)}
             <label class="sz-chk"><input type="checkbox" value="3XL" onchange="syncSizeStock()"> 3XL</label>
             <label class="sz-chk"><input type="checkbox" value="Free Size" onchange="syncSizeStock()"> Free Size</label>
           </div>
-
           <label class="field-label">Stock per size</label>
           <div id="pSizeStock" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px">
             <span style="font-size:12.5px;color:#9ca3af">Tick sizes above to set stock for each.</span>
           </div>
           <div style="font-size:12px;color:#6b7280;margin-bottom:14px">These add up to the total Stock Quantity automatically.</div>
-
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
             <div>
               <label class="field-label">Colour name</label>
@@ -687,12 +633,10 @@ input,select,textarea,button{font-family:var(--font-body)}
             </div>
           </div>
           <div style="font-size:12px;color:#6b7280;margin:6px 0 14px">Give every colour of the same garment the <b>same</b> style group — the store links them as swatches.</div>
-
           <label class="field-label">Size guide — one line per size: <code>Size,Chest,Length,Shoulder</code> (inches)</label>
           <textarea class="field-textarea" id="pSizeGuide" style="min-height:110px;font-family:monospace;font-size:13px" placeholder="S,36,26,14&#10;M,38,27,15&#10;L,40,28,16&#10;XL,42,29,17"></textarea>
         </div>
       </div>
-
       <!-- ===== SHIPPING & TAX ===== -->
       <div class="modal-grid full">
         <div style="border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:16px;background:#fafafa">
@@ -731,9 +675,7 @@ input,select,textarea,button{font-family:var(--font-body)}
     </div>
   </div>
 </div>
-
 <div class="toast-admin" id="adminToast"></div>
-
 <script>
 // ── CONFIG ───────────────────────────────────────
 var SB_URL = "https://wvzkyubggsckobvcqlgj.supabase.co";
@@ -755,7 +697,6 @@ function checkAdminAccess(onAllowed, onDenied){
     else { onDenied("This account doesn't have admin access."); }
   }).catch(function(){ onDenied("Couldn't verify admin access. Please try again."); });
 }
-
 var DEMO_PRODUCTS = [
   {id:1, name:"ProAir X90 Headphones",       brand:"SoundVibe", category:"Audio",      price:7499,  orig_price:12000, stock:24, status:"active",       tag:"Hot",  icon:"ti-headphones"},
   {id:2, name:"VitaWatch Ultra 3 Smartwatch", brand:"VitaTech",  category:"Wearables",  price:11999, orig_price:18000, stock:12, status:"active",       tag:"New",  icon:"ti-device-watch"},
@@ -765,7 +706,6 @@ var DEMO_PRODUCTS = [
   {id:6, name:"VigilCam 2K Camera",           brand:"VigilCam",  category:"Smart Home", price:5199,  orig_price:8500,  stock:7,  status:"active",       tag:"New",  icon:"ti-camera"}
 ];
 allProducts = DEMO_PRODUCTS.slice();
-
 // ── HELPERS ──────────────────────────────────────
 function el(id)          { return document.getElementById(id); }
 function val(id)         { var e=el(id); return e ? e.value : ""; }
@@ -773,7 +713,6 @@ function setHtml(id,v)   { var e=el(id); if(e) e.innerHTML=v; }
 function setText(id,v)   { var e=el(id); if(e) e.textContent=v; }
 function show(id)        { var e=el(id); if(e) e.style.display="flex"; }
 function hide(id)        { var e=el(id); if(e) e.style.display="none"; }
-
 // ── TOAST ────────────────────────────────────────
 function toast(msg, type) {
   var t = el("adminToast");
@@ -783,30 +722,22 @@ function toast(msg, type) {
   clearTimeout(window._toast);
   window._toast = setTimeout(function(){ t.className = "toast-admin"; }, 3500);
 }
-
 // ── ALERT MODAL ──────────────────────────────────
 function showAlert(type, title, msg, detail, buttons) {
   var o = el("alertOverlay");
   // Fallback to native alert if overlay missing
   if (!o) { alert(title + "\n\n" + msg + (detail ? "\n\n" + detail : "")); return; }
-
   var icons = {success:"ti-circle-check", error:"ti-circle-x", loading:"ti-loader-2", warning:"ti-alert-triangle"};
-
   var icon = el("alertIcon");
   if (icon) icon.className = "alert-icon " + type;
-
   var iconInner = el("alertIconInner");
   if (iconInner) iconInner.className = "ti " + (icons[type]||"ti-info-circle");
-
   var titleEl = el("alertTitle");
   if (titleEl) { titleEl.className = "alert-title " + type; titleEl.textContent = title; }
-
   var msgEl = el("alertMessage");
   if (msgEl) msgEl.textContent = msg;
-
   var det = el("alertDetail");
   if (det) { det.textContent = detail||""; det.className = "alert-detail" + (detail?" show":""); }
-
   var act = el("alertActions");
   if (act) {
     act.innerHTML = "";
@@ -820,14 +751,11 @@ function showAlert(type, title, msg, detail, buttons) {
       });
     }
   }
-
   o.classList.add("show");
 }
-
 function hideAlert() {
   var o = el("alertOverlay"); if (o) o.classList.remove("show");
 }
-
 // ── SUPABASE INIT ────────────────────────────────
 function waitForSDK(fn) {
   var tries = 0;
@@ -837,7 +765,6 @@ function waitForSDK(fn) {
     setTimeout(check, 100);
   })();
 }
-
 function initDB() {
   waitForSDK(function() {
     try {
@@ -853,7 +780,6 @@ function initDB() {
     }
   });
 }
-
 function checkSession() {
   if (!db) return;
   db.auth.getSession().then(function(r) {
@@ -863,26 +789,20 @@ function checkSession() {
     }
   }).catch(function(){});
 }
-
 // ── LOGIN ─────────────────────────────────────────
 function doLogin() {
   var emailEl = el("loginEmail");
   var passEl  = el("loginPassword");
   var btnEl   = el("loginBtn");
   var errEl   = el("loginError");
-
   if (!emailEl || !passEl || !btnEl) { alert("Login form not found"); return; }
-
   var email = emailEl.value.trim();
   var pass  = passEl.value.trim();
-
   if (errEl) { errEl.style.display="none"; errEl.textContent=""; }
-
   if (!email || !pass) {
     if (errEl) { errEl.textContent="Please enter email and password."; errEl.style.display="block"; }
     return;
   }
-
   // Demo mode
   if (isDemo) {
     btnEl.disabled = true;
@@ -895,16 +815,13 @@ function doLogin() {
     }, 700);
     return;
   }
-
   // Real login — ensure db ready
   if (!db) {
     if (errEl) { errEl.textContent="Database connecting... please wait and try again."; errEl.style.display="block"; }
     initDB(); return;
   }
-
   btnEl.disabled = true;
   btnEl.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:15px"></i>  Signing in...';
-
   db.auth.signInWithPassword({email:email, password:pass}).then(function(r) {
     btnEl.disabled = false;
     btnEl.innerHTML = '<i class="ti ti-lock-open"></i> Sign In to Admin Panel';
@@ -926,7 +843,6 @@ function doLogin() {
     if (errEl) { errEl.textContent="Error: "+e.message; errEl.style.display="block"; }
   });
 }
-
 function doLogout() {
   if (db) db.auth.signOut();
   currentUser = null;
@@ -934,7 +850,6 @@ function doLogout() {
   var ap = el("adminPanel");  if (ap) ap.style.display="none";
   var pw = el("loginPassword"); if (pw) pw.value="";
 }
-
 // ── PANEL ─────────────────────────────────────────
 function showPanel() {
   var ls = el("loginScreen"); if (ls) ls.style.display="none";
@@ -949,7 +864,6 @@ function showPanel() {
   loadDashboard();
   loadProducts();
 }
-
 // ── NAV ───────────────────────────────────────────
 function showPage(name, navEl) {
   document.querySelectorAll(".page").forEach(function(p){ p.classList.remove("active"); });
@@ -966,7 +880,6 @@ function showPage(name, navEl) {
   if (name==="returns") loadReturns();
   if (name==="reviews") loadAdminReviews();
 }
-
 // ── ORDERS ────────────────────────────────────────
 var allOrders = [];
 function loadOrders(){
@@ -974,7 +887,7 @@ function loadOrders(){
   if(isDemo || !db){
     allOrders = [
       {id:"DEMO-1",customer_name:"Rahul Khanna",customer_email:"rahul@email.com",items:[{name:"ProAir X90",qty:1}],total:7499,status:"delivered",created_at:"2026-05-25"},
-      {id:"DEMO-2",customer_name:"Priya Sharma",customer_email:"priya@email.com",items:[{name:"VitaWatch Ultra 3",qty:1}],total:11999,status:"shipped",created_at:"2026-05-24"},
+      {id:"DEMO-2",customer_name:"Priya Sharma",customer_email:"priya@email.com",items:[{name:"VitaWatch Ultra 3",qty:1}],total:11999,status:"shipped",created_at:"2026-05-24",delivery_instructions:"Leave with security guard"},
       {id:"DEMO-3",customer_name:"Arjun Verma",customer_email:"arjun@email.com",items:[{name:"XStrike Vortex",qty:1}],total:4799,status:"processing",created_at:"2026-05-24"}
     ];
     renderOrders(); return;
@@ -999,7 +912,7 @@ function renderOrders(){
     return okS && (!q || hay.indexOf(q)>=0);
   });
   if(!list.length){ tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-shopping-cart"></i><h3>No orders found</h3><p>Orders placed on your store will appear here.</p></div></td></tr>'; return; }
-  var statusClass={requested:"status-pending",approved:"status-processing",pickup_scheduled:"status-processing","picked up":"status-shipped",refunded:"status-delivered",rejected:"status-pending"};
+  var statusClass={pending:"status-pending",processing:"status-processing",shipped:"status-shipped",delivered:"status-delivered",cancelled:"status-cancelled"};
   tbody.innerHTML = list.map(function(o){
     var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
     var itemStr=(items||[]).map(function(it){return (it.name||"item")+" × "+(it.qty||1);}).join(", ")||"—";
@@ -1008,7 +921,7 @@ function renderOrders(){
     var opts=["pending","processing","shipped","delivered","cancelled"].map(function(s){return '<option value="'+s+'"'+(s===st?" selected":"")+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>';}).join("");
     return "<tr>"
       +'<td><span style="font-family:var(--font-mono);color:var(--cyan)">#'+(o.id||"—")+'</span></td>'
-      +'<td>'+(o.customer_name||"—")+'<br><span style="font-size:11px;color:var(--muted)">'+(o.customer_email||"")+'</span>'+(o.customer_phone?'<br><span style="font-size:11px;color:var(--muted)">'+o.customer_phone+'</span>':'')+'</td>'
+      +'<td>'+(o.customer_name||"—")+'<br><span style="font-size:11px;color:var(--muted)">'+(o.customer_email||"")+'</span>'+(o.customer_phone?'<br><span style="font-size:11px;color:var(--muted)">'+o.customer_phone+'</span>':'')+(o.delivery_instructions?'<br><span style="font-size:11px;color:var(--cyan)"><i class="ti ti-note"></i> Has delivery note</span>':'')+'</td>'
       +'<td style="font-size:12px;max-width:220px">'+itemStr+'</td>'
       +'<td style="font-family:var(--font-mono);color:var(--electric)">&#8377;'+Number(o.total||0).toLocaleString("en-IN")+'</td>'
       +'<td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">'+d+'</td>'
@@ -1030,9 +943,9 @@ function viewOrder(id){
   var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
   var itemStr=(items||[]).map(function(it){return "• "+(it.name||"item")+" × "+(it.qty||1)+"  —  ₹"+Number(it.price||0).toLocaleString("en-IN");}).join("\n");
   var addr=[o.address,o.city,o.state,o.pin].filter(Boolean).join(", ");
-  alert("ORDER #"+id+"\n\nCustomer: "+(o.customer_name||"")+"\nEmail: "+(o.customer_email||"")+"\nPhone: "+(o.customer_phone||"")+"\n\nShipping: "+addr+"\n\nItems:\n"+itemStr+"\n\nTotal: ₹"+Number(o.total||0).toLocaleString("en-IN")+"\nPayment: "+(o.payment_method||"—")+"\nStatus: "+(o.status||"pending"));
+  var instrLine = o.delivery_instructions ? ("\n\nDelivery instructions: "+o.delivery_instructions) : "";
+  alert("ORDER #"+id+"\n\nCustomer: "+(o.customer_name||"")+"\nEmail: "+(o.customer_email||"")+"\nPhone: "+(o.customer_phone||"")+"\n\nShipping: "+addr+instrLine+"\n\nItems:\n"+itemStr+"\n\nTotal: ₹"+Number(o.total||0).toLocaleString("en-IN")+"\nPayment: "+(o.payment_method||"—")+"\nStatus: "+(o.status||"pending"));
 }
-
 // ── RETURNS ────────────────────────────────────────
 var allReturns = [];
 /* ===== REVIEW MODERATION ===== */
@@ -1065,14 +978,12 @@ function renderAdminReviews(){
   if(f==="photos")   list=list.filter(function(r){ return adminPhotosOf(r).length>0; });
   if(f==="verified") list=list.filter(function(r){ return !!r.verified; });
   if(f==="low")      list=list.filter(function(r){ return Number(r.rating)<=2; });
-
   var total=adminReviews.length;
   var hidden=adminReviews.filter(function(r){return r.status==="hidden";}).length;
   var verified=adminReviews.filter(function(r){return !!r.verified;}).length;
   var withPh=adminReviews.filter(function(r){return adminPhotosOf(r).length>0;}).length;
   var avg=total?(adminReviews.reduce(function(s,r){return s+(Number(r.rating)||0);},0)/total).toFixed(1):"—";
   setText("revStats", total+" total · "+avg+"★ average · "+verified+" verified · "+withPh+" with photos · "+hidden+" hidden");
-
   if(!list.length){ box.innerHTML='<div class="empty-state">No reviews match this filter.</div>'; return; }
   box.innerHTML = list.map(function(r){
     var ph=adminPhotosOf(r);
@@ -1101,7 +1012,6 @@ function renderAdminReviews(){
   }).join("");
 }
 function escA(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
-
 function toggleReviewVisible(id, hide){
   if(!db) return;
   db.from("reviews").update({status: hide?"hidden":"visible"}).eq("id",id)
@@ -1128,7 +1038,6 @@ function deleteReview(id){
     }}
   ]);
 }
-
 function loadReturns(){
   var tbody = el("returnsTableBody"); if(!tbody) return;
   if(isDemo || !db){
@@ -1178,36 +1087,29 @@ function renderReturns(){
 }
 function updateReturnStatus(id,status){
   if(isDemo || !db){ toast("Demo mode — status not saved","info"); return; }
-
   db.from("returns").update({status:status}).eq("id",id).then(async function(r){
     if(r.error){ toast("Update failed: "+r.error.message,"error"); return; }
-
     var x=allReturns.find(function(y){return y.id==id;});
     if(x) x.status=status;
-
     if (status === "approved") {
-  const { data, error: fnError } = await supabase.functions.invoke("create-shiprocket-return", {
-    body: { return_id: id }
-  });
-
-  console.log("create-shiprocket-return", { data, fnError });
-
-  if (fnError) {
-    toast("Approved, but reverse pickup creation failed: " + fnError.message, "error");
-  } else {
-    toast("Return approved and reverse pickup requested", "success");
-  }
-} else {
+      const { data, error: fnError } = await db.functions.invoke("create-shiprocket-return", {
+        body: { return_id: id }
+      });
+      console.log("create-shiprocket-return", { data, fnError });
+      if (fnError) {
+        toast("Approved, but reverse pickup creation failed: " + fnError.message, "error");
+      } else {
+        toast("Return approved and reverse pickup requested", "success");
+      }
+    } else {
       toast("Return #"+id+" → "+status,"success");
     }
-
     setText("returnCount", allReturns.filter(function(y){return (y.status||"requested")==="requested";}).length);
     renderReturns();
   }).catch(function(){
     toast("Update failed","error");
   });
 }
-
 // ── DASHBOARD ─────────────────────────────────────
 function loadDashboard() {
   setText("statProducts", allProducts.length);
@@ -1217,7 +1119,6 @@ function loadDashboard() {
   setText("statRevenue",  isDemo ? "₹27,596" : "—");
   setText("orderCount",   isDemo ? "2" : "0");
 }
-
 // ── PRODUCTS ──────────────────────────────────────
 function loadProducts() {
   if (!isDemo && db) {
@@ -1232,7 +1133,6 @@ function loadProducts() {
     renderProducts(allProducts);
   }
 }
-
 function renderProducts(list) {
   var tbody = el("productsTableBody"); if (!tbody) return;
   shownProducts = list || [];
@@ -1262,13 +1162,11 @@ function renderProducts(list) {
   setText("prodCount",    list.length);
   setText("statProducts", list.length);
 }
-
 function filterProds(q) {
   renderProducts(allProducts.filter(function(p){
     return !q || p.name.toLowerCase().includes(q.toLowerCase()) || p.brand.toLowerCase().includes(q.toLowerCase());
   }));
 }
-
 // ── PRODUCT MODAL ─────────────────────────────────
 function openAddProduct() {
   editingId = null;
@@ -1285,7 +1183,6 @@ function openAddProduct() {
   uploadImages=[]; uploadedImageUrls=[]; editingImageUrl=null; editingImages=null;
   var pm=el("productModal"); if(pm) pm.classList.add("open");
 }
-
 function editProduct(i) {
   try {
   var p = shownProducts[i];
@@ -1320,11 +1217,9 @@ function editProduct(i) {
   var pm=el("productModal"); if(pm) pm.classList.add("open");
   } catch(err){ toast("Couldn't open editor: "+err.message,"error"); console.error("editProduct error:",err); }
 }
-
 function closeModal() {
   var pm=el("productModal"); if(pm) pm.classList.remove("open");
 }
-
 var uploadedImageUrls = [];
 var editingImageUrl = null;
 var editingImages = null;
@@ -1356,9 +1251,7 @@ function handleImageUpload(input) {
     }
   });
 }
-
 // ── SAVE PRODUCT ──────────────────────────────────
-
 /* ===== APPAREL: size chips + per-size stock ===== */
 function getCheckedSizes(){
   var row = el("pSizeRow"); if(!row) return [];
@@ -1401,7 +1294,6 @@ function setSizeChecks(sizes){
     c.checked = sizes.indexOf(c.value) > -1;
   });
 }
-
 function saveProduct() {
   try {
   // Read all fields directly
@@ -1432,24 +1324,20 @@ function saveProduct() {
   var dimH       = val("pDimH").trim();
   var hsn        = val("pHsn").trim();
   var gstRate    = val("pGstRate").trim();
-
   // Reset borders
   ["pName","pBrand","pPrice","pCategory"].forEach(function(id){
     var e=el(id); if(e) e.style.borderColor="";
   });
-
   // Validate
   var missing = [];
   if (!name)     { missing.push("Product Name"); var e=el("pName");     if(e) e.style.borderColor="var(--red)"; }
   if (!brand)    { missing.push("Brand");         var e=el("pBrand");    if(e) e.style.borderColor="var(--red)"; }
   if (!price)    { missing.push("Price");         var e=el("pPrice");    if(e) e.style.borderColor="var(--red)"; }
   if (!category) { missing.push("Category");      var e=el("pCategory"); if(e) e.style.borderColor="var(--red)"; }
-
   if (missing.length > 0) {
     alert("❌ Please fill in these required fields:\n\n• " + missing.join("\n• "));
     return;
   }
-
   var data = {
     name:       name,
     brand:      brand,
@@ -1492,16 +1380,13 @@ function saveProduct() {
   gallery = gallery.filter(Boolean);
   data.image_url = gallery[0] || null;                 // first photo = main image
   data.images    = gallery.length>1 ? gallery.slice(1).join("|") : null;  // the rest = gallery
-
   console.log("[Z] saveProduct — isDemo:", isDemo, "db:", !!db, "data:", data);
-
   if (!isDemo && db) {
     // Real save to Supabase
     console.log("[Z] Going to Supabase save path");
     var promise = editingId
       ? db.from("products").update(data).eq("id", editingId)
       : db.from("products").insert([data]).select();
-
     promise.then(function(r) {
       console.log("[Z] Save response:", r);
       if (r.error) {
@@ -1515,7 +1400,6 @@ function saveProduct() {
       console.error("[Z] Save exception:", e);
       alert("❌ Save error: " + e.message);
     });
-
   } else {
     // Demo mode
     if (editingId) {
@@ -1536,7 +1420,6 @@ function saveProduct() {
     alert("Save crashed: " + e.message + "\n\nCheck browser console for details.");
   }
 }
-
 function delProduct(i) {
   var p = shownProducts[i];
   if (!p) { toast("Product not found","error"); return; }
@@ -1557,7 +1440,6 @@ function delProduct(i) {
     toast("Product deleted (demo)","success");
   }
 }
-
 // ── SUPABASE SETTINGS ─────────────────────────────
 function saveSupabaseConfig() {
   var urlEl = el("sbUrl");
@@ -1565,9 +1447,7 @@ function saveSupabaseConfig() {
   var url   = urlEl ? urlEl.value.trim() : SB_URL;
   var key   = keyEl ? keyEl.value.trim() : SB_KEY;
   if (!url || !key) { toast("Enter URL and key","error"); return; }
-
   showAlert("loading","Connecting...","Connecting to Supabase...",null,[]);
-
   waitForSDK(function(){
     try {
       db = window.supabase.createClient(url, key);
@@ -1599,29 +1479,24 @@ function saveSupabaseConfig() {
     }
   });
 }
-
   // ── DELIVERY / SHIPROCKET ─────────────────────────
 function saveShiprocketConfig() {
   var email = val("shiprocketEmail").trim();
   var password = val("shiprocketPassword").trim();
-
   if (!email || !password) {
     toast("Enter Shiprocket email and password", "error");
     return;
   }
-
   if (isDemo || !db) {
     toast("Demo mode — Shiprocket config not saved permanently", "info");
     return;
   }
-
   var payload = {
     config_key: "shiprocket",
     shiprocket_email: email,
     shiprocket_password: password,
     updated_at: new Date().toISOString()
   };
-
   db.from("store_config").upsert([payload], { onConflict: "config_key" }).then(function(r) {
     if (r.error) {
       toast("Shiprocket save failed: " + r.error.message, "error");
@@ -1632,23 +1507,19 @@ function saveShiprocketConfig() {
     toast("Shiprocket save error: " + e.message, "error");
   });
 }
-
 function savePickupAddress() {
   var address = val("pickupAddress").trim();
   var city = val("pickupCity").trim();
   var pin = val("pickupPin").trim();
   var state = val("pickupState").trim();
-
   if (!address || !city || !pin || !state) {
     toast("Fill all pickup address fields", "error");
     return;
   }
-
   if (isDemo || !db) {
     toast("Demo mode — pickup address not saved permanently", "info");
     return;
   }
-
   var payload = {
     config_key: "pickup_address",
     pickup_address: address,
@@ -1657,7 +1528,6 @@ function savePickupAddress() {
     pickup_state: state,
     updated_at: new Date().toISOString()
   };
-
   db.from("store_config").upsert([payload], { onConflict: "config_key" }).then(function(r) {
     if (r.error) {
       toast("Pickup address save failed: " + r.error.message, "error");
@@ -1668,10 +1538,9 @@ function savePickupAddress() {
     toast("Pickup address save error: " + e.message, "error");
   });
 }
-  
+
 // ── MISC ──────────────────────────────────────────
 function refreshData(){ loadProducts(); loadDashboard(); toast("Refreshed","success"); }
-
 document.addEventListener("DOMContentLoaded", function(){
   // Set pre-filled settings values
   var su=el("sbUrl"); if(su) su.value=SB_URL;
@@ -1684,7 +1553,6 @@ document.addEventListener("DOMContentLoaded", function(){
   var ao=el("alertOverlay");
   if(ao) ao.addEventListener("click",function(e){ if(e.target===ao) hideAlert(); });
 });
-
 // Spin animation for loaders
 (function(){
   var s=document.createElement("style");
