@@ -295,6 +295,7 @@ input,select,textarea,button{font-family:var(--font-body)}
         <div class="nav-item" onclick="showPage('products',this)"><i class="ti ti-box"></i> Products <span class="nav-badge" id="prodCount">0</span></div>
         <div class="nav-item" onclick="showPage('categories',this)"><i class="ti ti-category"></i> Categories</div>
         <div class="nav-item" onclick="showPage('media',this)"><i class="ti ti-photo"></i> Media Library</div>
+        <div class="nav-item" onclick="showPage('reviews',this)"><i class="ti ti-star"></i> Reviews <span class="nav-badge" id="revCount">0</span></div>
 
         <div class="nav-section-label">Commerce</div>
         <div class="nav-item" onclick="showPage('orders',this)"><i class="ti ti-shopping-cart"></i> Orders <span class="nav-badge" id="orderCount" style="background:var(--amber)">0</span></div>
@@ -410,7 +411,30 @@ input,select,textarea,button{font-family:var(--font-body)}
         </div>
 
         <!-- ── ORDERS ── -->
-        <div class="page" id="page-orders">
+        <div class="page" id="page-reviews">
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Customer Reviews</div>
+        <div class="card-sub" id="revStats">—</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select class="field-input" id="revFilterStatus" style="width:auto" onchange="renderAdminReviews()">
+          <option value="all">All reviews</option>
+          <option value="visible">Visible only</option>
+          <option value="hidden">Hidden only</option>
+          <option value="photos">With photos</option>
+          <option value="verified">Verified only</option>
+          <option value="low">1–2 star only</option>
+        </select>
+        <button class="btn btn-ghost" onclick="loadAdminReviews()"><i class="ti ti-refresh"></i> Refresh</button>
+      </div>
+    </div>
+    <div id="adminRevList"><div class="empty-state">Loading…</div></div>
+  </div>
+</div>
+
+<div class="page" id="page-orders">
           <div class="page-header"><div class="page-title">Orders</div><button class="btn-secondary" onclick="loadOrders()" style="margin-left:auto"><i class="ti ti-refresh"></i> Refresh</button></div>
           <div class="search-filter-row">
             <input class="search-input" type="text" id="orderSearch" placeholder="Search by order ID, name or email..." oninput="renderOrders()">
@@ -934,12 +958,13 @@ function showPage(name, navEl) {
   if (navEl) navEl.classList.add("active");
   var titles = {dashboard:"Dashboard",products:"Products",categories:"Categories",
     media:"Media Library",orders:"Orders",returns:"Returns",delivery:"Delivery",promos:"Promo Codes",
-    users:"Customers",partners:"Partners",settings:"Settings"};
+    users:"Customers",partners:"Partners",settings:"Settings",reviews:"Reviews"};
   setText("topbarTitle", titles[name]||name);
   var btn = el("topbarAction");
   if (btn) btn.style.display = (name==="products") ? "flex" : "none";
   if (name==="orders") loadOrders();
   if (name==="returns") loadReturns();
+  if (name==="reviews") loadAdminReviews();
 }
 
 // ── ORDERS ────────────────────────────────────────
@@ -1010,6 +1035,100 @@ function viewOrder(id){
 
 // ── RETURNS ────────────────────────────────────────
 var allReturns = [];
+/* ===== REVIEW MODERATION ===== */
+var adminReviews = [];
+function loadAdminReviews(){
+  var box=el("adminRevList"); if(!box) return;
+  if(isDemo || !db){ box.innerHTML='<div class="empty-state">Connect Supabase to manage reviews.</div>'; return; }
+  box.innerHTML='<div class="empty-state">Loading…</div>';
+  db.from("reviews").select("*").order("created_at",{ascending:false})
+    .then(function(r){
+      if(r.error){ box.innerHTML='<div class="empty-state">Could not load reviews: '+r.error.message+'</div>'; return; }
+      adminReviews = r.data||[];
+      var nb=el("revCount"); if(nb) nb.textContent = adminReviews.length;
+      renderAdminReviews();
+    })
+    .catch(function(){ box.innerHTML='<div class="empty-state">Could not load reviews.</div>'; });
+}
+function adminPhotosOf(r){
+  var ph=r.photos;
+  if(Array.isArray(ph)) return ph.filter(Boolean);
+  if(typeof ph==="string" && ph.trim()) return ph.replace(/[{}"]/g,"").split(",").map(function(s){return s.trim();}).filter(Boolean);
+  return [];
+}
+function renderAdminReviews(){
+  var box=el("adminRevList"); if(!box) return;
+  var f=(el("revFilterStatus")||{}).value||"all";
+  var list=adminReviews.slice();
+  if(f==="visible")  list=list.filter(function(r){ return !r.status||r.status==="visible"; });
+  if(f==="hidden")   list=list.filter(function(r){ return r.status==="hidden"; });
+  if(f==="photos")   list=list.filter(function(r){ return adminPhotosOf(r).length>0; });
+  if(f==="verified") list=list.filter(function(r){ return !!r.verified; });
+  if(f==="low")      list=list.filter(function(r){ return Number(r.rating)<=2; });
+
+  var total=adminReviews.length;
+  var hidden=adminReviews.filter(function(r){return r.status==="hidden";}).length;
+  var verified=adminReviews.filter(function(r){return !!r.verified;}).length;
+  var withPh=adminReviews.filter(function(r){return adminPhotosOf(r).length>0;}).length;
+  var avg=total?(adminReviews.reduce(function(s,r){return s+(Number(r.rating)||0);},0)/total).toFixed(1):"—";
+  setText("revStats", total+" total · "+avg+"★ average · "+verified+" verified · "+withPh+" with photos · "+hidden+" hidden");
+
+  if(!list.length){ box.innerHTML='<div class="empty-state">No reviews match this filter.</div>'; return; }
+  box.innerHTML = list.map(function(r){
+    var ph=adminPhotosOf(r);
+    var isHidden = r.status==="hidden";
+    var d=r.created_at?new Date(r.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
+    var stars="★★★★★".slice(0,Math.round(r.rating||0))+"☆☆☆☆☆".slice(0,5-Math.round(r.rating||0));
+    return '<div style="border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:14px;margin-bottom:10px;'+(isHidden?'opacity:.6;background:#fafafa':'')+'">'
+      +'<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:start">'
+      +'<div style="flex:1;min-width:220px">'
+      +'<div style="font-weight:800;font-size:13.5px;margin-bottom:2px">'+escA(r.author||"Anonymous")
+      +(r.verified?' <span style="font-size:10px;font-weight:800;color:#0a7d5e;background:rgba(12,166,120,.1);border-radius:5px;padding:2px 6px">VERIFIED</span>':'')
+      +(isHidden?' <span style="font-size:10px;font-weight:800;color:#b45309;background:rgba(245,158,11,.13);border-radius:5px;padding:2px 6px">HIDDEN</span>':'')
+      +'</div>'
+      +'<div style="font-size:11.5px;color:#6b7280;margin-bottom:6px">'+escA(r.email||"no email")+' · '+escA(r.product_key||"")+' · '+d+'</div>'
+      +'<div style="color:#f59e0b;font-size:13px;letter-spacing:1px">'+stars+'</div>'
+      +(r.title?'<div style="font-weight:700;font-size:13px;margin-top:5px">'+escA(r.title)+'</div>':'')
+      +(r.body?'<div style="font-size:13px;color:#374151;margin-top:4px;line-height:1.5">'+escA(r.body)+'</div>':'')
+      +(ph.length?'<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'+ph.map(function(u){return '<a href="'+escA(u)+'" target="_blank" rel="noopener"><img src="'+escA(u)+'" style="width:54px;height:54px;object-fit:cover;border-radius:7px;border:1px solid #e5e7eb"></a>';}).join("")+'</div>':'')
+      +'<div style="font-size:11.5px;color:#6b7280;margin-top:7px"><i class="ti ti-thumb-up"></i> '+(r.helpful_count||0)+' found helpful</div>'
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px">'
+      +'<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" onclick="toggleReviewVisible(\''+escA(String(r.id))+'\','+(isHidden?'false':'true')+')">'
+      +'<i class="ti ti-'+(isHidden?'eye':'eye-off')+'"></i> '+(isHidden?'Unhide':'Hide')+'</button>'
+      +'<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px;color:#dc2626" onclick="deleteReview(\''+escA(String(r.id))+'\')"><i class="ti ti-trash"></i> Delete</button>'
+      +'</div></div></div>';
+  }).join("");
+}
+function escA(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+function toggleReviewVisible(id, hide){
+  if(!db) return;
+  db.from("reviews").update({status: hide?"hidden":"visible"}).eq("id",id)
+    .then(function(r){
+      if(r.error){ toast("Could not update: "+r.error.message,"error"); return; }
+      var rec=adminReviews.find(function(x){return String(x.id)===String(id);});
+      if(rec) rec.status = hide?"hidden":"visible";
+      toast(hide?"Review hidden from store":"Review is visible again","success");
+      renderAdminReviews();
+    }).catch(function(){ toast("Could not update review","error"); });
+}
+function deleteReview(id){
+  showAlert("warning","Delete review?","This permanently removes the review from the store. This cannot be undone.",null,[
+    {label:"Cancel", secondary:true, fn:hideAlert},
+    {label:"Delete", fn:function(){
+      hideAlert();
+      if(!db){ toast("Not connected","error"); return; }
+      db.from("reviews").delete().eq("id",id).then(function(r){
+        if(r.error){ toast("Could not delete: "+r.error.message,"error"); return; }
+        adminReviews = adminReviews.filter(function(x){ return String(x.id)!==String(id); });
+        var nb=el("revCount"); if(nb) nb.textContent=adminReviews.length;
+        toast("Review deleted","success"); renderAdminReviews();
+      }).catch(function(){ toast("Could not delete review","error"); });
+    }}
+  ]);
+}
+
 function loadReturns(){
   var tbody = el("returnsTableBody"); if(!tbody) return;
   if(isDemo || !db){
