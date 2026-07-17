@@ -1382,6 +1382,7 @@ var modalReturnTo = null;
 function closeModal(){
   el("modalOv").classList.remove("open");
   var back = modalReturnTo; modalReturnTo = null;
+  if(back==="cart"){ openCart(); return; }
   if(back==="wish"){ openWishlist(); return; }
   if(back==="orders"){ openOrders(); return; }
   if(!anyDrawerOpen()&&!el("checkoutOv").classList.contains("open")&&!el("authOv").classList.contains("open")) document.body.style.overflow="";
@@ -1744,8 +1745,8 @@ function updateCart(){
   foot.style.display="block";
   items.innerHTML=cart.map(function(it,idx){
     var pair=catPair(it.category), im=it.image_url?'<img src="'+esc(String(it.image_url).replace(/^http:/i,"https:"))+'" style="width:100%;height:100%;object-fit:cover">':'<i class="ti '+it.icon+'" style="color:'+pair[1]+'"></i>';
-    return '<div class="citem"><div class="citem-img" style="background:linear-gradient(155deg,#fff,'+pair[0]+')">'+im+'</div>'
-      +'<div class="citem-info"><div class="citem-name">'+esc(it.name)+'</div><div class="citem-brand">'+esc(it.brand||"")+'</div>'
+    return '<div class="citem"><div class="citem-img citem-open" onclick="cartOpen('+idx+')" title="View product" style="background:linear-gradient(155deg,#fff,'+pair[0]+')">'+im+'</div>'
+      +'<div class="citem-info"><div class="citem-name citem-open" onclick="cartOpen('+idx+')" title="View product">'+esc(it.name)+'</div><div class="citem-brand">'+esc(it.brand||"")+'</div>'
       +(it.size?'<div class="citem-size">Size: '+esc(it.size)+'</div>':'')
       +'<div class="citem-controls"><button class="qty" onclick="chQty('+idx+',-1)">−</button><span class="qty-n">'+it.qty+'</span><button class="qty" onclick="chQty('+idx+',1)">+</button>'
       +'<button class="citem-rm" onclick="rmItem('+idx+')" aria-label="Remove"><i class="ti ti-trash"></i></button></div></div>'
@@ -1783,6 +1784,21 @@ function wishToCart(idx){
   var full = products.find(function(x){ return String(keyOf(x))===String(it.key); });
   if(full && isApparel(full)){ closeWishlist(); openModalByProduct(full); modalReturnTo="wish"; showToast("Please pick a size"); return; }
   addToCartObj(it,1); wish.splice(idx,1); save("twipid_wish",wish); updateWishBadge(); renderWishlist(); render(); closeWishlist(); openCart();
+}
+function cartOpen(idx){
+  var it = cart[idx]; if(!it) return;
+  // apparel cart keys look like "base::M" — older saved carts have no product_key
+  var baseKey = it.product_key || String(it.key||"").split("::")[0];
+  var full = products.find(function(x){ return String(keyOf(x))===String(baseKey); });
+  if(!full){ showToast("This product is no longer available"); return; }
+  closeCart();
+  openModalByProduct(full);
+  modalReturnTo = "cart";
+  // pre-select the size that's in the cart
+  if(it.size){
+    var chip = document.querySelector('#sizeChips .size-chip[data-size="'+String(it.size).replace(/"/g,"")+'"]');
+    if(chip && !chip.disabled) pickSize(chip);
+  }
 }
 function wishOpen(idx){
   var it = wish[idx]; if(!it) return;
