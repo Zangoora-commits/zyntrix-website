@@ -973,10 +973,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 @media(max-width:480px){ .enq-row{grid-template-columns:1fr} .enq-head{padding:22px 20px 4px} .enq-body{padding:16px 20px 22px} }
 
 /* ===== FILTER DRAWER — lean pass ===== */
-.fd-body{padding:0 20px 18px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
-.fd-body::-webkit-scrollbar{width:5px}
-.fd-body::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
-.fd-body::-webkit-scrollbar-track{background:transparent}
+.fd-body{padding:0 20px 18px}
 
 /* active filter summary — see everything at a glance */
 .fd-active{display:flex;flex-wrap:wrap;gap:6px;padding:13px 0 12px;border-bottom:1px solid var(--line)}
@@ -1062,6 +1059,26 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .modal-qty button{width:40px}
   .modal-wishbtn{padding:0 12px}
   .sticky-buy .sb-add span,.sticky-buy .sb-add i+span{display:none}
+}
+
+/* ===== HIDE SCROLLBARS ON INTERNAL PANELS =====
+   Scrolling still works (touch, wheel, trackpad, keyboard) — the bar itself
+   is just not painted. The page scrollbar is left alone: on desktop it's an
+   expected affordance, and hiding it is disorienting.
+   Mobile browsers already overlay-scroll, so this mainly affects desktop. */
+.fd-body, .drawer-body, .modal, .modal-body, .sg-box, .enq-box,
+.fmodal, .cmodal-body, .mobile-menu, .rev-list, .fg-b, .acc-b,
+.prod-filters, .strip-h, .size-chips, .fswatches{
+  scrollbar-width:none;          /* Firefox */
+  -ms-overflow-style:none;       /* old Edge/IE */
+}
+.fd-body::-webkit-scrollbar, .drawer-body::-webkit-scrollbar, .modal::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar, .sg-box::-webkit-scrollbar, .enq-box::-webkit-scrollbar,
+.fmodal::-webkit-scrollbar, .cmodal-body::-webkit-scrollbar, .mobile-menu::-webkit-scrollbar,
+.rev-list::-webkit-scrollbar, .fg-b::-webkit-scrollbar, .acc-b::-webkit-scrollbar,
+.prod-filters::-webkit-scrollbar, .strip-h::-webkit-scrollbar,
+.size-chips::-webkit-scrollbar, .fswatches::-webkit-scrollbar{
+  width:0; height:0; display:none;   /* Chrome, Safari, Edge */
 }
 </style>
 </head>
