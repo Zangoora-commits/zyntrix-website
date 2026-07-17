@@ -1035,6 +1035,34 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   transition:transform .2s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .fsw-t.on{background:var(--brand)}
 .fsw-t.on::after{transform:translateX(18px)}
+
+/* ===== MODAL ACTIONS — mobile ===== */
+.mw-lb{display:none}
+@media(max-width:760px){
+  /* the sticky bar already carries Add to Cart + Buy Now, so drop the
+     duplicates here. That frees the row so the wishlist stops being
+     pushed off the right edge on narrow phones. */
+  .modal-add,.modal-buynow{display:none!important}
+  .modal-actions{margin-top:10px;gap:10px}
+  .modal-qty{flex:1;min-width:0}
+  .modal-qty button{width:46px;height:48px;flex-shrink:0}
+  .modal-qty span{flex:1;text-align:center;min-width:0}
+  .modal-wishbtn{width:auto;height:48px;padding:0 16px;gap:8px;flex-shrink:0;font-size:18px}
+  .mw-lb{display:inline;font-family:var(--fb);font-size:13.5px;font-weight:700}
+  /* breathing room: 24px each side was eating the narrow screens */
+  .modal-ov{padding:12px}
+  /* sticky bar */
+  .sticky-buy{padding:9px 12px calc(9px + env(safe-area-inset-bottom));gap:8px}
+  .sticky-buy .sb-price{font-size:16px}
+  .sticky-buy .sb-add,.sticky-buy .sb-buy{padding:12px 8px;font-size:13.5px;min-width:0}
+  .sticky-buy .sb-add i{flex-shrink:0}
+}
+@media(max-width:360px){
+  .modal-ov{padding:8px}
+  .modal-qty button{width:40px}
+  .modal-wishbtn{padding:0 12px}
+  .sticky-buy .sb-add span,.sticky-buy .sb-add i+span{display:none}
+}
 </style>
 </head>
 <body>
@@ -1377,7 +1405,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div class="modal-actions">
       <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
       <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
-      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Wishlist"><i class="ti ti-heart"></i></button>
+      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i><span class="mw-lb">Save</span></button>
     </div>
     <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="share-row">
