@@ -1316,7 +1316,7 @@ function showBestSellers(){ window._tagFilter="hot"; activeFilter="all"; searchT
 function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFilter=null; if(searchTerm){ activeFilter="all"; setActiveBtn("all"); el("prodTitle").textContent='Results for "'+esc(v.trim())+'"'; } else { el("prodTitle").textContent="Featured Products"; } render(); if(searchTerm) scrollToId("products"); }
 
 /* ===== PRODUCT MODAL ===== */
-function openModal(i){ var p=view[i]; if(!p) return; openModalByProduct(p); }
+function openModal(i){ var p=view[i]; if(!p) return; modalReturnTo=null; openModalByProduct(p); }
 function openModalByProduct(p){
   modalProduct=p; modalQtyVal=1; el("modalQtyN").textContent="1"; pickedStars=0; paintStars(0);
   el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
@@ -1378,9 +1378,16 @@ function switchModalTab(which){
   el("paneDetails").classList.toggle("active",which==="details");
   el("paneReviews").classList.toggle("active",which==="reviews");
 }
-function closeModal(){ el("modalOv").classList.remove("open"); if(!anyDrawerOpen()&&!el("checkoutOv").classList.contains("open")&&!el("authOv").classList.contains("open")) document.body.style.overflow=""; }
+var modalReturnTo = null;
+function closeModal(){
+  el("modalOv").classList.remove("open");
+  var back = modalReturnTo; modalReturnTo = null;
+  if(back==="wish"){ openWishlist(); return; }
+  if(back==="orders"){ openOrders(); return; }
+  if(!anyDrawerOpen()&&!el("checkoutOv").classList.contains("open")&&!el("authOv").classList.contains("open")) document.body.style.overflow="";
+}
 function modalQty(d){ modalQtyVal=Math.max(1,modalQtyVal+d); el("modalQtyN").textContent=modalQtyVal; }
-function modalAdd(){ if(!modalProduct) return; if(el("modalAddBtn").disabled){return;} if(!requireSize()) return; addToCartObj(modalProduct,modalQtyVal,false,selectedSize); closeModal(); openCart(); }
+function modalAdd(){ if(!modalProduct) return; if(el("modalAddBtn").disabled){return;} if(!requireSize()) return; addToCartObj(modalProduct,modalQtyVal,false,selectedSize); modalReturnTo=null; closeModal(); openCart(); }
 function modalToggleWish(){ if(!modalProduct) return; toggleWishObj(modalProduct); el("modalWish").classList.toggle("on", wish.some(function(w){return w.key===keyOf(modalProduct);})); }
 
 
@@ -1518,6 +1525,7 @@ function modalBuyNow(){
   if(el("modalAddBtn").disabled) return;
   if(!requireSize()) return;
   addToCartObj(modalProduct, modalQtyVal, true, selectedSize);
+  modalReturnTo=null;
   closeModal();
   startCheckout();
 }
@@ -1773,7 +1781,7 @@ function renderWishlist(){
 function wishToCart(idx){
   var it=wish[idx]; if(!it)return;
   var full = products.find(function(x){ return String(keyOf(x))===String(it.key); });
-  if(full && isApparel(full)){ closeWishlist(); openModalByProduct(full); showToast("Please pick a size"); return; }
+  if(full && isApparel(full)){ closeWishlist(); openModalByProduct(full); modalReturnTo="wish"; showToast("Please pick a size"); return; }
   addToCartObj(it,1); wish.splice(idx,1); save("twipid_wish",wish); updateWishBadge(); renderWishlist(); render(); closeWishlist(); openCart();
 }
 function wishOpen(idx){
@@ -1782,6 +1790,7 @@ function wishOpen(idx){
   if(!full){ showToast("This product is no longer available"); return; }
   closeWishlist();
   openModalByProduct(full);
+  modalReturnTo = "wish";
 }
 function wishRemove(idx){ wish.splice(idx,1); save("twipid_wish",wish); updateWishBadge(); renderWishlist(); render(); }
 
@@ -1902,7 +1911,7 @@ function orderCard(o){
       +'</div>'):'')
     +'</div>';
 }
-function openOrderProduct(s){ var p=window._findProduct&&window._findProduct(s); if(p){ closeOrders(); openModalByProduct(p); } else { showToast("Product details unavailable"); } }
+function openOrderProduct(s){ var p=window._findProduct&&window._findProduct(s); if(p){ closeOrders(); openModalByProduct(p); modalReturnTo="orders"; } else { showToast("Product details unavailable"); } }
 function reorderOrder(id){
   var o=(window._orders||[]).find(function(x){return String(x.id)===String(id);}); if(!o)return;
   var items=o.items; if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
