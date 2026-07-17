@@ -760,6 +760,66 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 
 /* cart item size pill */
 .citem-size{display:inline-block;font-size:11px;font-weight:800;color:var(--brand-deep);background:rgba(12,166,120,.1);border-radius:5px;padding:2px 7px;margin-top:3px}
+
+/* ===== REVIEW SYSTEM ===== */
+.rev-dist{margin:14px 0 6px}
+.rev-dist-row{display:flex;align-items:center;gap:9px;padding:3px 0;cursor:pointer;border-radius:6px;transition:background .12s}
+.rev-dist-row:hover{background:var(--paper)}
+.rev-dist-row.on{background:rgba(12,166,120,.09)}
+.rev-dist-row .rd-l{font-size:12px;font-weight:700;color:var(--ink2);min-width:34px;white-space:nowrap}
+.rev-dist-row .rd-bar{flex:1;height:7px;border-radius:4px;background:rgba(0,0,0,.07);overflow:hidden}
+.rev-dist-row .rd-bar span{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--brand),var(--brand-deep))}
+.rev-dist-row .rd-n{font-size:11.5px;font-weight:700;color:var(--muted);min-width:26px;text-align:right}
+.rev-clear{background:none;border:none;font-family:var(--fb);font-size:12px;font-weight:700;color:var(--brand-deep);cursor:pointer;padding:4px 0;margin-top:4px}
+
+.rev-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.rev-toolbar select{border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:var(--fb);font-size:12.5px;font-weight:600;color:var(--ink);background:#fff;outline:none;cursor:pointer}
+.rev-toolbar select:focus{border-color:var(--brand)}
+.rev-chip{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 12px;font-family:var(--fb);font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.rev-chip:hover{border-color:var(--brand)}
+.rev-chip.on{border-color:var(--brand);background:var(--brand);color:#fff}
+.rev-shown{font-size:12px;font-weight:600;color:var(--muted);margin-left:auto}
+
+.rev-badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;color:var(--brand-deep);background:rgba(12,166,120,.1);border-radius:5px;padding:2px 7px;letter-spacing:.2px}
+.rev-badge i{font-size:12px}
+.rev-photos{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.rev-photos img{width:62px;height:62px;object-fit:cover;border-radius:9px;border:1px solid var(--line);cursor:pointer;transition:transform .15s}
+.rev-photos img:hover{transform:scale(1.05)}
+.rev-foot{display:flex;align-items:center;gap:10px;margin-top:10px}
+.rev-help{background:none;border:1px solid var(--line);border-radius:18px;padding:5px 11px;font-family:var(--fb);font-size:11.5px;font-weight:700;color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.rev-help:hover:not(:disabled){border-color:var(--brand);color:var(--brand-deep)}
+.rev-help.voted{border-color:var(--brand);color:var(--brand-deep);background:rgba(12,166,120,.07);cursor:default}
+.rev-help:disabled{opacity:.55;cursor:not-allowed}
+.rev-more{width:100%;margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:11px;font-family:var(--fb);font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer}
+.rev-more:hover{border-color:var(--brand);color:var(--brand-deep)}
+
+/* review photo upload */
+.rev-up{border:1.5px dashed var(--line);border-radius:11px;padding:14px;text-align:center;cursor:pointer;position:relative;transition:all .15s;margin:4px 0 10px}
+.rev-up:hover{border-color:var(--brand);background:rgba(12,166,120,.03)}
+.rev-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.rev-up-t{font-size:12.5px;font-weight:700;color:var(--ink2)}
+.rev-up-s{font-size:11.5px;color:var(--muted);margin-top:2px}
+.rev-up-prev{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.rev-up-prev .upi{position:relative;width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
+.rev-up-prev .upi img{width:100%;height:100%;object-fit:cover}
+.rev-up-prev .upi button{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:10px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
+.rev-up-prev .upi .bz{position:absolute;inset:0;background:rgba(7,9,15,.6);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center}
+
+.rev-signin{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.rev-signin p{font-size:13px;color:var(--ink2);font-weight:600;margin:0 0 10px}
+.rev-signin button{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer}
+.rev-mine{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:12px}
+
+/* lightbox */
+.lb-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;display:none;align-items:center;justify-content:center}
+.lb-ov.open{display:flex}
+.lb-ov img{max-width:92vw;max-height:82vh;object-fit:contain;border-radius:8px}
+.lb-x{position:absolute;top:18px;right:18px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer}
+.lb-nav.prev{left:14px} .lb-nav.next{right:14px}
+.lb-count{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:12.5px;font-weight:700}
+.modal-rating{cursor:pointer}
+.modal-rating:hover .rnum{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1040,7 +1100,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div class="modal-content">
     <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-name" id="modalName">Product</div>
-    <div class="modal-rating"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
+    <div class="modal-rating" onclick="jumpToReviews()" title="See all reviews"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
     <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
     <div class="modal-stock" id="modalStock"></div>
     <div class="color-wrap" id="colorWrap">
@@ -1071,15 +1131,37 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     </div>
     <div class="mpane" id="paneReviews">
       <div class="rev-summary" id="revSummary"></div>
+      <div class="rev-dist" id="revDist"></div>
+      <div class="rev-toolbar" id="revToolbar" style="display:none">
+        <select id="revSort" onchange="applyReviewView()">
+          <option value="recent">Most recent</option>
+          <option value="helpful">Most helpful</option>
+          <option value="high">Highest rated</option>
+          <option value="low">Lowest rated</option>
+          <option value="photos">With photos first</option>
+        </select>
+        <button class="rev-chip" id="revChipPhotos" onclick="toggleRevFilter('photos')"><i class="ti ti-camera"></i> With photos</button>
+        <button class="rev-chip" id="revChipVerified" onclick="toggleRevFilter('verified')"><i class="ti ti-rosette-discount-check"></i> Verified only</button>
+        <span class="rev-shown" id="revShown"></span>
+      </div>
       <div class="rev-list" id="revList"></div>
-      <div class="rev-form">
+      <div class="rev-form" id="revForm">
         <h5>Write a review</h5>
-        <div class="star-pick-label">Your rating <span style="color:var(--orange)">*</span> <span id="starHint" style="color:var(--muted);font-weight:600">— tap a star</span></div>
-        <div class="star-pick" id="starPick"><i class="ti ti-star" data-s="1" onclick="setStars(1)"></i><i class="ti ti-star" data-s="2" onclick="setStars(2)"></i><i class="ti ti-star" data-s="3" onclick="setStars(3)"></i><i class="ti ti-star" data-s="4" onclick="setStars(4)"></i><i class="ti ti-star" data-s="5" onclick="setStars(5)"></i></div>
-        <input type="text" id="revName" placeholder="Your name">
-        <input type="text" id="revTitle" placeholder="Review title (optional)">
-        <textarea id="revBody" placeholder="Share your experience..."></textarea>
-        <button onclick="submitReview()">Submit Review</button>
+        <div id="revGate"></div>
+        <div id="revFormInner">
+          <div class="star-pick-label">Your rating <span style="color:var(--orange)">*</span> <span id="starHint" style="color:var(--muted);font-weight:600">— tap a star</span></div>
+          <div class="star-pick" id="starPick"><i class="ti ti-star" data-s="1" onclick="setStars(1)"></i><i class="ti ti-star" data-s="2" onclick="setStars(2)"></i><i class="ti ti-star" data-s="3" onclick="setStars(3)"></i><i class="ti ti-star" data-s="4" onclick="setStars(4)"></i><i class="ti ti-star" data-s="5" onclick="setStars(5)"></i></div>
+          <input type="text" id="revName" placeholder="Your name">
+          <input type="text" id="revTitle" placeholder="Review title (optional)">
+          <textarea id="revBody" placeholder="Share your experience..."></textarea>
+          <div class="rev-up-prev" id="revUpPrev"></div>
+          <div class="rev-up">
+            <input type="file" accept="image/*" multiple onchange="handleReviewPhotos(this)">
+            <div class="rev-up-t"><i class="ti ti-camera-plus"></i> Add photos</div>
+            <div class="rev-up-s">Up to 5 photos · JPG, PNG or WEBP · max 5MB each</div>
+          </div>
+          <button onclick="submitReview()" id="revSubmitBtn">Submit Review</button>
+        </div>
       </div>
     </div>
     <div class="modal-actions">
@@ -1630,24 +1712,59 @@ function shipNudgeHTML(itemTotal){
 }
 
 /* ===== REVIEWS ===== */
+var revState = { list:[], filter:{star:null,photos:false,verified:false}, sort:"recent", page:1, perPage:5, key:null };
+var revPhotos = [];          // {url, uploading}
+var myVotes = {};            // reviewId -> true (localStorage-backed UI guard)
+try{ myVotes = JSON.parse(localStorage.getItem("twipid_votes")||"{}"); }catch(e){ myVotes = {}; }
+
+function jumpToReviews(){
+  switchModalTab("reviews");
+  var t = el("tabReviews"); if(t && t.scrollIntoView){ try{ t.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){} }
+}
+
+/* ---- verified purchase: does this signed-in user have an order with this product? ---- */
+function checkVerifiedPurchase(p, cb){
+  if(!db || !currentUser || !currentUser.email){ cb(false); return; }
+  db.from("orders").select("items,status").eq("customer_email", currentUser.email)
+    .then(function(r){
+      if(r.error || !r.data){ cb(false); return; }
+      var target = String(p.name||"").toLowerCase();
+      var found = r.data.some(function(o){
+        var items = o.items;
+        if(typeof items === "string"){ try{ items = JSON.parse(items); }catch(e){ items = []; } }
+        if(!Array.isArray(items)) return false;
+        return items.some(function(it){ return String(it.name||"").toLowerCase() === target; });
+      });
+      cb(found);
+    }).catch(function(){ cb(false); });
+}
+
 function loadReviews(p){
   var k=keyOf(p);
+  revState.key = k; revState.page = 1;
+  revState.filter = {star:null, photos:false, verified:false};
+  revState.sort = "recent";
+  var ss = el("revSort"); if(ss) ss.value = "recent";
+  revPhotos = [];
+  renderPhotoPreviews();
   el("tabRevCount").textContent="";
   el("revList").innerHTML='<div class="rev-empty">Loading reviews…</div>';
-  el("revSummary").innerHTML="";
+  el("revSummary").innerHTML=""; el("revDist").innerHTML="";
+  var tb=el("revToolbar"); if(tb) tb.style.display="none";
+  renderReviewGate(p);
+
   function paint(list){
-    list=list||[];
-    var count=list.length, avg=count?(list.reduce(function(s,r){return s+r.rating;},0)/count):(p.rating||0);
+    list=(list||[]).filter(function(r){ return !r.status || r.status==="visible"; });
+    revState.list = list;
+    var count=list.length, avg=count?(list.reduce(function(s,r){return s+(Number(r.rating)||0);},0)/count):(p.rating||0);
     reviewCache[k]={avg:avg,count:count,list:list};
     el("tabRevCount").textContent=count?"("+count+")":"";
     el("modalStars").textContent=starString(ratingOf(p));
     el("modalRnum").textContent=ratingOf(p).toFixed(1)+(count?" · "+count+" review"+(count!==1?"s":""):" · No reviews yet");
     el("revSummary").innerHTML='<div class="rev-big">'+(count?avg.toFixed(1):(p.rating||4.7).toFixed(1))+'</div><div class="rev-sumright"><div class="rstars">'+starString(count?avg:(p.rating||4.7))+'</div><div class="rcount">'+(count?("Based on "+count+" review"+(count!==1?"s":"")):"Be the first to review")+'</div></div>';
-    if(!count){ el("revList").innerHTML='<div class="rev-empty">No reviews yet — share your thoughts below!</div>'; return; }
-    el("revList").innerHTML=list.map(function(r){
-      var d=r.created_at?new Date(r.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
-      return '<div class="rev-item"><div class="rev-top"><span class="rev-author">'+esc(r.author||"Anonymous")+'</span><span class="rev-date">'+d+'</span></div><div class="rev-rstars">'+starString(r.rating)+'</div>'+(r.title?'<div class="rev-title">'+esc(r.title)+'</div>':'')+(r.body?'<div class="rev-body">'+esc(r.body)+'</div>':'')+'</div>';
-    }).join("");
+    renderDistribution();
+    if(tb) tb.style.display = count ? "flex" : "none";
+    applyReviewView();
   }
   if(db){
     db.from("reviews").select("*").eq("product_key",k).order("created_at",{ascending:false})
@@ -1655,6 +1772,193 @@ function loadReviews(p){
       .catch(function(){ paint([]); });
   } else { paint([]); }
 }
+
+/* ---- rating distribution bars (clickable filters) ---- */
+function renderDistribution(){
+  var box=el("revDist"); if(!box) return;
+  var list=revState.list, total=list.length;
+  if(!total){ box.innerHTML=""; return; }
+  var buckets=[0,0,0,0,0];
+  list.forEach(function(r){ var s=Math.round(Number(r.rating)||0); if(s>=1&&s<=5) buckets[s-1]++; });
+  var html="";
+  for(var s=5;s>=1;s--){
+    var n=buckets[s-1], pct=total?Math.round(n/total*100):0;
+    var on=revState.filter.star===s;
+    html+='<div class="rev-dist-row'+(on?" on":"")+'" onclick="filterByStar('+s+')" title="Show only '+s+'-star reviews">'
+      +'<span class="rd-l">'+s+' ★</span>'
+      +'<span class="rd-bar"><span style="width:'+pct+'%"></span></span>'
+      +'<span class="rd-n">'+n+'</span></div>';
+  }
+  if(revState.filter.star){ html+='<button class="rev-clear" onclick="filterByStar(null)">Clear '+revState.filter.star+'-star filter</button>'; }
+  box.innerHTML=html;
+}
+function filterByStar(s){
+  revState.filter.star = (revState.filter.star===s) ? null : s;
+  revState.page=1; renderDistribution(); applyReviewView();
+}
+function toggleRevFilter(which){
+  revState.filter[which] = !revState.filter[which];
+  revState.page=1;
+  var c=el(which==="photos"?"revChipPhotos":"revChipVerified");
+  if(c) c.classList.toggle("on", revState.filter[which]);
+  applyReviewView();
+}
+
+/* ---- sort + filter + paginate ---- */
+function visibleReviews(){
+  var out = revState.list.slice();
+  var f = revState.filter;
+  if(f.star) out = out.filter(function(r){ return Math.round(Number(r.rating)||0)===f.star; });
+  if(f.photos) out = out.filter(function(r){ return photosOf(r).length>0; });
+  if(f.verified) out = out.filter(function(r){ return !!r.verified; });
+  var s = revState.sort;
+  out.sort(function(a,b){
+    if(s==="helpful") return (b.helpful_count||0)-(a.helpful_count||0);
+    if(s==="high")    return (b.rating||0)-(a.rating||0);
+    if(s==="low")     return (a.rating||0)-(b.rating||0);
+    if(s==="photos")  return photosOf(b).length - photosOf(a).length;
+    return new Date(b.created_at||0) - new Date(a.created_at||0);
+  });
+  return out;
+}
+function photosOf(r){
+  var ph = r.photos;
+  if(Array.isArray(ph)) return ph.filter(Boolean);
+  if(typeof ph === "string" && ph.trim()){
+    return ph.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+  }
+  return [];
+}
+function applyReviewView(){
+  var ss=el("revSort"); if(ss) revState.sort = ss.value;
+  var list = visibleReviews();
+  var shown = list.slice(0, revState.page*revState.perPage);
+  var box = el("revList");
+  var info = el("revShown");
+  if(info) info.textContent = revState.list.length ? (list.length+" of "+revState.list.length+" review"+(revState.list.length!==1?"s":"")) : "";
+  if(!revState.list.length){ box.innerHTML='<div class="rev-empty">No reviews yet — share your thoughts below!</div>'; return; }
+  if(!list.length){ box.innerHTML='<div class="rev-empty">No reviews match this filter. <button class="rev-clear" onclick="clearRevFilters()">Clear filters</button></div>'; return; }
+  box.innerHTML = shown.map(reviewCard).join("")
+    + (list.length>shown.length ? '<button class="rev-more" onclick="revState.page++;applyReviewView()">Show '+Math.min(revState.perPage,list.length-shown.length)+' more review'+((list.length-shown.length)!==1?"s":"")+'</button>' : "");
+  renderDistribution();
+}
+function clearRevFilters(){
+  revState.filter={star:null,photos:false,verified:false}; revState.page=1;
+  ["revChipPhotos","revChipVerified"].forEach(function(id){ var c=el(id); if(c) c.classList.remove("on"); });
+  applyReviewView();
+}
+
+function reviewCard(r){
+  var d=r.created_at?new Date(r.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"";
+  var ph=photosOf(r);
+  var voted = !!myVotes[r.id];
+  var hc = Number(r.helpful_count)||0;
+  return '<div class="rev-item">'
+    +'<div class="rev-top"><span class="rev-author">'+esc(r.author||"Anonymous")+(r.verified?' <span class="rev-badge"><i class="ti ti-rosette-discount-check"></i> Verified Purchase</span>':'')+'</span><span class="rev-date">'+d+'</span></div>'
+    +'<div class="rev-rstars">'+starString(r.rating)+'</div>'
+    +(r.title?'<div class="rev-title">'+esc(r.title)+'</div>':'')
+    +(r.body?'<div class="rev-body">'+esc(r.body)+'</div>':'')
+    +(ph.length?'<div class="rev-photos">'+ph.map(function(u,i){ return '<img src="'+esc(u)+'" loading="lazy" onclick="openLightbox(\''+esc(String(r.id))+'\','+i+')" alt="Customer photo">'; }).join("")+'</div>':'')
+    +'<div class="rev-foot"><button class="rev-help'+(voted?" voted":"")+'" onclick="voteHelpful(\''+esc(String(r.id))+'\')"'+(voted?' disabled':'')+'>'
+    +'<i class="ti ti-thumb-up"></i> '+(voted?"Marked helpful":"Helpful")+(hc?" ("+hc+")":"")+'</button></div>'
+    +'</div>';
+}
+
+/* ---- helpful votes ---- */
+function voteHelpful(id){
+  if(myVotes[id]){ return; }
+  if(!currentUser || !currentUser.email){ showToast("Please sign in to mark reviews helpful"); openAuth("signin"); return; }
+  if(!db){ showToast("Not connected"); return; }
+  db.rpc("vote_review_helpful", { p_review_id: id, p_email: currentUser.email })
+    .then(function(r){
+      if(r.error){ showToast("Could not record your vote"); return; }
+      if(r.data === -1){ showToast("You've already marked this helpful"); }
+      else {
+        var rec = revState.list.find(function(x){ return String(x.id)===String(id); });
+        if(rec) rec.helpful_count = r.data;
+        showToast("Thanks for the feedback!");
+      }
+      myVotes[id]=true; try{ localStorage.setItem("twipid_votes", JSON.stringify(myVotes)); }catch(e){}
+      applyReviewView();
+    }).catch(function(){ showToast("Could not record your vote"); });
+}
+
+/* ---- lightbox ---- */
+var lbList=[], lbIdx=0;
+function openLightbox(reviewId, idx){
+  var rec = revState.list.find(function(x){ return String(x.id)===String(reviewId); });
+  if(!rec) return;
+  lbList = photosOf(rec); lbIdx = idx||0;
+  if(!lbList.length) return;
+  paintLightbox(); el("lbOv").classList.add("open");
+}
+function paintLightbox(){
+  el("lbImg").src = lbList[lbIdx];
+  el("lbCount").textContent = (lbIdx+1)+" / "+lbList.length;
+  var show = lbList.length>1 ? "" : "none";
+  document.querySelectorAll("#lbOv .lb-nav").forEach(function(b){ b.style.display=show; });
+}
+function lbStep(d){ if(!lbList.length) return; lbIdx=(lbIdx+d+lbList.length)%lbList.length; paintLightbox(); }
+function closeLightbox(){ var o=el("lbOv"); if(o) o.classList.remove("open"); }
+
+/* ---- review photo upload ---- */
+function handleReviewPhotos(input){
+  var files = Array.from(input.files||[]);
+  input.value="";
+  if(!currentUser){ showToast("Please sign in to add photos"); return; }
+  if(!db || !db.storage){ showToast("Not connected — photos can't upload"); return; }
+  files.forEach(function(file){
+    if(revPhotos.length>=5){ showToast("Maximum 5 photos"); return; }
+    if(file.size > 5*1024*1024){ showToast(file.name+" is over 5MB"); return; }
+    var slot = { url:null, uploading:true, preview:null };
+    revPhotos.push(slot);
+    var reader = new FileReader();
+    reader.onload = function(e){ slot.preview = e.target.result; renderPhotoPreviews(); };
+    reader.readAsDataURL(file);
+    renderPhotoPreviews();
+    var ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+    var path="reviews/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+"."+ext;
+    db.storage.from("review-photos").upload(path, file, {cacheControl:"3600",upsert:false})
+      .then(function(r){
+        if(r.error){ showToast("Photo upload failed — is the 'review-photos' bucket created?"); revPhotos.splice(revPhotos.indexOf(slot),1); renderPhotoPreviews(); return; }
+        var pub=db.storage.from("review-photos").getPublicUrl(path);
+        slot.url = pub && pub.data && pub.data.publicUrl;
+        slot.uploading=false; renderPhotoPreviews();
+      })
+      .catch(function(){ showToast("Photo upload error"); revPhotos.splice(revPhotos.indexOf(slot),1); renderPhotoPreviews(); });
+  });
+}
+function renderPhotoPreviews(){
+  var box=el("revUpPrev"); if(!box) return;
+  box.innerHTML = revPhotos.map(function(s,i){
+    return '<div class="upi"><img src="'+(s.preview||s.url||"")+'">'
+      + (s.uploading?'<div class="bz">Uploading…</div>':'<button onclick="removeReviewPhoto('+i+')" aria-label="Remove">✕</button>')
+      + '</div>';
+  }).join("");
+}
+function removeReviewPhoto(i){ revPhotos.splice(i,1); renderPhotoPreviews(); }
+
+/* ---- who can write a review ---- */
+function renderReviewGate(p){
+  var gate=el("revGate"), inner=el("revFormInner");
+  if(!gate||!inner) return;
+  if(!currentUser){
+    gate.innerHTML='<div class="rev-signin"><p>Sign in to write a review — it keeps reviews honest and lets us badge verified purchases.</p><button onclick="openAuth(\'signin\')">Sign In</button></div>';
+    inner.style.display="none"; return;
+  }
+  var mine = (reviewCache[keyOf(p)]||{list:[]}).list.some(function(r){
+    return r.email && currentUser.email && String(r.email).toLowerCase()===String(currentUser.email).toLowerCase();
+  });
+  if(mine){
+    gate.innerHTML='<div class="rev-mine"><i class="ti ti-circle-check"></i> You\'ve already reviewed this product.</div>';
+    inner.style.display="none"; return;
+  }
+  gate.innerHTML="";
+  inner.style.display="";
+  var nm=el("revName");
+  if(nm && !nm.value){ nm.value = (currentUser.user_metadata && currentUser.user_metadata.full_name) || String(currentUser.email||"").split("@")[0]; }
+}
+
 function paintStars(n){
   document.querySelectorAll("#starPick i").forEach(function(s){
     var k=parseInt(s.getAttribute("data-s"));
@@ -1664,20 +1968,40 @@ function paintStars(n){
   var hint=el("starHint"); if(hint) hint.textContent = n? ("— "+n+"/5") : "— tap a star";
 }
 function setStars(n){ pickedStars=n; paintStars(n); }
+
 function submitReview(){
   if(!modalProduct) return;
+  if(!currentUser){ showToast("Please sign in to review"); openAuth("signin"); return; }
   var name=el("revName").value.trim(), title=el("revTitle").value.trim(), body=el("revBody").value.trim();
   if(!pickedStars){ showToast("Please pick a star rating"); return; }
   if(!name){ showToast("Please enter your name"); return; }
   if(!body){ showToast("Please write a few words"); return; }
-  var rec={product_id:(modalProduct.id||null),product_key:keyOf(modalProduct),author:name,email:(currentUser?currentUser.email:null),rating:pickedStars,title:title||null,body:body};
-  if(db){
+  if(revPhotos.some(function(s){return s.uploading;})){ showToast("Please wait — photos still uploading"); return; }
+  var btn=el("revSubmitBtn"); if(btn){ btn.disabled=true; btn.textContent="Submitting…"; }
+  var urls = revPhotos.map(function(s){ return s.url; }).filter(Boolean);
+
+  checkVerifiedPurchase(modalProduct, function(isVerified){
+    var rec={product_id:(modalProduct.id||null),product_key:keyOf(modalProduct),author:name,
+      email:currentUser.email,rating:pickedStars,title:title||null,body:body,
+      photos: urls.length?urls:null, verified:isVerified, helpful_count:0, status:"visible"};
+    if(!db){ showToast("Connect to save reviews."); if(btn){btn.disabled=false;btn.textContent="Submit Review";} return; }
     db.from("reviews").insert([rec]).then(function(r){
-      if(r.error){ showToast("Review error: "+r.error.message); console.error("Review insert error:",r.error); return; }
-      el("revName").value=""; el("revTitle").value=""; el("revBody").value=""; pickedStars=0; paintStars(0);
-      showToast("Thanks for your review! 🌟"); loadReviews(modalProduct);
-    }).catch(function(e){ showToast("Review error: "+(e&&e.message?e.message:"unknown")); });
-  } else { showToast("Connect to save reviews."); }
+      if(btn){ btn.disabled=false; btn.textContent="Submit Review"; }
+      if(r.error){
+        if(String(r.error.message||"").indexOf("uniq_review_per_person")>-1 || r.error.code==="23505"){
+          showToast("You've already reviewed this product");
+        } else { showToast("Review error: "+r.error.message); console.error("Review insert error:",r.error); }
+        return;
+      }
+      el("revName").value=""; el("revTitle").value=""; el("revBody").value="";
+      pickedStars=0; paintStars(0); revPhotos=[]; renderPhotoPreviews();
+      showToast(isVerified ? "Thanks! Your verified review is live 🌟" : "Thanks for your review! 🌟");
+      loadReviews(modalProduct);
+    }).catch(function(e){
+      if(btn){ btn.disabled=false; btn.textContent="Submit Review"; }
+      showToast("Review error: "+(e&&e.message?e.message:"unknown"));
+    });
+  });
 }
 
 /* ===== SHARE ===== */
@@ -2402,6 +2726,15 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     <div id="sgBody"></div>
     <div class="sg-note"><b>How to measure:</b> lay a similar garment flat. <b>Chest</b> — armpit to armpit, doubled. <b>Length</b> — highest point of shoulder to hem. <b>Shoulder</b> — seam to seam across the back.<br>Between two sizes? Size up for a relaxed fit.</div>
   </div>
+</div>
+
+<!-- REVIEW PHOTO LIGHTBOX -->
+<div class="lb-ov" id="lbOv" onclick="if(event.target===this)closeLightbox()">
+  <button class="lb-x" onclick="closeLightbox()"><i class="ti ti-x"></i></button>
+  <button class="lb-nav prev" onclick="lbStep(-1)"><i class="ti ti-chevron-left"></i></button>
+  <img id="lbImg" alt="Review photo">
+  <button class="lb-nav next" onclick="lbStep(1)"><i class="ti ti-chevron-right"></i></button>
+  <div class="lb-count" id="lbCount"></div>
 </div>
 </body>
 </html>
