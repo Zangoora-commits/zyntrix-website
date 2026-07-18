@@ -941,12 +941,28 @@ function renderOrders(){
       +"</tr>";
   }).join("");
 }
+function notifyOrderCancelled(o){
+  if(isDemo || !db || !db.functions || !o) return;
+  var name=String(o.customer_name||"there").split(" ")[0];
+  var pay=(o.payment_id||o.payment_method&&/online|razorpay/i.test(o.payment_method))?"online":"cod";
+  var refundLine=(pay==="online")?" Since you paid online, your refund will be processed to your original payment method within 5–7 business days.":"";
+  var msg="Hi "+name+", your twipid order #"+o.id+" has been cancelled."+refundLine+" Questions? WhatsApp us at +91 88609 31112.";
+  var raw=String(o.customer_phone||"").replace(/\D/g,"");
+  var e164=raw.length===10?("+91"+raw):("+"+raw.replace(/^\+/,""));
+  if(raw){
+    try{ db.functions.invoke("send-order-message",{body:{channel:"sms",to:e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+    try{ db.functions.invoke("send-order-message",{body:{channel:"whatsapp",to:"whatsapp:"+e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+  }
+  try{ db.functions.invoke("send-order-email",{body:{orderId:o.id,type:"cancelled",message:msg}}).then(function(){},function(){}); }catch(e){}
+}
 function updateOrderStatus(id,status){
   if(isDemo || !db){ toast("Demo mode — status not saved","info"); return; }
   db.from("orders").update({status:status}).eq("id",id).then(function(r){
     if(r.error){ toast("Update failed: "+r.error.message,"error"); return; }
     var o=allOrders.find(function(x){return x.id==id;}); if(o)o.status=status;
-    toast("Order #"+id+" → "+status,"success"); renderOrders();
+    if(status==="cancelled" && o){ notifyOrderCancelled(o); toast("Order #"+id+" cancelled — customer notified","success"); }
+    else { toast("Order #"+id+" → "+status,"success"); }
+    renderOrders();
   }).catch(function(){ toast("Update failed","error"); });
 }
 function viewOrder(id){
