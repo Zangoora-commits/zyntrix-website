@@ -211,10 +211,12 @@ section.first{padding-top:44px}
 /* FOOTER */
 footer{background:var(--ink);color:#fff;margin-top:64px}
 .footer-inner{max-width:1300px;margin:0 auto;padding:56px 28px 30px}
-.footer-top{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
+.footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:36px;margin-bottom:44px}
 .footer-brand .logo-word .rest{color:#fff}
 .footer-brand p{font-size:13.5px;color:rgba(255,255,255,.62);line-height:1.65;max-width:260px;margin-top:15px}
 .footer-social{display:flex;gap:9px;margin-top:20px}
+.footer-brand{align-self:start}
+.footer-brand .logo{align-items:center}
 .fsoc{width:39px;height:39px;border-radius:11px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.8);font-size:18px;transition:all .16s;cursor:pointer}
 .fsoc:hover{background:var(--brand);color:#fff;transform:translateY(-2px)}
 .footer-col h5{font-family:var(--fd);font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:17px;color:#fff}
@@ -594,7 +596,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:6px;max-width:100%}
 .hc-view{overflow:hidden;border-radius:24px;width:100%;max-width:100%}
 .hc-track{display:flex;transition:transform .7s cubic-bezier(.6,.02,.15,1)}
-.hc-slide{flex:0 0 100%;width:100%;min-width:0;height:340px;position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
+.hc-slide{flex:0 0 100%;width:100%;min-width:0;height:clamp(300px,40vw,360px);position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
 .hc-slide::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5;pointer-events:none;z-index:3}
 .hc-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,20,14,.26),rgba(2,20,14,0) 55%);pointer-events:none;z-index:1}
 .hc-deco{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
@@ -630,7 +632,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-dot.on{background:#fff;width:26px;border-radius:5px}
 /* ===== HERO — TABLET (481–768px) ===== */
 @media(min-width:481px) and (max-width:768px){
-  .hc-slide{height:360px}
+  .hc-slide{height:300px}
   .hc-text{padding:0 28px;max-width:56%}
   .hc-title{font-size:clamp(24px,4.6vw,32px);letter-spacing:-.8px}
   .hc-sub{font-size:13.5px;margin-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -645,7 +647,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
    Full-bleed editorial layout: art bleeds off the right edge, copy sits
    bottom-left over a scrim at FULL width — no more 64% squeeze. */
 @media(max-width:480px){
-  .hc-slide{height:380px;display:block;padding:0}
+  .hc-slide{height:clamp(240px,46vw,300px);display:block;padding:0}
   .hc-slide::before{background:linear-gradient(to top,rgba(2,20,14,.82) 0%,rgba(2,20,14,.34) 42%,rgba(2,20,14,0) 68%)}
   .hc-text{position:absolute;left:0;right:0;bottom:0;max-width:none;width:100%;padding:0 18px 40px;z-index:4}
   .hc-title{font-size:clamp(25px,7.4vw,32px);letter-spacing:-.9px;line-height:1.05;margin-bottom:7px}
@@ -661,7 +663,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .hc-dot.on{width:22px}
 }
 @media(max-width:360px){
-  .hc-slide{height:352px}
+  .hc-slide{height:230px}
   .hc-art{width:158px;height:158px;right:-28px}
   .hc-title{font-size:23px}
 }
@@ -692,7 +694,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 @keyframes htblink{0%,90%,100%{transform:scaleY(1)}94%,96%{transform:scaleY(.08)}}
 @keyframes htglance{0%,18%{transform:translateX(0)}28%,44%{transform:translateX(4.5px)}54%,70%{transform:translateX(-4.5px)}82%,100%{transform:translateX(0)}}
 .hc:hover .ht-bob,.hc:hover .ht-eyes,.hc:hover .ht-pupils{animation-play-state:paused}
-@media(min-width:769px) and (max-width:1200px){.hc-slide{height:330px}.hc-text{max-width:36%;padding:0 30px}.hc-tappy{right:250px;width:210px;height:285px}.hc-art{right:40px;width:228px;height:228px;bottom:18px}.hc-arrow{top:16px;bottom:auto;transform:none}.hc-arrow.left{left:auto;right:64px}.hc-arrow.right{right:16px}}
+@media(min-width:769px) and (max-width:1200px){.hc-slide{height:clamp(260px,38vw,320px)}.hc-text{max-width:36%;padding:0 30px}.hc-tappy{right:250px;width:210px;height:285px}.hc-art{right:40px;width:228px;height:228px;bottom:18px}.hc-arrow{top:16px;bottom:auto;transform:none}.hc-arrow.left{left:auto;right:64px}.hc-arrow.right{right:16px}}
 @media(max-width:600px){.hc-deco{display:none}}
 /* ===== DELIVERY ESTIMATE ===== */
 .deliv-box{border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin:12px 0 4px;background:var(--paper)}
@@ -1085,6 +1087,54 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .size-chips::-webkit-scrollbar, .fswatches::-webkit-scrollbar{
   width:0; height:0; display:none;   /* Chrome, Safari, Edge */
 }
+
+/* ===== STICKY SHOP BAR =====
+   Category chips + Filters + Sort, merged into one line and pinned under the
+   nav. Replaces two section headings and two stacked control rows, so products
+   start roughly 260px higher on mobile — and the controls stay reachable while
+   you scroll instead of being stranded at the top. */
+.shopbar{position:sticky;top:72px;z-index:90;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--line);transition:box-shadow .2s}
+.shopbar.stuck{box-shadow:0 6px 20px rgba(12,22,17,.06)}
+.sb-inner{max-width:1300px;margin:0 auto;padding:0 28px;height:60px;display:flex;align-items:center;gap:16px}
+.sb-tools{display:flex;align-items:center;gap:9px;margin-left:auto;flex-shrink:0}
+.rb-lb{display:inline}
+
+/* chips scroll horizontally with a soft fade instead of wrapping */
+.prod-filters{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;flex:1;min-width:0;
+  margin-bottom:0;padding:0;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+  mask-image:linear-gradient(to right,transparent 0,#000 12px,#000 calc(100% - 20px),transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 12px,#000 calc(100% - 20px),transparent 100%)}
+.fbtn{flex-shrink:0}
+
+/* compact section head — replaces the big clamp(25px,3vw,35px) title */
+.shop-meta{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.shop-h{font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:-.5px;line-height:1.2}
+#resultCount{font-size:13px;color:var(--muted);font-weight:600}
+#products{padding-top:26px}
+
+@media(max-width:980px){
+  .sb-inner{padding:0 18px;height:56px;gap:10px}
+}
+@media(max-width:760px){
+  .shopbar{top:64px}
+  .sb-inner{height:54px;gap:8px}
+  .rb-lb{display:none}          /* icon-only Filters button on phones */
+  .refine-btn{padding:8px 11px}
+  .sort-sel{max-width:112px;text-overflow:ellipsis}
+  .shop-h{font-size:17px}
+  #products{padding-top:18px}
+  .shop-meta{margin-bottom:14px;gap:8px}
+}
+@media(max-width:380px){
+  .sort-wrap{display:none}      /* sort lives in the filter drawer at this size */
+}
+
+/* footer: brand + 4 link columns, evenly distributed to the right edge */
+.footer-col h5{margin-bottom:17px}
+@media(max-width:1100px){ .footer-top{grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px} #footerCats{display:none} }
+@media(max-width:860px){ .footer-top{grid-template-columns:1fr 1fr 1fr;gap:28px} .footer-brand{grid-column:1/-1} }
+@media(max-width:560px){ .footer-top{grid-template-columns:1fr 1fr;gap:26px} }
 </style>
 </head>
 <body>
@@ -1190,7 +1240,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 </div>
 <!-- CATEGORIES -->
 <section id="categories" class="first">
-  <div class="sec-head"><span class="sec-tag">Browse by category</span><h2 class="sec-title">What are you looking for?</h2></div>
   <div class="hc" id="hc">
     <div class="hc-view"><div class="hc-track" id="hcTrack"></div></div>
     <button class="hc-arrow left" onclick="hcPrev()" aria-label="Previous"><i class="ti ti-chevron-left"></i></button>
@@ -1199,27 +1248,31 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   </div>
 </section>
 <!-- PRODUCTS -->
-<section id="products">
-  <div class="sec-head sec-head-row"><div><span class="sec-tag">Handpicked for you</span><h2 class="sec-title" id="prodTitle">Featured Products</h2></div></div>
-  <div class="prod-filters" id="prodFilters">
-    <button class="fbtn active" data-cat="all" onclick="pickFilter(this,'all')">All</button>
+<!-- STICKY SHOP BAR -->
+<div class="shopbar" id="shopbar">
+  <div class="sb-inner">
+    <div class="prod-filters" id="prodFilters">
+      <button class="fbtn active" data-cat="all" onclick="pickFilter(this,'all')">All</button>
+    </div>
+    <div class="sb-tools">
+      <button class="refine-btn" onclick="toggleRefine()" aria-label="Filters"><i class="ti ti-adjustments-horizontal"></i><span class="rb-lb">Filters</span><span class="cnt" id="refineCount" style="display:none">0</span></button>
+      <div class="sort-wrap">
+        <select class="sort-sel" id="sortSel" onchange="setSort(this.value)" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+    </div>
   </div>
-  <div class="shop-controls">
-    <div class="refine-left">
-      <button class="refine-btn" onclick="toggleRefine()"><i class="ti ti-adjustments-horizontal"></i> Filters <span class="cnt" id="refineCount" style="display:none">0</span></button>
-      <span id="resultCount" style="font-size:13px;color:var(--muted);font-weight:600"></span>
-      <div class="active-filters" id="activeFilters" style="display:none"></div>
-    </div>
-    <div class="sort-wrap">
-      <label for="sortSel">Sort</label>
-      <select class="sort-sel" id="sortSel" onchange="setSort(this.value)">
-        <option value="featured">Featured</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="rating">Top Rated</option>
-        <option value="newest">Newest First</option>
-      </select>
-    </div>
+</div>
+<section id="products">
+  <div class="shop-meta">
+    <h2 class="shop-h" id="prodTitle">Featured Products</h2>
+    <span id="resultCount"></span>
+    <div class="active-filters" id="activeFilters" style="display:none"></div>
   </div>
   <div class="prod-grid" id="prodGrid"></div>
   <div id="loadMoreWrap" style="text-align:center;margin-top:26px"></div>
@@ -1293,7 +1346,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
         <a class="fsoc" onclick="comingSoon('LinkedIn')" style="cursor:pointer" aria-label="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
       </div>
     </div>
-    <div class="footer-col"><h5>Shop</h5><ul><li><a onclick="showNewArrivals()">New Arrivals</a></li><li><a onclick="showBestSellers()">Best Sellers</a></li><li><a onclick="pickCategory('audio')">Audio</a></li><li><a onclick="pickCategory('wearables')">Wearables</a></li><li><a onclick="pickCategory('gaming')">Gaming</a></li></ul></div>
+    <div class="footer-col"><h5>Shop</h5><ul><li><a onclick="showNewArrivals()">New Arrivals</a></li><li><a onclick="showBestSellers()">Best Sellers</a></li><li><a onclick="scrollToId('products')">All Products</a></li><li><a onclick="openWishlist()">Wishlist</a></li></ul></div>
+    <div class="footer-col" id="footerCats"><h5>Categories</h5><ul id="footerCatList"><li><a onclick="scrollToId('products')">Browse all</a></li></ul></div>
     <div class="footer-col"><h5>Company</h5><ul><li><a onclick="scrollToId('about')">About Us</a></li><li><a onclick="scrollToId('partner')">Partners</a></li><li><a onclick="comingSoon('Careers')">Careers</a></li><li><a onclick="comingSoon('Blog')">Blog</a></li><li><a onclick="comingSoon('Press')">Press</a></li></ul></div>
     <div class="footer-col"><h5>Support</h5><ul><li><a onclick="openOrders()">Track Order</a></li><li><a onclick="openContent('returns')">Returns</a></li><li><a onclick="openContent('shipping')">Shipping</a></li><li><a onclick="openContent('faq')">FAQ</a></li><li><a onclick="openContent('contact')">Contact</a></li></ul></div>
   </div>
@@ -1537,10 +1591,10 @@ function imagesOf(p){ var arr=[]; if(Array.isArray(p.images)) arr=p.images.slice
 function stockOf(p){ return (p.stock===undefined||p.stock===null)?null:Number(p.stock); }
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", function(){
-  buildCategoryChips(); render(); updateCart(); updateWishBadge(); buildBrandChips(); renderRecent();
+  buildCategoryChips(); buildFooterCats(); render(); updateCart(); updateWishBadge(); buildBrandChips(); renderRecent();
   if(db){
     db.from("products").select("*").eq("status","active").order("created_at",{ascending:false})
-      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); render(); buildBrandChips(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
+      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); buildFooterCats(); render(); buildBrandChips(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
     db.auth.getSession().then(function(r){ if(r.data&&r.data.session){ setUser(r.data.session.user); } }).catch(function(){});
     db.auth.onAuthStateChange(function(_e,s){ setUser(s?s.user:null); });
   } else { handleDeepLink(); }
@@ -1655,6 +1709,20 @@ function clearAllFilters(){
 }
 /* ===== SORT + REFINE ===== */
 function setSort(v){ sortMode=v; render(); }
+/* shopbar stuck-state shadow */
+(function(){
+  function bind(){
+    var bar=document.getElementById("shopbar"); if(!bar) return;
+    var nav=document.querySelector("nav");
+    var navH=nav?nav.offsetHeight:72;
+    window.addEventListener("scroll",function(){
+      var r=bar.getBoundingClientRect();
+      bar.classList.toggle("stuck", r.top<=navH+1);
+    },{passive:true});
+  }
+  if(document.readyState!=="loading") bind(); else document.addEventListener("DOMContentLoaded",bind);
+})();
+
 function toggleRefine(){ var d=el("filterDrawer"); if(d && d.classList.contains("open")) closeFilters(); else openFilters(); }
 function collectValues(getter){ var out=[]; products.forEach(function(p){ var v=getter(p); (Array.isArray(v)?v:[v]).forEach(function(x){ if(x && out.indexOf(x)<0) out.push(x); }); }); return out; }
 function chipGroup(title, values, selectedArr, kind){
@@ -1844,6 +1912,16 @@ function prettyCat(c){
   var k=String(c||"").toLowerCase();
   if(MAP[k]) return MAP[k];
   return String(c||"").replace(/[-_]+/g," ").replace(/\b\w/g,function(m){return m.toUpperCase();});
+}
+function buildFooterCats(){
+  var box=el("footerCatList"); if(!box) return;
+  var counts={};
+  products.forEach(function(p){ var c=p.category; if(!c) return; var k=String(c).toLowerCase().trim(); counts[k]=(counts[k]||0)+1; });
+  var cats=Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a] || a.localeCompare(b); }).slice(0,5);
+  if(!cats.length){ box.innerHTML='<li><a onclick="scrollToId(\'products\')">Browse all</a></li>'; return; }
+  box.innerHTML=cats.map(function(c){
+    return '<li><a onclick="pickCategory(\''+esc(c).replace(/'/g,"")+'\')">'+esc(prettyCat(c))+'</a></li>';
+  }).join("");
 }
 function buildCategoryChips(){
   var box=el("prodFilters"); if(!box) return;
