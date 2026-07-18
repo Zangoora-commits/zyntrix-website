@@ -152,12 +152,12 @@ section.first{padding-top:44px}
 .prod-wish.on{color:#fff;background:var(--orange);border-color:var(--orange)}
 .prod-wish .ti{font-size:18px;line-height:1}
 .prod-body{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
-.prod-brand{font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
-.prod-name{font-family:var(--fd);font-weight:600;font-size:14.5px;line-height:1.32;margin-bottom:8px;flex:1}
+.prod-brand{font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.prod-name{font-family:var(--fd);font-weight:600;font-size:14.5px;line-height:1.32;margin-bottom:3px}
 .prod-rating{display:flex;align-items:center;gap:5px;margin-bottom:12px}
 .prod-stars{color:var(--amber);font-size:12px;letter-spacing:1px}
 .prod-rnum{font-size:11.5px;color:var(--muted);font-weight:500}
-.prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
 .prod-price{font-family:var(--fd);font-weight:800;font-size:17.5px;color:var(--ink)}
 .prod-orig{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:5px;font-weight:400}
 .prod-add{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-deep);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
@@ -294,8 +294,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-close{position:static;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
 .modal-close .ti{font-size:18px;line-height:1}
 .modal-close:hover{background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
-.modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
-.modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:12px}
+.modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin:0 0 10px}
+.modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:5px}
 .modal-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px}
 .modal-rating .stars{color:var(--amber);font-size:14px;letter-spacing:1px}
 .modal-rating .rnum{font-size:13px;color:var(--muted)}
@@ -1422,8 +1422,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   <div class="modal-body">
     <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
     <div class="modal-content">
-    <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-name" id="modalName">Product</div>
+    <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-rating" onclick="jumpToReviews()" title="See all reviews"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
     <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
     <div class="modal-stock" id="modalStock"></div>
@@ -1679,7 +1679,7 @@ function render(keep){
       +(p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':'')
       +'<button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
       +'<div class="prod-quick"><span><i class="ti ti-eye"></i> Quick View</span></div></div>'
-      +'<div class="prod-body"><div class="prod-brand">'+esc(p.brand||"")+'</div><div class="prod-name">'+esc(p.name)+'</div>'
+      +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+(rc2?" ("+rc2+")":"")+'</span></div>'
       +(stockPill?'<div>'+stockPill+'</div>':'')
       +'<div class="prod-foot" style="margin-top:10px"><div><span class="prod-price">'+inr(p.price)+'</span>'
