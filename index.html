@@ -2928,13 +2928,29 @@ function reorderOrder(id){
 function orderHelp(id){ var msg="Hi twipid! I need help with my order #"+id; window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank"); }
 /* ===== CANCEL ORDER ===== */
 function toggleCancel(id){ var f=el("cancel"+id); if(f) f.style.display=(f.style.display==="block"?"none":"block"); }
+function notifyOrderCancelled(o){
+  if(!db || !db.functions || !o) return;
+  var name=String(o.customer_name||"there").split(" ")[0];
+  var pay=(o.payment_id||o.payment_method&&/online|razorpay/i.test(o.payment_method))?"online":"cod";
+  var refundLine=(pay==="online")?" Since you paid online, your refund will be processed to your original payment method within 5–7 business days.":"";
+  var msg="Hi "+name+", your twipid order #"+o.id+" has been cancelled."+refundLine+" Questions? WhatsApp us at +91 88609 31112.";
+  var raw=String(o.customer_phone||"").replace(/\D/g,"");
+  var e164=raw.length===10?("+91"+raw):("+"+raw.replace(/^\+/,""));
+  if(raw){
+    try{ db.functions.invoke("send-order-message",{body:{channel:"sms",to:e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+    try{ db.functions.invoke("send-order-message",{body:{channel:"whatsapp",to:"whatsapp:"+e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+  }
+  try{ db.functions.invoke("send-order-email",{body:{orderId:o.id,type:"cancelled",message:msg}}).then(function(){},function(){}); }catch(e){}
+}
 function confirmCancel(id){
   var box=el("cancel"+id);
   if(box) box.innerHTML='<div class="ret-ok"><i class="ti ti-loader"></i> Cancelling…</div>';
   if(!db){ showToast("Not connected"); return; }
   db.from("orders").update({status:"cancelled"}).eq("id",id).then(function(r){
     if(r.error){ showToast("Could not cancel: "+r.error.message); loadOrders(); return; }
-    showToast("Order cancelled");
+    var o=(window._orders||[]).find(function(x){return String(x.id)===String(id);});
+    if(o){ o.status="cancelled"; notifyOrderCancelled(o); }
+    showToast("Order cancelled — a confirmation is on its way by email & message");
     loadOrders();
   }).catch(function(){ showToast("Could not cancel order"); loadOrders(); });
 }
