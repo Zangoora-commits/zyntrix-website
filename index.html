@@ -137,7 +137,7 @@ section.first{padding-top:44px}
 .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .prod-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .24s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
 .prod-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:transparent}
-.prod-img{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.prod-img{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#fff}
 .prod-img i.pic{font-size:64px;transition:transform .35s;filter:drop-shadow(0 6px 14px rgba(12,22,17,.12))}
 .prod-card:hover .prod-img i.pic{transform:scale(1.1) translateY(-3px)}
 .prod-img img{width:100%;height:100%;object-fit:cover}
@@ -152,14 +152,22 @@ section.first{padding-top:44px}
 .prod-wish.on{color:#fff;background:var(--orange);border-color:var(--orange)}
 .prod-wish .ti{font-size:18px;line-height:1}
 .prod-body{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
-.prod-brand{font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
-.prod-name{font-family:var(--fd);font-weight:600;font-size:14.5px;line-height:1.32;margin-bottom:8px;flex:1}
+.prod-brand{font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.prod-name{font-family:var(--fd);font-weight:600;font-size:14.5px;line-height:1.32;margin-bottom:3px}
 .prod-rating{display:flex;align-items:center;gap:5px;margin-bottom:12px}
 .prod-stars{color:var(--amber);font-size:12px;letter-spacing:1px}
 .prod-rnum{font-size:11.5px;color:var(--muted);font-weight:500}
-.prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
 .prod-price{font-family:var(--fd);font-weight:800;font-size:17.5px;color:var(--ink)}
 .prod-orig{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:5px;font-weight:400}
+.prod-offpct{display:block;font-size:11.5px;font-weight:800;color:var(--brand-deep);margin-top:2px}
+/* deal tier badges (auto-derived from discount %) */
+.tag-hotdeal{background:linear-gradient(120deg,#f43f5e,#f97316)!important;color:#fff;box-shadow:0 3px 10px rgba(244,63,94,.35)}
+.tag-super{background:linear-gradient(120deg,#f59e0b,#eab308)!important;color:#fff}
+.tag-bigdeal{background:var(--amber)!important;color:#fff}
+.modal-save{font-size:13px;font-weight:700;color:var(--brand-deep);margin:-12px 0 16px}
+.modal-save .hd{color:#e11d48;font-weight:800}
+.sb-off{font-size:11px;font-weight:800;color:var(--brand-deep);display:block;line-height:1.2}
 .prod-add{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-deep);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
 .prod-add:hover{background:var(--brand);color:#fff;transform:scale(1.08)}
 .prod-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
@@ -279,19 +287,27 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-ov.open{opacity:1;pointer-events:all}
 .modal{background:#fff;border-radius:22px;width:760px;max-width:100%;max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .modal-ov.open .modal{transform:scale(1) translateY(0)}
-.modal-img{display:flex;align-items:center;justify-content:center;position:relative;min-height:340px;overflow:hidden}
+.modal-img{display:flex;flex-direction:column;position:relative;align-self:start;overflow:hidden;background:#fff}
+.modal-media{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;overflow:hidden;background:#fff;padding:26px}
+.modal-media img{width:100%;height:100%;object-fit:contain}
+.modal-media i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-img i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
-.modal-img img{width:100%;height:100%;object-fit:cover}
+.modal-img img{width:100%;height:100%;object-fit:contain}
 .modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
 .modal-body{padding:0;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
 .modal-topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:13px 14px 13px 28px;border-bottom:1px solid var(--line)}
-.modal-topbar-name{font-family:var(--fd);font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.modal-topbar-name{font-family:var(--fd);font-weight:800;font-size:23px;letter-spacing:-.6px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.modal-topbar.scrolled .modal-topbar-name{opacity:1;transform:none}
+.modal-topbar-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.modal-cartbtn{position:relative;overflow:visible}
+.modal-cartbtn:hover{background:var(--brand-tint);color:var(--brand);border-color:var(--brand)}
+.modal-cartbtn .badge{top:-7px;right:-7px}
 .modal-content{padding:22px 28px 28px;display:flex;flex-direction:column;flex:1}
 .modal-close{position:static;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
 .modal-close .ti{font-size:18px;line-height:1}
 .modal-close:hover{background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
-.modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
-.modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:12px}
+.modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin:0 0 10px}
+.modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:5px}
 .modal-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px}
 .modal-rating .stars{color:var(--amber);font-size:14px;letter-spacing:1px}
 .modal-rating .rnum{font-size:13px;color:var(--muted)}
@@ -449,8 +465,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .prod-card.soldout .prod-add{background:#eee;color:#bbb;cursor:not-allowed}
 .modal-stock{margin-bottom:18px}
 /* GALLERY */
-.gallery-thumbs{display:flex;gap:8px;padding:12px 14px;position:absolute;bottom:0;left:0;right:0;justify-content:center;flex-wrap:wrap;background:linear-gradient(to top,rgba(12,22,17,.5),transparent)}
-.gthumb{width:50px;height:50px;border-radius:10px;border:2px solid rgba(255,255,255,.75);background:#fff;cursor:pointer;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.gallery-thumbs{display:flex;gap:8px;padding:8px 12px 16px;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;background:transparent;border-top:1px solid var(--line);min-height:96px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.gallery-thumbs::-webkit-scrollbar{display:none}
+.gallery-thumbs .gthumb:first-child{margin-left:auto}
+.gallery-thumbs .gthumb:last-child{margin-right:auto}
+.gthumb{flex:0 0 72px;width:72px;height:72px;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .15s;display:flex;align-items:center;justify-content:center}
 .gthumb.on{border-color:var(--brand);transform:translateY(-2px)}
 .gthumb img{width:100%;height:100%;object-fit:cover}
 .gthumb.on{border-color:var(--brand)}
@@ -569,7 +588,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .partner{grid-template-columns:1fr;text-align:center}.partner-points{justify-content:center}.partner-deco{display:none}
   .nav-search{display:none}
   .modal{grid-template-columns:1fr;max-height:90vh;display:block;overflow-y:auto}
-  .modal-img{min-height:auto;height:240px}
+  .modal-img{min-height:auto;height:auto}
   .modal-body{max-height:none;overflow:visible;padding:0}
   .modal-content{padding:20px}
   .modal-topbar{padding-left:20px}
@@ -743,7 +762,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .size-chip{min-width:46px;padding:9px 12px;border:1.5px solid var(--line);background:#fff;border-radius:10px;font-family:var(--fb);font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer;transition:all .15s;position:relative}
 .size-chip:hover:not(.oos){border-color:var(--brand);color:var(--brand-deep)}
 .size-chip.on{border-color:var(--brand);background:var(--brand);color:#fff}
-.size-chip.oos{opacity:.4;cursor:not-allowed;text-decoration:line-through;background:var(--paper)}
+.size-chip.oos{opacity:.55;cursor:not-allowed;background:var(--paper);color:var(--muted);overflow:hidden}
+.size-chip.oos::after{content:"";position:absolute;left:-10%;right:-10%;top:50%;height:1.5px;background:#e07070;transform:rotate(-24deg);pointer-events:none}
 .size-low{font-size:12px;font-weight:700;color:var(--orange);margin-top:8px;display:none}
 .size-err{font-size:12.5px;font-weight:700;color:var(--orange);margin-top:8px;display:none}
 /* ===== COLOUR SWATCHES ===== */
@@ -831,8 +851,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .load-end{color:var(--muted);font-size:13px;font-weight:600}
 .price-presets,.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 /* ===== PRODUCT IMAGE ZOOM HINT ===== */
-.zoom-hint{position:absolute;top:12px;right:12px;z-index:6;background:rgba(12,22,17,.55);color:#fff;border:none;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;backdrop-filter:blur(4px)}
-.zoom-hint:hover{background:rgba(12,22,17,.8)}
+
 /* ===== MOBILE / TABLET POLISH ===== */
 @media(max-width:900px){ .sec-title{font-size:clamp(20px,4.4vw,27px)} }
 @media(max-width:768px){
@@ -851,8 +870,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .footer-bottom .fmeta{justify-content:center;flex-wrap:wrap;gap:12px}
   .footer-inner{padding:40px 18px 30px}
   .footer-social{flex-wrap:wrap}
-  .modal-img{align-items:center;justify-content:center}
-  .modal-img img{object-position:center}
+  .modal-media{padding:16px}
+  .modal-media img{object-position:center}
   .load-more{width:100%}
 }
 @media(max-width:480px){
@@ -1105,8 +1124,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 /* chips scroll horizontally with a soft fade instead of wrapping */
 .prod-filters{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;flex:1;min-width:0;
   margin-bottom:0;padding:0;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
-  mask-image:linear-gradient(to right,transparent 0,#000 12px,#000 calc(100% - 20px),transparent 100%);
-  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 12px,#000 calc(100% - 20px),transparent 100%)}
+  mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 20px),transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 20px),transparent 100%)}
 .fbtn{flex-shrink:0}
 
 /* compact section head — replaces the big clamp(25px,3vw,35px) title */
@@ -1411,18 +1430,19 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <!-- PRODUCT MODAL -->
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()">
   <div class="sticky-buy" id="stickyBuy">
-    <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
+    <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span><span class="sb-off" id="sbOff" style="display:none"></span></div>
     <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add</button>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()">Buy Now</button>
   </div><div class="modal">
-  <div class="modal-img" id="modalImg"><i class="ti ti-box pic" id="modalIcon"></i><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
+  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
-    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
+    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><div class="modal-topbar-acts"><button class="modal-close modal-cartbtn" onclick="closeModal();openCart()" aria-label="Cart"><i class="ti ti-shopping-bag"></i><span class="badge" id="modalCartBadge" style="display:none">0</span></button><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div></div>
     <div class="modal-content">
-    <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-name" id="modalName">Product</div>
+    <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-rating" onclick="jumpToReviews()" title="See all reviews"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
     <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
+    <div class="modal-save" id="modalSave" style="display:none"></div>
     <div class="modal-stock" id="modalStock"></div>
     <div class="color-wrap" id="colorWrap">
       <div class="color-head">COLOUR: <span id="colorName"></span></div>
@@ -1581,7 +1601,7 @@ try { db = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.war
 var DEMO = [
   {name:"ProAir X90 Wireless Headphones",brand:"SoundVibe",category:"Audio",price:7499,orig_price:12000,icon:"ti-headphones",tag:"Hot",stock:14,rating:4.8,reviews:126,desc:"Premium over-ear headphones with active noise cancellation, plush memory-foam earcups and a 40-hour battery.",specs:["ANC","40hr Battery","Bluetooth 5.3","Hi-Res Audio","USB-C"]},
   {name:"BassCore Nano TWS Earbuds",brand:"BassCore",category:"Audio",price:3299,orig_price:5500,icon:"ti-ear",tag:"New",stock:8,rating:4.6,reviews:64,desc:"True-wireless earbuds with punchy 8mm drivers, IPX5 sweat resistance and 32 hours total playback.",specs:["IPX5","8mm Drivers","32hr Total","Touch Controls","ENC Mic"]},
-  {name:"PulseBeat Mini Speaker",brand:"SoundVibe",category:"Audio",price:1899,orig_price:2999,icon:"ti-speakerphone",tag:"Deal",stock:3,rating:4.5,reviews:41,desc:"Pocket-sized Bluetooth speaker with big sound, 12-hour battery and IPX7 waterproofing.",specs:["IPX7","12hr Battery","Bluetooth 5.1","TWS Pairing"]},
+  {name:"PulseBeat Mini Speaker",brand:"SoundVibe",category:"Audio",price:1899,orig_price:4999,icon:"ti-speakerphone",tag:"Deal",stock:3,rating:4.5,reviews:41,desc:"Pocket-sized Bluetooth speaker with big sound, 12-hour battery and IPX7 waterproofing.",specs:["IPX7","12hr Battery","Bluetooth 5.1","TWS Pairing"]},
   {name:"VitaWatch Ultra 3 Smartwatch",brand:"VitaTech",category:"Wearables",price:11999,orig_price:18000,icon:"ti-device-watch",tag:"New",stock:21,rating:4.7,reviews:203,desc:"A flagship health smartwatch with AMOLED display, built-in GPS, SpO2 and a 7-day battery.",specs:["AMOLED","Built-in GPS","SpO2","IP68","7-Day Battery"]},
   {name:"FlexBand Fitness Tracker",brand:"VitaTech",category:"Wearables",price:2299,orig_price:3500,icon:"ti-activity",tag:"Deal",stock:0,rating:4.3,reviews:88,desc:"A slim fitness band tracking heart rate, sleep, steps and 14 workout modes with a 10-day battery.",specs:["Heart Rate","Sleep","14 Workouts","10-Day Battery","IP67"]},
   {name:"LumiHome Smart Bulb Pack",brand:"LumiHome",category:"Smart Home",price:2499,orig_price:4200,icon:"ti-bulb",tag:"Deal",stock:32,rating:4.4,reviews:57,desc:"16 million colors and tunable white light. Works with Alexa and Google Home.",specs:["16M Colors","Alexa & Google","App Control","Pack of 4"]},
@@ -1654,6 +1674,26 @@ function currentList(){
   else if(sortMode==="newest") list.sort(function(a,b){var ta=(a.tag==="New")?1:0,tb=(b.tag==="New")?1:0; if(tb-ta)return tb-ta; return (b.id||0)-(a.id||0);});
   return list;
 }
+/* ===== DISCOUNT HELPERS =====
+   Discount % is derived automatically from the two price fields the admin
+   panel already has: "Price" (selling price) and "Original / MRP".
+   pct = round((1 - price / orig_price) * 100). No extra backend field needed. */
+function discountPct(p){
+  if(!p) return 0;
+  var pr=Number(p.price)||0, op=Number(p.orig_price)||0;
+  if(op>pr && pr>0) return Math.round((1-pr/op)*100);
+  return 0;
+}
+/* Auto deal-tier badge. >=60% = Hot Deal; 40–59% = Super Saver; 25–39% = Big Deal.
+   Below 25% the % still shows next to the price but the manual tag (New/Hot/Deal)
+   keeps the badge spot. Auto badge wins over the manual tag when both apply. */
+function dealBadge(p){
+  var d=discountPct(p);
+  if(d>=60) return {label:"🔥 Hot Deal", cls:"tag-hotdeal"};
+  if(d>=40) return {label:"Super Saver", cls:"tag-super"};
+  if(d>=25) return {label:d+"% Off", cls:"tag-bigdeal"};
+  return null;
+}
 function render(keep){
   view = currentList();
   if(!keep) shownCount = PAGE_SIZE;
@@ -1673,14 +1713,15 @@ function render(keep){
     var rt=ratingOf(p), rc2=reviewCountOf(p);
     return '<article class="prod-card'+(soldout?' soldout':'')+'" data-i="'+i+'">'
       +'<div class="prod-img" '+bg+'>'+media
-      +(p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':'')
+      +(function(){ var db=dealBadge(p); if(db) return '<span class="prod-tag '+db.cls+'">'+db.label+'</span>'; return p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':''; })()
       +'<button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
       +'<div class="prod-quick"><span><i class="ti ti-eye"></i> Quick View</span></div></div>'
-      +'<div class="prod-body"><div class="prod-brand">'+esc(p.brand||"")+'</div><div class="prod-name">'+esc(p.name)+'</div>'
+      +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+(rc2?" ("+rc2+")":"")+'</span></div>'
       +(stockPill?'<div>'+stockPill+'</div>':'')
       +'<div class="prod-foot" style="margin-top:10px"><div><span class="prod-price">'+inr(p.price)+'</span>'
-      +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')+'</div>'
+      +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')
+      +(discountPct(p)?'<span class="prod-offpct">'+discountPct(p)+'% off</span>':'')+'</div>'
       +'<button class="prod-add" data-add="'+i+'" aria-label="Add to cart"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div></div></article>';
   }).join("");
   grid.querySelectorAll(".prod-card").forEach(function(c){ c.addEventListener("click",function(){ openModal(parseInt(this.dataset.i)); }); });
@@ -2005,7 +2046,9 @@ function openModalByProduct(p){
   modalProduct=p; modalQtyVal=1; el("modalQtyN").textContent="1"; pickedStars=0; paintStars(0);
   el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
   var was=el("modalWas"), off=el("modalOff");
-  if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+Math.round((1-p.price/p.orig_price)*100)+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
+  var _d=discountPct(p), _sv=el("modalSave");
+  if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+_d+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
+  if(_sv){ if(_d>0){ _sv.innerHTML="You save "+inr(Number(p.orig_price)-Number(p.price))+" ("+_d+"% off)"+(_d>=60?' · <span class="hd">🔥 Hot Deal</span>':""); _sv.style.display=""; } else _sv.style.display="none"; }
   // rating
   var rt=ratingOf(p), rcnt=reviewCountOf(p);
   el("modalStars").textContent=starString(rt);
@@ -2016,14 +2059,16 @@ function openModalByProduct(p){
   else { addBtn.disabled=false; addBtn.style.opacity=""; addBtn.style.cursor=""; var bb2=el("modalBuyBtn"); if(bb2){bb2.disabled=false;} if(st!==null&&st<=5) sEl.innerHTML='<span class="stock-pill stock-low"><i class="ti ti-flame" style="font-size:12px"></i> Hurry — only '+st+' left</span>'; else if(st!==null) sEl.innerHTML='<span class="stock-pill stock-in"><i class="ti ti-check" style="font-size:12px"></i> In stock</span>'; else sEl.innerHTML=""; }
   el("modalDesc").textContent=p.desc||p.short_desc||"";
   // gallery
-  var imgWrap=el("modalImg"), pair=catPair(p.category), exist=imgWrap.querySelector("img"); if(exist)exist.remove(); var _zh0=imgWrap.querySelector(".zoom-hint"); if(_zh0)_zh0.remove();
+  var imgWrap=el("modalImg"), media=el("modalMedia"), pair=catPair(p.category), exist=media.querySelector("img"); if(exist)exist.remove(); media.style.aspectRatio="";
   var icon=el("modalIcon"), imgs=imagesOf(p), thumbs=el("galleryThumbs");
-  if(imgs.length){ icon.style.display="none"; imgWrap.style.background=""; var im=document.createElement("img"); im.id="modalMainImg"; im.src=imgs[0]; im.style.cursor="zoom-in"; im.onclick=function(){ openProductZoom(window._galIdx||0); }; imgWrap.insertBefore(im, thumbs); window._galIdx=0; var zb=document.createElement("button"); zb.className="zoom-hint"; zb.innerHTML='<i class="ti ti-zoom-in"></i>'; zb.onclick=function(ev){ ev.stopPropagation(); openProductZoom(window._galIdx||0); }; imgWrap.appendChild(zb); }
-  else { icon.style.display=""; icon.className="ti "+(p.icon||"ti-box")+" pic"; icon.style.color=pair[1]; imgWrap.style.background="linear-gradient(155deg,#ffffff,"+pair[0]+")"; }
-  if(imgs.length>1){ thumbs.style.display="flex"; thumbs.innerHTML=imgs.map(function(u,gi){return '<div class="gthumb'+(gi===0?' on':'')+'" onclick="setGalleryImg('+gi+')"><img src="'+esc(u)+'"></div>';}).join(""); window._galleryImgs=imgs; }
+  if(imgs.length){ icon.style.display="none"; media.style.background=""; var im=document.createElement("img"); im.id="modalMainImg"; im.src=imgs[0]; im.style.cursor="zoom-in"; im.onclick=function(){ openProductZoom(window._galIdx||0); }; im.onload=fitModalImg; media.appendChild(im); window._galIdx=0; if(im.complete)fitModalImg(); }
+  else { icon.style.display=""; icon.className="ti "+(p.icon||"ti-box")+" pic"; icon.style.color=pair[1]; media.style.background="linear-gradient(155deg,#ffffff,"+pair[0]+")"; }
+  if(imgs.length>=1){ thumbs.style.display="flex"; thumbs.innerHTML=imgs.map(function(u,gi){return '<div class="gthumb'+(gi===0?' on':'')+'" onclick="setGalleryImg('+gi+')"><img src="'+esc(u)+'"></div>';}).join(""); window._galleryImgs=imgs; }
   else { thumbs.style.display="none"; window._galleryImgs=imgs; }
-  var ot=imgWrap.querySelector(".modal-tag"); if(ot)ot.remove();
-  if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; imgWrap.appendChild(t); }
+  var ot=media.querySelector(".modal-tag"); if(ot)ot.remove();
+  var _db=dealBadge(p);
+  if(_db){ var t0=document.createElement("span"); t0.className="modal-tag "+_db.cls; t0.textContent=_db.label; media.appendChild(t0); }
+  else if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; media.appendChild(t); }
   var specs=Array.isArray(p.specs)?p.specs:(p.specs?String(p.specs).split(","):[]);
   var specHtml=specs.filter(Boolean).map(function(s){return '<span class="modal-spec">'+esc(s.trim())+'</span>';}).join("");
   el("modalSpecs").innerHTML=specHtml;
@@ -2047,7 +2092,7 @@ function openModalByProduct(p){
   if(dRes){ dRes.textContent=""; dRes.className="deliv-res"; }
   if(dPin){ var lastPin=""; try{ lastPin=localStorage.getItem("twipid_pin")||""; }catch(e){} dPin.value=lastPin; if(lastPin.length===6) checkDelivery(); }
   syncStickyBuy();
-  el("modalOv").classList.add("open"); document.body.style.overflow="hidden";
+  el("modalOv").classList.add("open"); document.body.style.overflow="hidden"; var _tb=document.querySelector("#modalOv .modal-topbar"); if(_tb)_tb.classList.remove("scrolled");
 }
 /* keep mobile sticky bar in sync with the modal */
 function syncStickyBuy(){
@@ -2055,10 +2100,17 @@ function syncStickyBuy(){
   var pr=el("sbPrice"), wa=el("sbWas"), a=el("sbAdd"), b=el("sbBuy"), dis=el("modalAddBtn").disabled;
   if(pr) pr.textContent=inr(modalProduct.price);
   if(wa){ if(modalProduct.orig_price&&modalProduct.orig_price>modalProduct.price){ wa.textContent=inr(modalProduct.orig_price); wa.style.display=""; } else wa.style.display="none"; }
+  var so=el("sbOff"), sd=discountPct(modalProduct);
+  if(so){ if(sd>0){ so.textContent=sd+"% off"; so.style.display=""; } else so.style.display="none"; }
   if(a){ a.disabled=dis; }
   if(b){ b.disabled=dis; b.textContent=dis?"Out of stock":"Buy Now"; }
 }
-function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m)m.src=imgs[gi]; window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
+/* Media box is locked to a 1:1 square (CSS aspect-ratio) so every product's
+   image area + thumbnail strip sit in the exact same place regardless of the
+   uploaded image's dimensions. Non-square images letterbox inside via
+   object-fit:contain until pictures are standardized to 1200×1200. */
+function fitModalImg(){ var w=el("modalMedia"); if(w) w.style.aspectRatio="1 / 1"; }
+function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
 /* ---- product image zoom ---- */
 var pzList=[], pzIdx=0;
 function openProductZoom(i){
@@ -2129,14 +2181,20 @@ function syncModalWish(){
 /* ===== BUY NOW ===== */
 /* ===== APPAREL: sizes, colours, size guide ===== */
 var selectedSize = null;
+var SIZE_SORT=["XS","S","M","L","XL","XXL","3XL","Free Size"];
 function sizesOf(p){
   if(!p) return [];
-  var s = p.sizes;
-  if(Array.isArray(s)) return s.filter(Boolean);
-  if(typeof s === "string" && s.trim()){
-    return s.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+  var s = p.sizes, list = [];
+  if(Array.isArray(s)) list = s.filter(Boolean);
+  else if(typeof s === "string" && s.trim()){
+    list = s.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
   }
-  return [];
+  // merge in any sizes that only exist in the size_stock map (e.g. sizes that
+  // sold out and were removed from the list) so OOS sizes still render crossed
+  var ss = sizeStockOf(p);
+  Object.keys(ss).forEach(function(k){ if(list.indexOf(k)<0) list.push(k); });
+  list.sort(function(a,b){ var ia=SIZE_SORT.indexOf(a),ib=SIZE_SORT.indexOf(b); if(ia<0)ia=99; if(ib<0)ib=99; return ia-ib||String(a).localeCompare(String(b)); });
+  return list;
 }
 function sizeStockOf(p){
   if(!p) return {};
@@ -2703,6 +2761,7 @@ function addToCartObj(p,q,silent,size){
 function updateCart(){
   var n=cart.reduce(function(s,i){return s+i.qty;},0);
   var b=el("cartBadge"); b.textContent=n; b.style.display=n>0?"flex":"none";
+  var mb2=el("modalCartBadge"); if(mb2){ mb2.textContent=n; mb2.style.display=n>0?"flex":"none"; }
   el("cartCount").textContent=n+" item"+(n!==1?"s":"");
   var items=el("cartItems"), foot=el("cartFoot");
   if(!cart.length){ items.innerHTML='<div class="drawer-empty"><i class="ti ti-shopping-bag"></i><h4>Your cart is empty</h4><p>Browse our products and add something you love.</p><button onclick="closeCart();goShop()">Start Shopping</button></div>'; foot.style.display="none"; return; }
@@ -2924,13 +2983,29 @@ function reorderOrder(id){
 function orderHelp(id){ var msg="Hi twipid! I need help with my order #"+id; window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank"); }
 /* ===== CANCEL ORDER ===== */
 function toggleCancel(id){ var f=el("cancel"+id); if(f) f.style.display=(f.style.display==="block"?"none":"block"); }
+function notifyOrderCancelled(o){
+  if(!db || !db.functions || !o) return;
+  var name=String(o.customer_name||"there").split(" ")[0];
+  var pay=(o.payment_id||o.payment_method&&/online|razorpay/i.test(o.payment_method))?"online":"cod";
+  var refundLine=(pay==="online")?" Since you paid online, your refund will be processed to your original payment method within 5–7 business days.":"";
+  var msg="Hi "+name+", your twipid order #"+o.id+" has been cancelled."+refundLine+" Questions? WhatsApp us at +91 88609 31112.";
+  var raw=String(o.customer_phone||"").replace(/\D/g,"");
+  var e164=raw.length===10?("+91"+raw):("+"+raw.replace(/^\+/,""));
+  if(raw){
+    try{ db.functions.invoke("send-order-message",{body:{channel:"sms",to:e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+    try{ db.functions.invoke("send-order-message",{body:{channel:"whatsapp",to:"whatsapp:"+e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+  }
+  try{ db.functions.invoke("send-order-email",{body:{orderId:o.id,type:"cancelled",message:msg}}).then(function(){},function(){}); }catch(e){}
+}
 function confirmCancel(id){
   var box=el("cancel"+id);
   if(box) box.innerHTML='<div class="ret-ok"><i class="ti ti-loader"></i> Cancelling…</div>';
   if(!db){ showToast("Not connected"); return; }
   db.from("orders").update({status:"cancelled"}).eq("id",id).then(function(r){
     if(r.error){ showToast("Could not cancel: "+r.error.message); loadOrders(); return; }
-    showToast("Order cancelled");
+    var o=(window._orders||[]).find(function(x){return String(x.id)===String(id);});
+    if(o){ o.status="cancelled"; notifyOrderCancelled(o); }
+    showToast("Order cancelled — a confirmation is on its way by email & message");
     loadOrders();
   }).catch(function(){ showToast("Could not cancel order"); loadOrders(); });
 }
@@ -3392,6 +3467,11 @@ document.addEventListener("click",function(e){
     var c=el("catMenu"); if(c&&c.classList.contains("open")) closeCatMenu();
   }
 });
+(function(){
+  function syncTopName(){ var tb=document.querySelector("#modalOv .modal-topbar"), nm=el("modalName"); if(!tb||!nm)return; tb.classList.toggle("scrolled", nm.getBoundingClientRect().bottom < tb.getBoundingClientRect().bottom + 2); }
+  window._syncModalTopName=syncTopName;
+  ["#modalOv .modal-body","#modalOv .modal"].forEach(function(sel){ var e=document.querySelector(sel); if(e) e.addEventListener("scroll",syncTopName,{passive:true}); });
+})();
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModal(); closeCart(); closeWishlist(); closeOrders(); closeFilters(); closeMenu(); closeInfo(); closeAuth(); closeCheckout(); closeAcct(); closeCatMenu(); closeContent(); closePZoom(); closeLightbox(); closeSizeGuide(); closeEnq(); } });
 </script>
 <script>
