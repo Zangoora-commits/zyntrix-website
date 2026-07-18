@@ -279,7 +279,10 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-ov.open{opacity:1;pointer-events:all}
 .modal{background:#fff;border-radius:22px;width:760px;max-width:100%;max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .modal-ov.open .modal{transform:scale(1) translateY(0)}
-.modal-img{display:flex;align-items:center;justify-content:center;position:relative;aspect-ratio:1/1;align-self:start;overflow:hidden;background:#fff;padding:26px}
+.modal-img{display:flex;flex-direction:column;position:relative;align-self:start;overflow:hidden;background:#fff}
+.modal-media{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;overflow:hidden;background:#fff;padding:26px}
+.modal-media img{width:100%;height:100%;object-fit:contain}
+.modal-media i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-img i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-img img{width:100%;height:100%;object-fit:contain}
 .modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
@@ -449,7 +452,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .prod-card.soldout .prod-add{background:#eee;color:#bbb;cursor:not-allowed}
 .modal-stock{margin-bottom:18px}
 /* GALLERY */
-.gallery-thumbs{display:flex;gap:8px;padding:12px 14px;position:absolute;bottom:0;left:0;right:0;justify-content:center;flex-wrap:wrap;background:linear-gradient(to top,rgba(12,22,17,.5),transparent)}
+.gallery-thumbs{display:flex;gap:8px;padding:6px 12px 16px;justify-content:center;flex-wrap:wrap;background:transparent;border-top:1px solid var(--line)}
 .gthumb{width:50px;height:50px;border-radius:10px;border:2px solid rgba(255,255,255,.75);background:#fff;cursor:pointer;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:all .15s;display:flex;align-items:center;justify-content:center}
 .gthumb.on{border-color:var(--brand);transform:translateY(-2px)}
 .gthumb img{width:100%;height:100%;object-fit:cover}
@@ -569,7 +572,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .partner{grid-template-columns:1fr;text-align:center}.partner-points{justify-content:center}.partner-deco{display:none}
   .nav-search{display:none}
   .modal{grid-template-columns:1fr;max-height:90vh;display:block;overflow-y:auto}
-  .modal-img{min-height:auto;height:auto;aspect-ratio:1/1}
+  .modal-img{min-height:auto;height:auto}
   .modal-body{max-height:none;overflow:visible;padding:0}
   .modal-content{padding:20px}
   .modal-topbar{padding-left:20px}
@@ -850,8 +853,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .footer-bottom .fmeta{justify-content:center;flex-wrap:wrap;gap:12px}
   .footer-inner{padding:40px 18px 30px}
   .footer-social{flex-wrap:wrap}
-  .modal-img{align-items:center;justify-content:center;padding:16px}
-  .modal-img img{object-position:center}
+  .modal-media{padding:16px}
+  .modal-media img{object-position:center}
   .load-more{width:100%}
 }
 @media(max-width:480px){
@@ -1414,7 +1417,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add</button>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()">Buy Now</button>
   </div><div class="modal">
-  <div class="modal-img" id="modalImg"><i class="ti ti-box pic" id="modalIcon"></i><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
+  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
     <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
     <div class="modal-content">
@@ -2015,14 +2018,14 @@ function openModalByProduct(p){
   else { addBtn.disabled=false; addBtn.style.opacity=""; addBtn.style.cursor=""; var bb2=el("modalBuyBtn"); if(bb2){bb2.disabled=false;} if(st!==null&&st<=5) sEl.innerHTML='<span class="stock-pill stock-low"><i class="ti ti-flame" style="font-size:12px"></i> Hurry — only '+st+' left</span>'; else if(st!==null) sEl.innerHTML='<span class="stock-pill stock-in"><i class="ti ti-check" style="font-size:12px"></i> In stock</span>'; else sEl.innerHTML=""; }
   el("modalDesc").textContent=p.desc||p.short_desc||"";
   // gallery
-  var imgWrap=el("modalImg"), pair=catPair(p.category), exist=imgWrap.querySelector("img"); if(exist)exist.remove(); var _zh0=imgWrap.querySelector(".zoom-hint"); if(_zh0)_zh0.remove(); imgWrap.style.aspectRatio="";
+  var imgWrap=el("modalImg"), media=el("modalMedia"), pair=catPair(p.category), exist=media.querySelector("img"); if(exist)exist.remove(); media.style.aspectRatio="";
   var icon=el("modalIcon"), imgs=imagesOf(p), thumbs=el("galleryThumbs");
-  if(imgs.length){ icon.style.display="none"; imgWrap.style.background=""; var im=document.createElement("img"); im.id="modalMainImg"; im.src=imgs[0]; im.style.cursor="zoom-in"; im.onclick=function(){ openProductZoom(window._galIdx||0); }; im.onload=fitModalImg; imgWrap.insertBefore(im, thumbs); window._galIdx=0; if(im.complete)fitModalImg(); }
-  else { icon.style.display=""; icon.className="ti "+(p.icon||"ti-box")+" pic"; icon.style.color=pair[1]; imgWrap.style.background="linear-gradient(155deg,#ffffff,"+pair[0]+")"; }
+  if(imgs.length){ icon.style.display="none"; media.style.background=""; var im=document.createElement("img"); im.id="modalMainImg"; im.src=imgs[0]; im.style.cursor="zoom-in"; im.onclick=function(){ openProductZoom(window._galIdx||0); }; im.onload=fitModalImg; media.appendChild(im); window._galIdx=0; if(im.complete)fitModalImg(); }
+  else { icon.style.display=""; icon.className="ti "+(p.icon||"ti-box")+" pic"; icon.style.color=pair[1]; media.style.background="linear-gradient(155deg,#ffffff,"+pair[0]+")"; }
   if(imgs.length>1){ thumbs.style.display="flex"; thumbs.innerHTML=imgs.map(function(u,gi){return '<div class="gthumb'+(gi===0?' on':'')+'" onclick="setGalleryImg('+gi+')"><img src="'+esc(u)+'"></div>';}).join(""); window._galleryImgs=imgs; }
   else { thumbs.style.display="none"; window._galleryImgs=imgs; }
-  var ot=imgWrap.querySelector(".modal-tag"); if(ot)ot.remove();
-  if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; imgWrap.appendChild(t); }
+  var ot=media.querySelector(".modal-tag"); if(ot)ot.remove();
+  if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; media.appendChild(t); }
   var specs=Array.isArray(p.specs)?p.specs:(p.specs?String(p.specs).split(","):[]);
   var specHtml=specs.filter(Boolean).map(function(s){return '<span class="modal-spec">'+esc(s.trim())+'</span>';}).join("");
   el("modalSpecs").innerHTML=specHtml;
@@ -2057,7 +2060,7 @@ function syncStickyBuy(){
   if(a){ a.disabled=dis; }
   if(b){ b.disabled=dis; b.textContent=dis?"Out of stock":"Buy Now"; }
 }
-function fitModalImg(){ var w=el("modalImg"), m=el("modalMainImg"); if(!w||!m)return; var iw=m.naturalWidth, ih=m.naturalHeight; if(iw&&ih){ w.style.aspectRatio = Math.max(0.6, Math.min(1.6, iw/ih)); } }
+function fitModalImg(){ var w=el("modalMedia"), m=el("modalMainImg"); if(!w||!m)return; var iw=m.naturalWidth, ih=m.naturalHeight; if(iw&&ih){ w.style.aspectRatio = Math.max(0.6, Math.min(1.6, iw/ih)); } }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
 /* ---- product image zoom ---- */
 var pzList=[], pzIdx=0;
