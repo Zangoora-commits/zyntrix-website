@@ -2166,11 +2166,18 @@ function renderSizes(p){
   if(!sizes.length){ wrap.style.display="none"; return; }
   wrap.style.display="";
   var ss = sizeStockOf(p), hasStockMap = Object.keys(ss).length > 0;
-  chips.innerHTML = sizes.map(function(s){
-    var st = hasStockMap ? (Number(ss[s])||0) : null;
-    var oos = (st !== null && st <= 0);
+  // Show the full standard size ladder and grey-out sizes this product doesn't
+  // offer or that are out of stock. (Non-standard sets like "Free Size" show as-is.)
+  var LADDER = ["XS","S","M","L","XL","XXL","3XL"];
+  var standard = sizes.every(function(s){ return LADDER.indexOf(s) > -1; });
+  var display = standard ? LADDER : sizes;
+  chips.innerHTML = display.map(function(s){
+    var offered = sizes.indexOf(s) > -1;                 // does this product come in this size?
+    var st = (offered && hasStockMap) ? (Number(ss[s])||0) : (offered ? null : 0);
+    var oos = !offered || (st !== null && st <= 0);      // unavailable = not offered OR sold out
+    var label = !offered ? (esc(s)+" not available") : (oos ? esc(s)+" out of stock" : esc(s));
     return '<button class="size-chip'+(oos?' oos':'')+'" data-size="'+esc(s)+'"'
-      + (oos?' disabled aria-label="'+esc(s)+' out of stock"':' onclick="pickSize(this)"')
+      + (oos?' disabled aria-label="'+label+'"':' onclick="pickSize(this)"')
       + '>'+esc(s)+'</button>';
   }).join("");
   // hide guide button if no guide
