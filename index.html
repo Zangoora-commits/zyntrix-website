@@ -2062,7 +2062,7 @@ function syncStickyBuy(){
   if(a){ a.disabled=dis; }
   if(b){ b.disabled=dis; b.textContent=dis?"Out of stock":"Buy Now"; }
 }
-function fitModalImg(){ var w=el("modalMedia"), m=el("modalMainImg"); if(!w||!m)return; var iw=m.naturalWidth, ih=m.naturalHeight; if(iw&&ih){ w.style.aspectRatio = Math.max(0.6, Math.min(1.6, iw/ih)); } }
+function fitModalImg(){ /* fixed image frame: keep the CSS aspect-ratio; image is centered via object-fit:contain, small/landscape photos show white above & below. */ var w=el("modalMedia"); if(w) w.style.aspectRatio=""; }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
 /* ---- product image zoom ---- */
 var pzList=[], pzIdx=0;
