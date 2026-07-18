@@ -288,7 +288,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
 .modal-body{padding:0;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
 .modal-topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:13px 14px 13px 28px;border-bottom:1px solid var(--line)}
-.modal-topbar-name{font-family:var(--fd);font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.modal-topbar-name{font-family:var(--fd);font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.modal-topbar.scrolled .modal-topbar-name{opacity:1;transform:none}
 .modal-content{padding:22px 28px 28px;display:flex;flex-direction:column;flex:1}
 .modal-close{position:static;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
 .modal-close .ti{font-size:18px;line-height:1}
@@ -2049,7 +2050,7 @@ function openModalByProduct(p){
   if(dRes){ dRes.textContent=""; dRes.className="deliv-res"; }
   if(dPin){ var lastPin=""; try{ lastPin=localStorage.getItem("twipid_pin")||""; }catch(e){} dPin.value=lastPin; if(lastPin.length===6) checkDelivery(); }
   syncStickyBuy();
-  el("modalOv").classList.add("open"); document.body.style.overflow="hidden";
+  el("modalOv").classList.add("open"); document.body.style.overflow="hidden"; var _tb=document.querySelector("#modalOv .modal-topbar"); if(_tb)_tb.classList.remove("scrolled");
 }
 /* keep mobile sticky bar in sync with the modal */
 function syncStickyBuy(){
@@ -3395,6 +3396,11 @@ document.addEventListener("click",function(e){
     var c=el("catMenu"); if(c&&c.classList.contains("open")) closeCatMenu();
   }
 });
+(function(){
+  function syncTopName(){ var tb=document.querySelector("#modalOv .modal-topbar"), nm=el("modalName"); if(!tb||!nm)return; tb.classList.toggle("scrolled", nm.getBoundingClientRect().bottom < tb.getBoundingClientRect().bottom + 2); }
+  window._syncModalTopName=syncTopName;
+  ["#modalOv .modal-body","#modalOv .modal"].forEach(function(sel){ var e=document.querySelector(sel); if(e) e.addEventListener("scroll",syncTopName,{passive:true}); });
+})();
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModal(); closeCart(); closeWishlist(); closeOrders(); closeFilters(); closeMenu(); closeInfo(); closeAuth(); closeCheckout(); closeAcct(); closeCatMenu(); closeContent(); closePZoom(); closeLightbox(); closeSizeGuide(); closeEnq(); } });
 </script>
 <script>
