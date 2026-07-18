@@ -148,7 +148,7 @@ section.first{padding-top:44px}
 .prod-quick span{background:#fff;color:var(--ink);font-size:12.5px;font-weight:700;padding:9px 18px;border-radius:100px;display:inline-flex;align-items:center;gap:6px;box-shadow:var(--shadow);transform:translateY(8px);transition:transform .24s}
 .prod-card:hover .prod-quick span{transform:translateY(0)}
 .prod-wish{position:absolute;top:11px;right:11px;width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.95);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;transition:all .16s;z-index:3;box-shadow:var(--shadow-sm)}
-.prod-wish:hover{color:var(--orange);border-color:var(--orange)}
+@media(hover:hover) and (pointer:fine){ .prod-wish:hover{color:var(--orange);border-color:var(--orange)} }
 .prod-wish.on{color:#fff;background:var(--orange);border-color:var(--orange)}
 .prod-wish .ti{font-size:18px;line-height:1}
 .prod-body{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
@@ -308,7 +308,12 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-add{flex:1;background:var(--brand);color:#fff;border:none;min-height:52px;padding:0 22px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s;white-space:nowrap;line-height:1}
 .modal-add:hover{background:var(--brand-deep)}
 .modal-wishbtn{width:52px;height:52px;border-radius:13px;border:1px solid var(--line2);background:#fff;cursor:pointer;color:var(--ink2);font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
-.modal-wishbtn:hover,.modal-wishbtn.on{color:#fff;background:var(--orange);border-color:var(--orange)}
+.modal-wishbtn.on{color:#fff;background:var(--orange);border-color:var(--orange)}
+@media(hover:hover) and (pointer:fine){
+  /* touch devices keep :hover stuck after a tap, which made an un-saved
+     button look saved. Only apply hover where a real pointer exists. */
+  .modal-wishbtn:hover{color:#fff;background:var(--orange);border-color:var(--orange)}
+}
 /* FORM MODAL (auth/checkout/about) - single column */
 .fmodal{background:#fff;border-radius:22px;width:460px;max-width:100%;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .modal-ov.open .fmodal{transform:scale(1) translateY(0)}
@@ -1891,7 +1896,7 @@ function openModalByProduct(p){
   el("modalSpecs").innerHTML=specHtml;
   var accS=el("accSpecs"); if(accS) accS.style.display = specHtml ? "" : "none";
   var accD=el("accDesc"); if(accD) accD.style.display = (p.desc||p.short_desc) ? "" : "none";
-  el("modalWish").classList.toggle("on", wish.some(function(w){return w.key===keyOf(p);}));
+  syncModalWish();
   switchModalTab("details");
   resetAccordions();
   loadReviews(p);
@@ -1971,7 +1976,23 @@ function closeModal(){
 }
 function modalQty(d){ modalQtyVal=Math.max(1,modalQtyVal+d); el("modalQtyN").textContent=modalQtyVal; }
 function modalAdd(){ if(!modalProduct) return; if(el("modalAddBtn").disabled){return;} if(!requireSize()) return; addToCartObj(modalProduct,modalQtyVal,false,selectedSize); modalReturnTo=null; closeModal(); openCart(); }
-function modalToggleWish(){ if(!modalProduct) return; toggleWishObj(modalProduct); el("modalWish").classList.toggle("on", wish.some(function(w){return w.key===keyOf(modalProduct);})); }
+function modalToggleWish(){
+  if(!modalProduct) return;
+  toggleWishObj(modalProduct);
+  syncModalWish();
+  var b=el("modalWish"); if(b && b.blur) b.blur();   // drop any stuck focus/hover on touch
+}
+function syncModalWish(){
+  var b=el("modalWish"); if(!b || !modalProduct) return;
+  var on = wish.some(function(w){ return w.key===keyOf(modalProduct); });
+  b.classList.toggle("on", on);
+  var ic=b.querySelector("i");
+  if(ic) ic.className = on ? "ti ti-heart-filled" : "ti ti-heart";
+  var lb=b.querySelector(".mw-lb");
+  if(lb) lb.textContent = on ? "Saved" : "Save";
+  b.setAttribute("aria-pressed", on ? "true" : "false");
+  b.setAttribute("aria-label", on ? "Remove from wishlist" : "Add to wishlist");
+}
 /* ===== BUY NOW ===== */
 /* ===== APPAREL: sizes, colours, size guide ===== */
 var selectedSize = null;
