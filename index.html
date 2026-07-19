@@ -260,6 +260,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .footer-col a{font-size:13.5px;color:rgba(255,255,255,.62);transition:color .16s;cursor:pointer}
 .footer-col a:hover{color:#5ee3b6}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-legal{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:22px 0 4px;font-size:12.5px}
+.footer-legal a{color:rgba(255,255,255,.68);cursor:pointer;transition:color .16s}
+.footer-legal a:hover{color:#5ee3b6}
+.footer-legal span{color:rgba(255,255,255,.28)}
+.policy-meta{font-size:12px;color:var(--muted);margin:0 0 14px;font-style:italic}
 .footer-bottom p{font-size:12.5px;color:rgba(255,255,255,.5)}
 .footer-bottom .fmeta{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .footer-pay{display:flex;gap:7px;align-items:center}
@@ -1469,10 +1474,17 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div class="footer-col"><h5>Shop</h5><ul><li><a onclick="showNewArrivals()">New Arrivals</a></li><li><a onclick="showBestSellers()">Best Sellers</a></li><li><a onclick="scrollToId('products')">All Products</a></li><li><a onclick="openWishlist()">Wishlist</a></li></ul></div>
     <div class="footer-col" id="footerCats"><h5>Categories</h5><ul id="footerCatList"><li><a onclick="scrollToId('products')">Browse all</a></li></ul></div>
     <div class="footer-col"><h5>Company</h5><ul><li><a onclick="scrollToId('about')">About Us</a></li><li><a onclick="scrollToId('partner')">Partners</a></li><li><a onclick="comingSoon('Careers')">Careers</a></li><li><a onclick="comingSoon('Blog')">Blog</a></li><li><a onclick="comingSoon('Press')">Press</a></li></ul></div>
-    <div class="footer-col"><h5>Support</h5><ul><li><a onclick="openOrders()">Track Order</a></li><li><a onclick="openContent('returns')">Returns</a></li><li><a onclick="openContent('shipping')">Shipping</a></li><li><a onclick="openContent('faq')">FAQ</a></li><li><a onclick="openContent('contact')">Contact</a></li></ul></div>
+    <div class="footer-col"><h5>Support</h5><ul><li><a onclick="openOrders()">Track Order</a></li><li><a onclick="openContent('returns')">Returns &amp; Refunds</a></li><li><a onclick="openContent('shipping')">Shipping</a></li><li><a onclick="openContent('faq')">FAQ</a></li><li><a onclick="openContent('contact')">Contact</a></li><li><a onclick="openContent('terms')">Terms &amp; Conditions</a></li><li><a onclick="openContent('privacy')">Privacy Policy</a></li></ul></div>
+  </div>
+  <div class="footer-legal">
+    <a onclick="openContent('terms')">Terms &amp; Conditions</a><span>·</span>
+    <a onclick="openContent('privacy')">Privacy Policy</a><span>·</span>
+    <a onclick="openContent('returns')">Returns &amp; Refunds</a><span>·</span>
+    <a onclick="openContent('shipping')">Shipping</a><span>·</span>
+    <a onclick="openContent('contact')">Contact &amp; Grievance</a>
   </div>
   <div class="footer-bottom">
-    <p>© 2026 twipid. All rights reserved.</p>
+    <p>© 2026 twipid · Twipid Technologies. All rights reserved.</p>
     <div class="fmeta">
       <div class="footer-pay"><span>UPI</span><span>VISA</span><span>RuPay</span><span>COD</span></div>
       <a class="admin-link" href="admin.html"><i class="ti ti-lock" style="font-size:13px"></i> Store Admin</a>
@@ -3612,13 +3624,44 @@ var CONTENT = {
     +'<details class="faq-q"><summary>Do products come with a warranty?</summary><div class="faq-a">Every product carries the manufacturer\'s warranty (typically 1 year). The exact period is listed on each product page.</div></details>'
     +'<details class="faq-q"><summary>Is it safe to shop on twipid?</summary><div class="faq-a">Absolutely. Your connection is secured with SSL, payments are processed by trusted gateways, and we never store your card details.</div></details>'
     +'<details class="faq-q"><summary>How do I track my order?</summary><div class="faq-a">Sign in and open “My Orders” from the account menu, or use the Track Order link in the footer. You\'ll see live status for every order.</div></details>'},
+  terms:{ic:"ti-file-text",title:"Terms & Conditions",html:
+    '<p class="policy-meta">Last updated: 19 July 2026</p>'
+    +'<p>Welcome to twipid. This website (<b>twipid.com</b>) is owned and operated by <b>Twipid Technologies</b> (\u201cTwipid\u201d, \u201cwe\u201d, \u201cus\u201d, \u201cour\u201d), a partnership firm based at 4023, ATS Paradiso, Sector Chi IV, Greater Noida, Uttar Pradesh \u2013 201310, India. By accessing our website and placing an order, you agree to these Terms &amp; Conditions. Please read them carefully \u2014 if you do not agree, please do not use the site.</p>'
+    +'<h4>1. Eligibility</h4><p>You must be at least 18 years old and capable of entering into a legally binding contract under Indian law to shop with us. By placing an order you confirm that you meet these requirements.</p>'
+    +'<h4>2. Your account</h4><p>You are responsible for keeping your login details secure and for all activity under your account. Please provide accurate, current information so we can fulfil your orders and reach you when needed.</p>'
+    +'<h4>3. Products, pricing &amp; availability</h4><p>All prices are in Indian Rupees (\u20b9) and, unless stated otherwise, are inclusive of applicable taxes. We work hard to keep descriptions, images and prices accurate, but occasional errors can occur, and product images are indicative (colours may vary slightly). If we find an error in the price or description of an item you have ordered, we will let you know and give you the choice to continue at the correct price or cancel; any amount already paid for a cancelled order is refunded.</p>'
+    +'<h4>4. Orders &amp; acceptance</h4><p>Your order is an offer to buy. A confirmation email acknowledges that we have received it, but a binding contract forms only when we dispatch the item. We may decline or cancel an order \u2014 for example due to stock issues, a pricing error, or suspected fraud \u2014 and will refund any prepaid amount in such cases.</p>'
+    +'<h4>5. Cancellations, returns &amp; refunds</h4><p>Order cancellations, returns and refunds are governed by our <b>Returns, Refunds &amp; Cancellation</b> policy and our <b>Shipping</b> policy, both available on this site. Please review them before ordering.</p>'
+    +'<h4>6. Payments</h4><p>Online payments are processed by trusted third-party payment gateways. We do not store your full card details on our servers. You agree to the applicable payment provider\u2019s terms when you pay online. Cash on Delivery may be available on eligible orders and PIN codes.</p>'
+    +'<h4>7. Intellectual property</h4><p>All content on this site \u2014 including the twipid name, logo, text, graphics and layout \u2014 is the property of Twipid Technologies or its licensors and may not be copied or used without our written permission.</p>'
+    +'<h4>8. Acceptable use</h4><p>You agree not to use the site for any unlawful purpose, to interfere with its operation or security, or to attempt unauthorised access to our systems or other users\u2019 data.</p>'
+    +'<h4>9. Limitation of liability</h4><p>To the maximum extent permitted by law, Twipid Technologies is not liable for any indirect or consequential loss arising from your use of the site, and our total liability in connection with any order is limited to the value of that order. Nothing here limits any rights you have under the Consumer Protection Act, 2019 or other applicable law.</p>'
+    +'<h4>10. Governing law &amp; jurisdiction</h4><p>These Terms are governed by the laws of India, and any disputes are subject to the exclusive jurisdiction of the courts at Gautam Budh Nagar, Uttar Pradesh.</p>'
+    +'<h4>11. Changes to these Terms</h4><p>We may update these Terms from time to time. The current version will always be available on this page, and continued use of the site means you accept the updated Terms.</p>'
+    +'<h4>12. Contact</h4><p>Questions about these Terms? Email <a href="mailto:contact@twipid.com">contact@twipid.com</a> or call +91 88609 31112. Grievance details are on our Contact page.</p>'},
+  privacy:{ic:"ti-shield-lock",title:"Privacy Policy",html:
+    '<p class="policy-meta">Last updated: 19 July 2026</p>'
+    +'<p><b>Twipid Technologies</b> (\u201cwe\u201d, \u201cus\u201d, \u201cour\u201d) operates twipid.com and is committed to protecting your privacy. This policy explains what personal data we collect, why, and your rights \u2014 in line with applicable Indian law, including the Information Technology Act, 2000 and the Digital Personal Data Protection Act, 2023.</p>'
+    +'<h4>1. Information we collect</h4><ul><li><b>Information you give us</b> \u2014 your name, email, phone number, delivery address and order details when you create an account or place an order.</li><li><b>Information collected automatically</b> \u2014 device and usage data and cookies, including analytics from Google Analytics and Microsoft Clarity, to understand how the store is used.</li><li><b>Payment information</b> \u2014 handled directly by our payment gateway; we do not store your full card or bank details.</li></ul>'
+    +'<h4>2. How we use your information</h4><ul><li>To process, fulfil and deliver your orders</li><li>To send order updates by email, SMS and WhatsApp</li><li>To provide customer support and handle returns or refunds</li><li>To improve our products, store and service</li><li>To prevent fraud and keep the site secure</li><li>To meet legal and tax obligations</li></ul>'
+    +'<h4>3. Your consent</h4><p>We process your personal data with your consent and as necessary to perform our contract with you (fulfilling your order). You may withdraw consent at any time by contacting us, although this may affect our ability to serve you.</p>'
+    +'<h4>4. Who we share data with</h4><p>We share only the minimum data needed with trusted partners: logistics/courier partners (to deliver your order), our payment gateway (to process payments), and communication providers (to send order updates). We may also disclose information where required by law. <b>We do not sell your personal data.</b></p>'
+    +'<h4>5. Cookies &amp; analytics</h4><p>We use cookies and analytics tools to keep the site working and to understand usage. You can control or clear cookies through your browser settings, though some features may not work as well if you disable them.</p>'
+    +'<h4>6. Data retention</h4><p>We keep your personal data only as long as needed to fulfil your orders and meet legal, accounting and tax requirements, after which it is deleted or anonymised.</p>'
+    +'<h4>7. Security</h4><p>Your connection to our site is secured with SSL, and we apply reasonable safeguards to protect your data. No method of transmission over the internet is completely secure, but we work hard to protect your information.</p>'
+    +'<h4>8. Your rights</h4><p>Subject to applicable law, you can request access to, correction of, or deletion of your personal data, and withdraw consent. To exercise these rights, contact our Grievance Officer (details below and on our Contact page).</p>'
+    +'<h4>9. Children</h4><p>Our store is intended for users aged 18 and above, and we do not knowingly collect data from children.</p>'
+    +'<h4>10. Changes to this policy</h4><p>We may update this policy from time to time; the latest version will always be on this page.</p>'
+    +'<h4>11. Grievance Officer</h4><p>In accordance with the Information Technology Act, 2000 and applicable rules, our Grievance Officer is <b>Susheel Ahuja</b>.<br>Email <a href="mailto:contact@twipid.com">contact@twipid.com</a> \u00b7 Phone +91 88609 31112<br>Twipid Technologies, 4023, ATS Paradiso, Sector Chi IV, Greater Noida, Uttar Pradesh \u2013 201310.</p>'},
   shipping:{ic:"ti-truck-delivery",title:"Shipping Information",html:
     '<h4>Delivery timelines</h4><p>We dispatch orders within 24 hours of confirmation. Delivery usually takes 2–5 business days depending on your PIN code. Remote areas may take a little longer.</p>'
     +'<h4>Shipping charges</h4><ul><li>Orders above ₹999 — <strong>free shipping</strong></li><li>Orders below ₹999 — a flat ₹99 shipping fee</li></ul>'
     +'<h4>Tracking</h4><p>Once your order ships, you\'ll receive a tracking link by email. You can also check status anytime under “My Orders”.</p>'
     +'<h4>Areas we serve</h4><p>We currently ship across India. International shipping isn\'t available yet — but it\'s on our roadmap.</p>'},
-  returns:{ic:"ti-refresh",title:"Returns & Refunds",html:
-    '<h4>15-day returns</h4><p>You can request a return within 15 days of delivery on most products. The item must be unused, in its original packaging, with all accessories, tags and freebies included.</p>'
+  returns:{ic:"ti-refresh",title:"Returns, Refunds & Cancellation",html:
+    '<p class="policy-meta">Last updated: 19 July 2026</p>'
+    +'<h4>Cancelling an order</h4><p>You can cancel any time before your order ships \u2014 open \u201cMy Orders\u201d, select the order and tap <b>Cancel</b> (available while it is Pending or Processing). Prepaid amounts are refunded to your original payment method within 5\u20137 business days. Once an order has shipped, please use the Return option instead.</p>'
+    +'<h4>15-day returns</h4><p>You can request a return within 15 days of delivery on most products. The item must be unused, in its original packaging, with all accessories, tags and freebies included.</p>'
     +'<h4>Return shipping — who pays</h4><ul><li><b>Free pickup &amp; full refund</b> if the item is defective, damaged, the wrong product, missing parts, or not as described — that\'s on us.</li><li>For <b>“changed my mind”</b> returns (no longer needed, bought elsewhere, etc.), a flat <b>₹99 return shipping fee</b> is deducted from your refund.</li></ul>'
     +'<h4>How to start a return</h4><p>Open “My Orders”, pick the order, tap <b>Return</b>, and choose a reason — you\'ll see your expected refund before you submit. Our courier partner then picks the item up from your address.</p>'
     +'<h4>Your refund</h4><ul><li><b>Online (prepaid) orders</b> — refunded to your original payment method.</li><li><b>Cash on Delivery</b> — refunded to your UPI/bank account (we\'ll collect details), or as store credit if you prefer.</li><li>Refunds are processed within <b>5–7 business days</b> after we receive and inspect the returned item.</li></ul>'
@@ -3629,8 +3672,10 @@ var CONTENT = {
     +'<div class="contact-tile"><i class="ti ti-brand-whatsapp"></i><div><div class="ct-l">WhatsApp</div><a class="ct-v" href="https://wa.me/918860931112" target="_blank" rel="noopener">+91 88609 31112</a></div></div>'
     +'<div class="contact-tile"><i class="ti ti-mail"></i><div><div class="ct-l">Email</div><a class="ct-v" href="mailto:contact@twipid.com">contact@twipid.com</a></div></div>'
     +'<div class="contact-tile"><i class="ti ti-clock-hour-4"></i><div><div class="ct-l">Support hours</div><div class="ct-v">Mon–Sun · 9AM–9PM IST</div></div></div>'
-    +'<div class="contact-tile"><i class="ti ti-map-pin"></i><div><div class="ct-l">Based in</div><div class="ct-v">India</div></div></div>'
+    +'<div class="contact-tile"><i class="ti ti-building-store"></i><div><div class="ct-l">Registered as</div><div class="ct-v">Twipid Technologies</div></div></div>'
     +'</div>'
+    +'<h4>Business address</h4><p>Twipid Technologies<br>4023, ATS Paradiso, Sector Chi IV,<br>Greater Noida, Uttar Pradesh \u2013 201310, India</p>'
+    +'<h4>Grievance Officer</h4><p>As required under the Consumer Protection (E-Commerce) Rules, 2020 and the Information Technology Act, 2000, complaints may be addressed to:<br><b>Susheel Ahuja</b>, Grievance Officer<br>Email: <a href="mailto:contact@twipid.com">contact@twipid.com</a> \u00b7 Phone: +91 88609 31112<br>We aim to acknowledge grievances within 48 hours and resolve them within a reasonable time.</p>'
     +'<p style="margin-top:14px;font-size:13px;color:var(--muted)">For partnership enquiries, write to <a href="mailto:partners@twipid.com" style="color:var(--brand-deep);font-weight:600">partners@twipid.com</a>.</p>'}
 };
 function openContent(key){
