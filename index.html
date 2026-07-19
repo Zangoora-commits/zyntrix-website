@@ -34,6 +34,30 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- ===== ANALYTICS ===== -->
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-466V9MFL3B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-466V9MFL3B');
+</script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "xor67g96ul");
+</script>
+<!-- Small helper so the store can fire GA4 e-commerce events safely even if the
+     tag is blocked (adblock) or still loading. Never throws. -->
+<script>
+  window.track = function(name, params){
+    try{ if(typeof gtag==="function"){ gtag("event", name, params||{}); } }catch(e){}
+  };
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -2100,10 +2124,11 @@ function pickCategorySub(cat, sub){
 function goShop(){ window._tagFilter=null; activeFilter="all"; activeSub=null; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn("all"); el("prodTitle").textContent="All Products"; buildSubChips(); render(); scrollToId("products"); }
 function showNewArrivals(){ window._tagFilter="new"; activeFilter="all"; activeSub=null; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="New Arrivals"; buildSubChips(); render(); scrollToId("products"); }
 function showBestSellers(){ window._tagFilter="hot"; activeFilter="all"; activeSub=null; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="Best Sellers"; buildSubChips(); render(); scrollToId("products"); }
-function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFilter=null; if(searchTerm){ activeFilter="all"; activeSub=null; setActiveBtn("all"); el("prodTitle").textContent='Results for "'+esc(v.trim())+'"'; } else { el("prodTitle").textContent="Featured Products"; } buildSubChips(); render(); if(searchTerm) scrollToId("products"); }
+function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFilter=null; if(searchTerm){ activeFilter="all"; activeSub=null; setActiveBtn("all"); el("prodTitle").textContent='Results for "'+esc(v.trim())+'"'; try{ if(window._searchT)clearTimeout(window._searchT); window._searchT=setTimeout(function(){ track("search",{search_term:searchTerm}); },900); }catch(e){} } else { el("prodTitle").textContent="Featured Products"; } buildSubChips(); render(); if(searchTerm) scrollToId("products"); }
 /* ===== PRODUCT MODAL ===== */
 function openModal(i){ var p=view[i]; if(!p) return; modalReturnTo=null; openModalByProduct(p); }
 function openModalByProduct(p){
+  try{ track("view_item",{currency:"INR",value:Number(p.price)||0,items:[{item_id:String(p.sku||keyOf(p)),item_name:p.name,item_brand:p.brand||"",item_category:p.category||"",price:Number(p.price)||0}]}); }catch(e){}
   modalProduct=p; modalQtyVal=1; el("modalQtyN").textContent="1"; pickedStars=0; paintStars(0);
   el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
   var was=el("modalWas"), off=el("modalOff");
@@ -2809,6 +2834,7 @@ function addToCartObj(p,q,silent,size){
       size:size||null,color:p.color||null,sku:p.sku||null,hsn:p.hsn||null,weight_g:p.weight_g||null});
   }
   save("twipid_cart",cart); updateCart(); if(!silent) showToast("Added to cart"+(size?" · Size "+size:""));
+  track("add_to_cart",{currency:"INR",value:Number(p.price)*q,items:[{item_id:String(p.sku||keyOf(p)),item_name:p.name,item_brand:p.brand||"",item_category:p.category||"",item_variant:size||"",price:Number(p.price),quantity:q}]});
 }
 function updateCart(){
   var n=cart.reduce(function(s,i){return s+i.qty;},0);
@@ -3129,6 +3155,8 @@ function returnFallback(id,reason,note){
 /* ===== CHECKOUT ===== */
 function startCheckout(){
   if(!cart.length){ showToast("Your cart is empty"); return; }
+  try{ var cv=cart.reduce(function(s,i){return s+Number(i.price)*i.qty;},0);
+    track("begin_checkout",{currency:"INR",value:cv,items:cart.map(function(it){return {item_id:String(it.sku||it.product_key||it.key),item_name:it.name,item_brand:it.brand||"",item_category:it.category||"",item_variant:it.size||"",price:Number(it.price),quantity:it.qty};})}); }catch(e){}
   closeCart();
   if(currentUser){ el("coEmail").value=currentUser.email||""; el("coName").value=(currentUser.user_metadata&&currentUser.user_metadata.full_name)||""; }
   el("coErr").classList.remove("show");
@@ -3220,6 +3248,7 @@ async function saveOrder(order, onSuccess) {
       return;
     }
     const newOrder = r.data;
+    try{ track("purchase",{transaction_id:String(newOrder.id),currency:"INR",value:Number(newOrder.total)||0,shipping:Number(newOrder.total)-((newOrder.items||[]).reduce(function(s,it){return s+Number(it.price)*Number(it.qty||1);},0))||0,items:(newOrder.items||[]).map(function(it){return {item_id:String(it.sku||it.name),item_name:it.name,item_brand:it.brand||"",item_category:it.category||"",item_variant:it.size||"",price:Number(it.price),quantity:Number(it.qty)||1};})}); }catch(e){}
     try {
       const shiprocketRes = await db.functions.invoke("create-shiprocket-order", {
         body: { orderId: newOrder.id }
