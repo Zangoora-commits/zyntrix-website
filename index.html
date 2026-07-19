@@ -260,10 +260,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .footer-col a{font-size:13.5px;color:rgba(255,255,255,.62);transition:color .16s;cursor:pointer}
 .footer-col a:hover{color:#5ee3b6}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.footer-legal{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:22px 0 4px;font-size:12.5px}
-.footer-legal a{color:rgba(255,255,255,.68);cursor:pointer;transition:color .16s}
-.footer-legal a:hover{color:#5ee3b6}
-.footer-legal span{color:rgba(255,255,255,.28)}
 .policy-meta{font-size:12px;color:var(--muted);margin:0 0 14px;font-style:italic}
 .footer-bottom p{font-size:12.5px;color:rgba(255,255,255,.5)}
 .footer-bottom .fmeta{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
@@ -346,6 +342,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-price .was{font-size:15px;color:var(--muted);text-decoration:line-through}
 .modal-price .off{font-size:12px;font-weight:700;color:var(--orange);background:var(--orange-soft);padding:3px 9px;border-radius:6px}
 .modal-desc{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:20px}
+.modal-desc.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
+.desc-more{background:none;border:none;color:var(--brand-deep);font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;padding:0 0 16px;display:inline-flex;align-items:center;gap:3px}
+.desc-more:hover{text-decoration:underline}
 .modal-specs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
 .modal-spec{font-size:12px;font-weight:600;color:var(--ink2);background:var(--paper);border:1px solid var(--line);padding:6px 12px;border-radius:8px}
 .modal-actions{margin-top:8px;display:flex;gap:11px;align-items:center}
@@ -621,12 +620,17 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .footer-top{grid-template-columns:1fr 1fr;gap:32px}
   .partner{grid-template-columns:1fr;text-align:center}.partner-points{justify-content:center}.partner-deco{display:none}
   .nav-search{display:none}
-  .modal{grid-template-columns:1fr;max-height:90vh;display:block;overflow-y:auto}
+  .modal-ov{padding:0}
+  .modal-ov.open .modal{transform:none}
+  .modal{grid-template-columns:1fr;width:100%;max-width:100%;height:100%;max-height:100%;border-radius:0;display:block;overflow-y:auto}
   .modal-img{min-height:auto;height:auto;padding-top:0}
   .modal-body{max-height:none;overflow:visible;padding:0}
-  .modal-content{padding:20px}
-  .modal-topbar{padding-left:20px}
-  .modal-close{z-index:5}
+  .modal-content{padding:20px 20px 96px}
+  /* floating close button pinned to the top-right corner (no longer a stray line) */
+  .modal-topbar{position:fixed;top:0;right:0;left:auto;width:auto;padding:12px;background:none;border:none;box-shadow:none;z-index:410}
+  .modal-topbar.scrolled{background:none;box-shadow:none;border-color:transparent}
+  .modal-topbar-name{display:none}
+  .modal-close{background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 12px rgba(0,0,0,.2);border-radius:50%;width:38px;height:38px;z-index:411}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
 @media(max-width:768px){
@@ -1476,13 +1480,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div class="footer-col"><h5>Company</h5><ul><li><a onclick="scrollToId('about')">About Us</a></li><li><a onclick="scrollToId('partner')">Partners</a></li><li><a onclick="comingSoon('Careers')">Careers</a></li><li><a onclick="comingSoon('Blog')">Blog</a></li><li><a onclick="comingSoon('Press')">Press</a></li></ul></div>
     <div class="footer-col"><h5>Support</h5><ul><li><a onclick="openOrders()">Track Order</a></li><li><a onclick="openContent('returns')">Returns &amp; Refunds</a></li><li><a onclick="openContent('shipping')">Shipping</a></li><li><a onclick="openContent('faq')">FAQ</a></li><li><a onclick="openContent('contact')">Contact</a></li><li><a onclick="openContent('terms')">Terms &amp; Conditions</a></li><li><a onclick="openContent('privacy')">Privacy Policy</a></li></ul></div>
   </div>
-  <div class="footer-legal">
-    <a onclick="openContent('terms')">Terms &amp; Conditions</a><span>·</span>
-    <a onclick="openContent('privacy')">Privacy Policy</a><span>·</span>
-    <a onclick="openContent('returns')">Returns &amp; Refunds</a><span>·</span>
-    <a onclick="openContent('shipping')">Shipping</a><span>·</span>
-    <a onclick="openContent('contact')">Contact &amp; Grievance</a>
-  </div>
   <div class="footer-bottom">
     <p>© 2026 twipid · Twipid Technologies. All rights reserved.</p>
     <div class="fmeta">
@@ -1549,13 +1546,19 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       </div>
       <div class="deliv-res" id="delivRes"></div>
     </div>
+    <div class="modal-actions">
+      <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
+      <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
+      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i><span class="mw-lb">Save</span></button>
+    </div>
+    <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
       <div class="acc" id="accDesc">
         <button class="acc-h" onclick="toggleAcc('accDesc')" aria-expanded="true">
           <span><i class="ti ti-file-description"></i> Description</span><i class="ti ti-chevron-down acc-x"></i>
         </button>
-        <div class="acc-b open"><p class="modal-desc" id="modalDesc"></p></div>
+        <div class="acc-b open"><p class="modal-desc clamp" id="modalDesc"></p><button class="desc-more" id="descMore" onclick="toggleDesc()" style="display:none">Read more</button></div>
       </div>
       <div class="acc" id="accSpecs">
         <button class="acc-h" onclick="toggleAcc('accSpecs')" aria-expanded="false">
@@ -1610,12 +1613,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
         </div>
       </div>
     </div>
-    <div class="modal-actions">
-      <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
-      <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
-      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i><span class="mw-lb">Save</span></button>
-    </div>
-    <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="share-row">
       <span class="lbl">Share</span>
       <button class="share-btn wa" onclick="shareProduct('whatsapp')" aria-label="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>
@@ -2213,6 +2210,7 @@ function openModalByProduct(p){
   if(st!==null && st<=0){ sEl.innerHTML='<span class="stock-pill stock-out"><i class="ti ti-x" style="font-size:12px"></i> Out of stock</span>'; addBtn.disabled=true; addBtn.style.opacity=".5"; addBtn.style.cursor="not-allowed"; var bb=el("modalBuyBtn"); if(bb){bb.disabled=true;} }
   else { addBtn.disabled=false; addBtn.style.opacity=""; addBtn.style.cursor=""; var bb2=el("modalBuyBtn"); if(bb2){bb2.disabled=false;} if(st!==null&&st<=5) sEl.innerHTML='<span class="stock-pill stock-low"><i class="ti ti-flame" style="font-size:12px"></i> Hurry — only '+st+' left</span>'; else if(st!==null) sEl.innerHTML='<span class="stock-pill stock-in"><i class="ti ti-check" style="font-size:12px"></i> In stock</span>'; else sEl.innerHTML=""; }
   el("modalDesc").textContent=p.desc||p.short_desc||"";
+  (function(){ var dd=el("modalDesc"), dm=el("descMore"); if(!dd)return; dd.classList.add("clamp"); if(dm){ dm.textContent="Read more"; dm.style.display="none"; requestAnimationFrame(function(){ if(dd.scrollHeight>dd.clientHeight+2) dm.style.display=""; }); } })();
   // gallery
   var imgWrap=el("modalImg"), media=el("modalMedia"), pair=catPair(p.category), exist=media.querySelector("img"); if(exist)exist.remove(); media.style.aspectRatio="";
   var icon=el("modalIcon"), imgs=imagesOf(p), thumbs=el("galleryThumbs");
@@ -2274,6 +2272,7 @@ function paintPZoom(){
 }
 function pzStep(d){ if(!pzList.length)return; pzIdx=(pzIdx+d+pzList.length)%pzList.length; paintPZoom(); }
 function closePZoom(){ var o=el("pzOv"); if(o) o.classList.remove("open"); }
+function toggleDesc(){ var dd=el("modalDesc"), dm=el("descMore"); if(!dd)return; var clamped=dd.classList.toggle("clamp"); if(dm) dm.textContent=clamped?"Read more":"Read less"; }
 function toggleAcc(id){
   var box=el(id); if(!box) return;
   var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
