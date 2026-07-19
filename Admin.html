@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <title>twipid Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -553,12 +553,15 @@ input,select,textarea,button{font-family:var(--font-body)}
           <label class="field-label">Brand / Partner *</label>
           <input class="field-input" type="text" id="pBrand" placeholder="e.g. SoundVibe">
           <label class="field-label">Category *</label>
-          <select class="field-select" id="pCategory">
+          <select class="field-select" id="pCategory" onchange="refreshSubcatSuggestions()">
             <option value="">Select category</option>
             <option>Audio</option><option>Wearables</option><option>Smart Home</option>
             <option>Gaming</option><option>Smartphones</option><option>Computing</option>
             <option>Cameras</option><option>Power & Charging</option>
           </select>
+          <label class="field-label">Sub-category <span style="text-transform:none;letter-spacing:0;color:var(--muted)">— optional (e.g. T-Shirts, Shirts)</span></label>
+          <input class="field-input" type="text" id="pSubcat" list="subcatSuggestions" placeholder="Type, or pick a suggestion" autocomplete="off">
+          <datalist id="subcatSuggestions"></datalist>
           <label class="field-label">Sale Price (₹) *</label>
           <input class="field-input" type="number" id="pPrice" placeholder="7499">
           <label class="field-label">Original / MRP (₹)</label>
@@ -720,6 +723,22 @@ allProducts = DEMO_PRODUCTS.slice();
 // ── HELPERS ──────────────────────────────────────
 function el(id)          { return document.getElementById(id); }
 function val(id)         { var e=el(id); return e ? e.value : ""; }
+/* Sub-category suggestions: offer sub-categories already used within the
+   currently-selected category, so entries stay consistent (avoids "T-Shirts"
+   vs "Tshirt"). Falls back to all sub-categories in use if no category chosen. */
+function refreshSubcatSuggestions(){
+  var dl=el("subcatSuggestions"); if(!dl) return;
+  var cat=(val("pCategory")||"").toLowerCase().trim();
+  var seen={}, list=[];
+  (allProducts||[]).forEach(function(p){
+    var s=(p.subcategory||p.sub_category||p.subcat||""); s=String(s).trim(); if(!s) return;
+    var pc=String(p.category||"").toLowerCase().trim();
+    if(cat && pc!==cat) return;                 // scope to chosen category
+    var k=s.toLowerCase(); if(seen[k]) return; seen[k]=1; list.push(s);
+  });
+  list.sort(function(a,b){ return a.localeCompare(b); });
+  dl.innerHTML=list.map(function(s){ return '<option value="'+String(s).replace(/"/g,"&quot;")+'">'; }).join("");
+}
 function setHtml(id,v)   { var e=el(id); if(e) e.innerHTML=v; }
 function setText(id,v)   { var e=el(id); if(e) e.textContent=v; }
 function show(id)        { var e=el(id); if(e) e.style.display="flex"; }
@@ -941,12 +960,28 @@ function renderOrders(){
       +"</tr>";
   }).join("");
 }
+function notifyOrderCancelled(o){
+  if(isDemo || !db || !db.functions || !o) return;
+  var name=String(o.customer_name||"there").split(" ")[0];
+  var pay=(o.payment_id||o.payment_method&&/online|razorpay/i.test(o.payment_method))?"online":"cod";
+  var refundLine=(pay==="online")?" Since you paid online, your refund will be processed to your original payment method within 5–7 business days.":"";
+  var msg="Hi "+name+", your twipid order #"+o.id+" has been cancelled."+refundLine+" Questions? WhatsApp us at +91 88609 31112.";
+  var raw=String(o.customer_phone||"").replace(/\D/g,"");
+  var e164=raw.length===10?("+91"+raw):("+"+raw.replace(/^\+/,""));
+  if(raw){
+    try{ db.functions.invoke("send-order-message",{body:{channel:"sms",to:e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+    try{ db.functions.invoke("send-order-message",{body:{channel:"whatsapp",to:"whatsapp:"+e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+  }
+  try{ db.functions.invoke("send-order-email",{body:{orderId:o.id,type:"cancelled",message:msg}}).then(function(){},function(){}); }catch(e){}
+}
 function updateOrderStatus(id,status){
   if(isDemo || !db){ toast("Demo mode — status not saved","info"); return; }
   db.from("orders").update({status:status}).eq("id",id).then(function(r){
     if(r.error){ toast("Update failed: "+r.error.message,"error"); return; }
     var o=allOrders.find(function(x){return x.id==id;}); if(o)o.status=status;
-    toast("Order #"+id+" → "+status,"success"); renderOrders();
+    if(status==="cancelled" && o){ notifyOrderCancelled(o); toast("Order #"+id+" cancelled — customer notified","success"); }
+    else { toast("Order #"+id+" → "+status,"success"); }
+    renderOrders();
   }).catch(function(){ toast("Update failed","error"); });
 }
 function viewOrder(id){
@@ -1159,7 +1194,7 @@ function renderProducts(list) {
     html += "<tr>"
       + "<td><div class='prod-name-cell'><div class='prod-img-thumb'><i class='ti "+(p.icon||"ti-box")+"'></i></div>"
       + "<div><div class='prod-name'>"+p.name+"</div><div class='prod-brand'>"+p.brand+"</div></div></div></td>"
-      + "<td style='color:var(--muted);font-size:12px'>"+p.category+"</td>"
+      + "<td style='color:var(--muted);font-size:12px'>"+p.category+(function(){var s=(p.subcategory||p.sub_category||p.subcat||"");s=String(s).trim();return s?"<br><span style='font-size:10px;color:var(--hint)'>"+s+"</span>":"";})()+"</td>"
       + "<td><span class='prod-price'>&#8377;"+Number(p.price).toLocaleString("en-IN")+"</span><br>"
       + "<span style='font-size:11px;color:var(--hint);text-decoration:line-through'>&#8377;"+Number(p.orig_price||p.price).toLocaleString("en-IN")+"</span></td>"
       + "<td><span class='stock-badge "+sc+"'>"+sl+"</span></td>"
@@ -1182,12 +1217,13 @@ function filterProds(q) {
 function openAddProduct() {
   editingId = null;
   setText("modalTitle","Add New Product");
-  ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission",
+  ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission","pSubcat",
    "pColor","pColorHex","pStyleGroup","pSizeGuide","pWeight","pDimL","pDimB","pDimH","pHsn","pGstRate","pType","pOccasion"].forEach(function(id){
     var e=el(id); if(e){ e.value=""; e.style.borderColor=""; }
   });
   setSizeChecks([]); syncSizeStock({});
   var pc=el("pCategory"); if(pc) pc.value="";
+  refreshSubcatSuggestions();
   var ps=el("pStatus");   if(ps) ps.value="active";
   var pt=el("pTag");      if(pt) pt.value="";
   var ip=el("imagePreview"); if(ip) ip.innerHTML="";
@@ -1201,7 +1237,7 @@ function editProduct(i) {
   editingId = (p.id!==undefined && p.id!==null && String(p.id)!=="null") ? p.id : null;
   setText("modalTitle","Edit Product");
   var specsStr = Array.isArray(p.specs) ? p.specs.join(", ") : (p.specs ? String(p.specs) : "");
-  var fields = {pName:p.name, pBrand:p.brand, pCategory:p.category, pPrice:p.price,
+  var fields = {pName:p.name, pBrand:p.brand, pCategory:p.category, pSubcat:(p.subcategory||p.sub_category||p.subcat||""), pPrice:p.price,
     pOrigPrice:p.orig_price, pStock:p.stock, pSku:p.sku||"", pStatus:p.status||"active",
     pTag:p.tag||"", pShortDesc:p.short_desc||"", pDesc:p.desc||"",
     pSpecs:specsStr, pCommission:p.commission||"", pVideo:p.video||"",
@@ -1212,6 +1248,7 @@ function editProduct(i) {
   Object.keys(fields).forEach(function(fid){
     var e=el(fid); if(e){ var v=fields[fid]; e.value=(v===undefined||v===null)?"":v; e.style.borderColor=""; }
   });
+  refreshSubcatSuggestions();
   var ip=el("imagePreview"); if(ip){
     ip.innerHTML="";
     var existing=[]; if(p.image_url) existing.push(p.image_url);
@@ -1313,6 +1350,7 @@ function saveProduct() {
   var brand    = val("pBrand").trim();
   var price    = val("pPrice").trim();
   var category = val("pCategory").trim();
+  var subcat   = val("pSubcat").trim();
   var origPrice= val("pOrigPrice").trim();
   var stock    = val("pStock").trim();
   var sku      = val("pSku").trim();
@@ -1356,6 +1394,7 @@ function saveProduct() {
     name:       name,
     brand:      brand,
     category:   category,
+    subcategory: subcat || null,
     price:      Number(price),
     orig_price: Number(origPrice) || Number(price),
     stock:      Number(stock) || 0,
