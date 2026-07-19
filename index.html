@@ -330,6 +330,10 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-topbar.scrolled .modal-topbar-name{opacity:1;transform:none}
 .modal-content{padding:6px 28px 28px;display:flex;flex-direction:column;flex:1}
 .modal-topbar-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.media-fabs{position:absolute;top:12px;right:12px;z-index:30;display:flex;align-items:center;gap:8px}
+.media-fabs .modal-fab{background:rgba(255,255,255,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-color:transparent;box-shadow:0 2px 10px rgba(0,0,0,.16)}
+.media-fabs .modal-fab:hover{background:#fff}
+.media-fabs .modal-fab.on{background:#fff;color:#e11d48}
 .modal-fab{position:static;flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;font-size:19px;transition:all .16s;padding:0}
 .modal-fab:hover{background:#fff;color:var(--ink);border-color:var(--line2)}
 .modal-fab.on{color:#e11d48;border-color:#f3c3cd;background:#fff}
@@ -1516,9 +1520,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
   </div><div class="modal">
-  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
+  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
-    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><div class="modal-topbar-acts"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div></div>
     <div class="modal-content">
     <div class="modal-name" id="modalName">Product</div>
     <div class="modal-brand" id="modalBrand">Brand</div>
