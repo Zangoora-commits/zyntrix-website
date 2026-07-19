@@ -686,25 +686,35 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .nav-links a .chev{font-size:16px;transition:transform .22s}
 .nav-links a.open .chev{transform:rotate(180deg)}
 .nav-links a.open{color:var(--brand-deep);background:var(--brand-tint)}
-.cat-panel{position:absolute;top:calc(100% + 12px);left:0;width:520px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 50px rgba(12,22,17,.16);padding:14px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .2s;z-index:120}
+.cat-panel{position:absolute;top:calc(100% + 12px);left:0;width:600px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 50px rgba(12,22,17,.16);padding:12px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .2s;z-index:120}
 .cat-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
-.cat-panel-head{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:6px 8px 10px}
-.cat-grid-dd{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.cat-item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;cursor:pointer;transition:background .14s;border:none;background:none;text-align:left;width:100%;font-family:var(--fb)}
-.cat-item:hover{background:var(--paper)}
-.cat-item-wrap{display:flex;flex-direction:column}
-.cat-item-wrap:hover .cat-item{background:var(--paper)}
-.cat-subs{display:flex;flex-wrap:wrap;gap:5px;padding:2px 10px 8px 62px}
-.cat-sub{border:1px solid var(--line);background:#fff;color:var(--ink2);font-family:var(--fb);font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;cursor:pointer;transition:all .13s}
-.cat-sub:hover{border-color:var(--brand);background:var(--brand-tint);color:var(--brand-deep)}
-.cat-ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.cat-itext{display:flex;flex-direction:column;gap:3px;min-width:0}
-.cat-iname{display:block;font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.15}
-.cat-idesc{display:block;font-size:12px;color:var(--muted);line-height:1.2}
+.cat-mega{display:grid;grid-template-columns:236px 1fr;gap:6px}
+/* left: lean category list */
+.cat-mega-list{display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--line);padding-right:8px;max-height:60vh;overflow-y:auto}
+.catx{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:11px;border:none;background:none;cursor:pointer;text-align:left;width:100%;font-family:var(--fb);transition:background .13s}
+.catx:hover,.catx.on{background:var(--paper)}
+.catx.on{background:var(--brand-tint)}
+.catx-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.catx-name{flex:1;font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.catx-arrow{font-size:16px;color:var(--muted);transition:transform .15s,color .15s;flex-shrink:0}
+.catx.on .catx-arrow{color:var(--brand-deep);transform:translateX(2px)}
+/* right: detail panel for the hovered category */
+.cat-mega-detail{padding:2px 4px 4px 10px;min-height:224px;display:flex;flex-direction:column}
+.cat-detail-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 6px 12px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.cat-detail-title{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.3px}
+.cat-detail-all{font-size:12px;font-weight:700;color:var(--brand-deep);background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;padding:4px 6px;border-radius:8px;transition:background .13s}
+.cat-detail-all:hover{background:var(--brand-tint)}
+.cat-detail-all i{font-size:14px}
+.cat-sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.cat-sublink{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;border:none;background:none;cursor:pointer;text-align:left;font-family:var(--fb);font-size:13px;font-weight:600;color:var(--ink2);transition:background .12s,color .12s}
+.cat-sublink:hover{background:var(--brand-tint);color:var(--brand-deep)}
+.cat-sublink .n{margin-left:auto;font-size:11px;color:var(--muted);font-weight:700}
+.cat-sublink:hover .n{color:var(--brand-deep)}
+.cat-detail-empty{font-size:13px;color:var(--muted);padding:8px 6px;line-height:1.55}
 .cat-foot{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
 .cat-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:11px;border:none;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--fb);font-weight:800;font-size:14px;cursor:pointer}
 .cat-all:hover{background:#d8f2e9}
-@media(max-width:680px){.cat-panel{width:min(420px,calc(100vw - 28px))}.cat-grid-dd{grid-template-columns:1fr}}
+@media(max-width:680px){.cat-panel{width:min(440px,calc(100vw - 28px))}.cat-mega{grid-template-columns:1fr}.cat-mega-list{border-right:none;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:8px;max-height:none}.cat-mega-detail{padding-left:4px}}
 /* ===== Tappy mascot in carousel (between text and product) ===== */
 .ht-bob{transform-box:view-box;transform-origin:120px 250px;animation:htbob 3.4s ease-in-out infinite}
 .ht-eyes{transform-box:view-box;transform-origin:120px 138px;animation:htblink 3.9s infinite}
@@ -1243,8 +1253,10 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <li class="cat-li">
       <a id="catTrigger" onclick="toggleCat(event)"><i class="ti ti-category-2"></i> Categories <i class="ti ti-chevron-down chev"></i></a>
       <div class="cat-panel" id="catPanel">
-        <div class="cat-panel-head">Shop by category</div>
-        <div class="cat-grid-dd" id="catGridDD"></div>
+        <div class="cat-mega">
+          <div class="cat-mega-list" id="catGridDD"></div>
+          <div class="cat-mega-detail" id="catSubPanel"></div>
+        </div>
         <div class="cat-foot"><button class="cat-all" onclick="catPick('all')"><i class="ti ti-layout-grid"></i> View all products</button></div>
       </div>
     </li>
@@ -1645,7 +1657,7 @@ document.addEventListener("DOMContentLoaded", function(){
   buildCategoryChips(); buildFooterCats(); render(); updateCart(); updateWishBadge(); buildBrandChips(); renderRecent();
   if(db){
     db.from("products").select("*").eq("status","active").order("created_at",{ascending:false})
-      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); buildFooterCats(); render(); buildBrandChips(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
+      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); buildFooterCats(); render(); buildBrandChips(); if(window.rebuildCatDropdown) window.rebuildCatDropdown(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
     db.auth.getSession().then(function(r){ if(r.data&&r.data.session){ setUser(r.data.session.user); } }).catch(function(){});
     db.auth.onAuthStateChange(function(_e,s){ setUser(s?s.user:null); });
   } else { handleDeepLink(); }
@@ -3638,20 +3650,46 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     window.hcShow(0);
   }
   // ---- Categories dropdown ----
-  var ddGrid=document.getElementById("catGridDD"), panel=document.getElementById("catPanel"), trigger=document.getElementById("catTrigger");
-  if(ddGrid){
-    ddGrid.innerHTML=DD_CATS.map(function(c){
-      var subs = (typeof subsForCat==="function") ? subsForCat(c.cat) : [];
-      var subHtml = subs.length ? '<span class="cat-subs">'+subs.slice(0,4).map(function(s){
-          return '<button class="cat-sub" data-cat="'+c.cat+'" data-sub="'+s.slug+'">'+s.label+'</button>';
-        }).join("")+'</span>' : "";
-      return '<div class="cat-item-wrap"><button class="cat-item" data-cat="'+c.cat+'"><span class="cat-ic" style="background:'+c.bg+';color:'+c.fg+'"><i class="ti '+c.icon+'"></i></span><span class="cat-itext"><span class="cat-iname">'+c.name+'</span><span class="cat-idesc">'+c.desc+'</span></span></button>'+subHtml+'</div>';
-    }).join("");
-    window.toggleCat=function(e){ if(e){e.stopPropagation();} var open=panel.classList.toggle("open"); trigger.classList.toggle("open",open); };
+  var ddGrid=document.getElementById("catGridDD"), panel=document.getElementById("catPanel"), trigger=document.getElementById("catTrigger"), detail=document.getElementById("catSubPanel");
+  if(ddGrid && detail){
     window.catPick=function(cat){ panel.classList.remove("open"); trigger.classList.remove("open"); go(cat); };
     window.catSubPick=function(cat,sub){ panel.classList.remove("open"); trigger.classList.remove("open"); if(typeof pickCategorySub==="function") pickCategorySub(cat,sub); };
-    Array.prototype.forEach.call(ddGrid.querySelectorAll(".cat-item"),function(b){ b.addEventListener("click",function(){ window.catPick(b.getAttribute("data-cat")); }); });
-    Array.prototype.forEach.call(ddGrid.querySelectorAll(".cat-sub"),function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); window.catSubPick(b.getAttribute("data-cat"), b.getAttribute("data-sub")); }); });
+    window.toggleCat=function(e){ if(e){e.stopPropagation();} var open=panel.classList.toggle("open"); trigger.classList.toggle("open",open); if(open) setActive(0); };
+    function renderDetail(c){
+      var subs=(typeof subsForCat==="function")?subsForCat(c.cat):[];
+      var head='<div class="cat-detail-head"><span class="cat-detail-title">'+c.name+'</span>'
+        +'<button class="cat-detail-all" data-cat="'+c.cat+'">Shop all <i class="ti ti-arrow-right"></i></button></div>';
+      var body = subs.length
+        ? '<div class="cat-sub-grid">'+subs.map(function(s){
+            return '<button class="cat-sublink" data-cat="'+c.cat+'" data-sub="'+s.slug+'">'+s.label+'<span class="n">'+s.n+'</span></button>';
+          }).join("")+'</div>'
+        : '<div class="cat-detail-empty">'+c.desc+'.<br>No sub-categories yet — browse all '+c.name+'.</div>';
+      detail.innerHTML=head+body;
+      var allB=detail.querySelector(".cat-detail-all");
+      if(allB) allB.addEventListener("click",function(e){ e.stopPropagation(); window.catPick(allB.getAttribute("data-cat")); });
+      Array.prototype.forEach.call(detail.querySelectorAll(".cat-sublink"),function(b){
+        b.addEventListener("click",function(e){ e.stopPropagation(); window.catSubPick(b.getAttribute("data-cat"), b.getAttribute("data-sub")); });
+      });
+    }
+    function setActive(idx){
+      Array.prototype.forEach.call(ddGrid.children,function(elm,k){ elm.classList.toggle("on",k===idx); });
+      if(DD_CATS[idx]) renderDetail(DD_CATS[idx]);
+    }
+    function buildList(){
+      ddGrid.innerHTML=DD_CATS.map(function(c){
+        var hasSubs=((typeof subsForCat==="function")?subsForCat(c.cat):[]).length>0;
+        return '<button class="catx" data-cat="'+c.cat+'"><span class="catx-ic" style="background:'+c.bg+';color:'+c.fg+'"><i class="ti '+c.icon+'"></i></span><span class="catx-name">'+c.name+'</span>'+(hasSubs?'<i class="ti ti-chevron-right catx-arrow"></i>':'')+'</button>';
+      }).join("");
+      Array.prototype.forEach.call(ddGrid.children,function(b,idx){
+        b.addEventListener("mouseenter",function(){ setActive(idx); });
+        b.addEventListener("focus",function(){ setActive(idx); });
+        b.addEventListener("click",function(){ window.catPick(b.getAttribute("data-cat")); });
+      });
+      setActive(0);
+    }
+    buildList();
+    // rebuild once real products arrive so sub-category cues/counts are accurate
+    window.rebuildCatDropdown=buildList;
     document.addEventListener("click",function(e){ if(!e.target.closest(".cat-li")){ panel.classList.remove("open"); trigger.classList.remove("open"); } });
     document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ panel.classList.remove("open"); trigger.classList.remove("open"); } });
   }
