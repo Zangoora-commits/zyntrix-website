@@ -316,7 +316,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 /* MODALS (product, auth, checkout, about, info) */
 .modal-ov{position:fixed;inset:0;background:rgba(12,22,17,.55);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px}
 .modal-ov.open{opacity:1;pointer-events:all}
-.modal{background:#fff;border-radius:22px;width:760px;max-width:100%;max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.modal{background:#fff;border-radius:22px;width:760px;max-width:100%;max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .modal-ov.open .modal{transform:scale(1) translateY(0)}
 .modal-img{display:flex;flex-direction:column;position:relative;align-self:start;overflow:hidden;background:#fff;padding-top:28px}
 .modal-media{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:4/5;max-height:calc(90vh - 155px);overflow:hidden;background:#f5f6f5;padding:0;border:1px solid var(--line);border-radius:14px;margin:14px 16px 4px}
@@ -332,6 +332,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-content{padding:30px 28px 28px;display:flex;flex-direction:column;flex:1}
 .modal-topbar-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .media-fabs{position:absolute;top:12px;right:12px;z-index:30;display:flex;align-items:center;gap:8px}
+/* desktop: close lives at the modal's top-right; only the wishlist heart sits on the image */
+.modal-close-desktop{position:absolute;top:16px;right:16px;z-index:40;width:38px;height:38px;border-radius:50%;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;font-size:19px;transition:all .16s;padding:0}
+.modal-close-desktop:hover{background:#fff;color:var(--ink);border-color:var(--line2)}
+.modal-close-desktop .ti{font-size:18px;line-height:1}
+.media-fabs .modal-close{display:none}
 .media-rating{position:absolute;left:12px;bottom:12px;z-index:30;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:100px;padding:5px 11px 5px 9px;font-family:var(--fb);font-size:12.5px;font-weight:800;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.14);cursor:pointer}
 .media-rating i{color:#f5a623;font-size:14px}
 .modal-priceline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 18px}
@@ -361,7 +366,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .desc-more:hover{text-decoration:underline}
 .modal-specs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
 .modal-spec{font-size:12px;font-weight:600;color:var(--ink2);background:var(--paper);border:1px solid var(--line);padding:6px 12px;border-radius:8px}
-.modal-qty-row{margin-top:8px;margin-bottom:11px}
+.modal-qty-row{margin-top:8px;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.modal-qty-row .modal-stock{margin:0}
 .modal-actions{display:flex;gap:11px;align-items:stretch}
 .modal-qty{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:13px;overflow:hidden;flex-shrink:0}
 .modal-qty button{width:42px;height:52px;background:var(--paper);border:none;cursor:pointer;font-size:18px;color:var(--ink);transition:background .15s}
@@ -647,6 +653,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .modal-topbar-name{display:none}
   .modal-fab{background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 12px rgba(0,0,0,.2);border-color:transparent;z-index:411}
   .modal-fab.on{background:rgba(255,255,255,.96);border-color:transparent}
+  .modal-close-desktop{display:none}
+  .media-fabs .modal-close{display:flex}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
 @media(max-width:768px){
@@ -1525,7 +1533,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   <div class="sticky-buy" id="stickyBuy">
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
-  </div><div class="modal">
+  </div><div class="modal"><button class="modal-close-desktop" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button>
   <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
     <div class="modal-content">
@@ -1533,7 +1541,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-priceline">
       <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
-      <div class="modal-stock" id="modalStock"></div>
     </div>
     <div class="color-wrap" id="colorWrap">
       <div class="color-head">COLOUR: <span id="colorName"></span></div>
@@ -1548,7 +1555,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       <div class="size-low" id="sizeLow"></div>
       <div class="size-err" id="sizeErr">Please select a size first.</div>
     </div>
-    <div class="modal-qty-row"><div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div></div>
+    <div class="modal-qty-row"><div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div><div class="modal-stock" id="modalStock"></div></div>
     <div class="modal-actions">
       <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
       <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
