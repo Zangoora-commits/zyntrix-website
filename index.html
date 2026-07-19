@@ -3087,13 +3087,25 @@ function confirmCancel(id){
   var box=el("cancel"+id);
   if(box) box.innerHTML='<div class="ret-ok"><i class="ti ti-loader"></i> Cancelling…</div>';
   if(!db){ showToast("Not connected"); return; }
-  db.from("orders").update({status:"cancelled"}).eq("id",id).then(function(r){
-    if(r.error){ showToast("Could not cancel: "+r.error.message); loadOrders(); return; }
+  // .select() returns the affected row(s). If the update is blocked by table
+  // permissions it comes back with NO error but an empty array — so we check
+  // that a row actually changed before claiming success.
+  db.from("orders").update({status:"cancelled"}).eq("id",id).select().then(function(r){
+    if(r.error){ showToast("Couldn't cancel this order — please try again."); loadOrders(); return; }
+    var updated=(r.data&&r.data.length)?r.data[0]:null;
+    if(!updated || String(updated.status).toLowerCase().indexOf("cancel")<0){
+      // update matched no row (permissions / id mismatch) — don't fake success
+      showToast("Couldn't cancel this order. Please contact us at contact@twipid.com and we'll sort it.");
+      loadOrders();
+      return;
+    }
+    // genuine success — reflect it locally right away, then re-fetch
     var o=(window._orders||[]).find(function(x){return String(x.id)===String(id);});
-    if(o){ o.status="cancelled"; notifyOrderCancelled(o); }
-    showToast("Order cancelled — a confirmation is on its way by email & message");
+    if(o){ o.status="cancelled"; }
+    showToast("Order cancelled.");
+    try{ notifyOrderCancelled(updated); }catch(e){}   // notifications are fire-and-forget; their failure never affects the cancel
     loadOrders();
-  }).catch(function(){ showToast("Could not cancel order"); loadOrders(); });
+  }).catch(function(){ showToast("Couldn't cancel this order — please try again."); loadOrders(); });
 }
 /* ===== SHARE TRACKING (WhatsApp) ===== */
 function shareTracking(id){
