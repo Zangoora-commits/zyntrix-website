@@ -131,13 +131,24 @@ section.first{padding-top:44px}
 .cat-card:hover .cat-arrow{color:var(--brand);transform:translate(2px,-2px)}
 /* PRODUCTS */
 .prod-filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:28px}
+/* second-level (sub-category) chip row — appears under the category chips
+   only when a category with sub-categories is selected */
+.sub-filters{display:none;flex-wrap:wrap;gap:7px;align-items:center;margin:2px 0 20px;padding:0}
+.sub-filters.show{display:flex;animation:subIn .28s ease}
+@keyframes subIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sub-filters .sub-lead{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
+.sub-filters .sub-lead i{font-size:15px;color:var(--brand)}
+.sbtn{background:var(--brand-tint);border:1px solid var(--brand-soft);color:var(--brand-deep);padding:6px 13px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .14s;display:inline-flex;align-items:center;gap:6px}
+.sbtn:hover{border-color:var(--brand);background:#dff4ec}
+.sbtn.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.sbtn .scount{font-size:11px;opacity:.75;font-weight:700}
 .fbtn{background:var(--bg);border:1px solid var(--line);color:var(--ink2);padding:9px 17px;border-radius:100px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .16s}
 .fbtn:hover{border-color:var(--brand);color:var(--brand-deep)}
 .fbtn.active{background:var(--ink);border-color:var(--ink);color:#fff}
 .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .prod-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .24s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
 .prod-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:transparent}
-.prod-img{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#fff}
+.prod-img{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#f5f6f5}
 .prod-img i.pic{font-size:64px;transition:transform .35s;filter:drop-shadow(0 6px 14px rgba(12,22,17,.12))}
 .prod-card:hover .prod-img i.pic{transform:scale(1.1) translateY(-3px)}
 .prod-img img{width:100%;height:100%;object-fit:cover}
@@ -160,14 +171,6 @@ section.first{padding-top:44px}
 .prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
 .prod-price{font-family:var(--fd);font-weight:800;font-size:17.5px;color:var(--ink)}
 .prod-orig{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:5px;font-weight:400}
-.prod-offpct{display:block;font-size:11.5px;font-weight:800;color:var(--brand-deep);margin-top:2px}
-/* deal tier badges (auto-derived from discount %) */
-.tag-hotdeal{background:linear-gradient(120deg,#f43f5e,#f97316)!important;color:#fff;box-shadow:0 3px 10px rgba(244,63,94,.35)}
-.tag-super{background:linear-gradient(120deg,#f59e0b,#eab308)!important;color:#fff}
-.tag-bigdeal{background:var(--amber)!important;color:#fff}
-.modal-save{font-size:13px;font-weight:700;color:var(--brand-deep);margin:-12px 0 16px}
-.modal-save .hd{color:#e11d48;font-weight:800}
-.sb-off{font-size:11px;font-weight:800;color:var(--brand-deep);display:block;line-height:1.2}
 .prod-add{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-deep);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
 .prod-add:hover{background:var(--brand);color:#fff;transform:scale(1.08)}
 .prod-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
@@ -287,22 +290,18 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-ov.open{opacity:1;pointer-events:all}
 .modal{background:#fff;border-radius:22px;width:760px;max-width:100%;max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .modal-ov.open .modal{transform:scale(1) translateY(0)}
-.modal-img{display:flex;flex-direction:column;position:relative;align-self:start;overflow:hidden;background:#fff}
-.modal-media{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;overflow:hidden;background:#fff;padding:26px}
-.modal-media img{width:100%;height:100%;object-fit:contain}
+.modal-img{display:flex;flex-direction:column;position:relative;align-self:start;overflow:hidden;background:#fff;padding-top:28px}
+.modal-media{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;max-height:44vh;overflow:hidden;background:#f5f6f5;padding:0;border:1px solid var(--line);border-radius:14px;margin:14px 16px 4px}
+.modal-media img{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:0}
 .modal-media i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-img i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
-.modal-img img{width:100%;height:100%;object-fit:contain}
 .modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
 .modal-body{padding:0;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
-.modal-topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:13px 14px 13px 28px;border-bottom:1px solid var(--line)}
-.modal-topbar-name{font-family:var(--fd);font-weight:800;font-size:23px;letter-spacing:-.6px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.modal-topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:transparent;padding:14px 14px 4px 28px;border-bottom:1px solid transparent;transition:background .22s,border-color .22s,box-shadow .22s}
+.modal-topbar.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom-color:var(--line);box-shadow:0 4px 16px rgba(12,22,17,.06)}
+.modal-topbar-name{font-family:var(--fd);font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .2s;pointer-events:none}
 .modal-topbar.scrolled .modal-topbar-name{opacity:1;transform:none}
-.modal-topbar-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.modal-cartbtn{position:relative;overflow:visible}
-.modal-cartbtn:hover{background:var(--brand-tint);color:var(--brand);border-color:var(--brand)}
-.modal-cartbtn .badge{top:-7px;right:-7px}
-.modal-content{padding:22px 28px 28px;display:flex;flex-direction:column;flex:1}
+.modal-content{padding:6px 28px 28px;display:flex;flex-direction:column;flex:1}
 .modal-close{position:static;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
 .modal-close .ti{font-size:18px;line-height:1}
 .modal-close:hover{background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
@@ -465,14 +464,10 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .prod-card.soldout .prod-add{background:#eee;color:#bbb;cursor:not-allowed}
 .modal-stock{margin-bottom:18px}
 /* GALLERY */
-.gallery-thumbs{display:flex;gap:8px;padding:8px 12px 16px;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;background:transparent;border-top:1px solid var(--line);min-height:96px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.gallery-thumbs::-webkit-scrollbar{display:none}
-.gallery-thumbs .gthumb:first-child{margin-left:auto}
-.gallery-thumbs .gthumb:last-child{margin-right:auto}
-.gthumb{flex:0 0 72px;width:72px;height:72px;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .15s;display:flex;align-items:center;justify-content:center}
-.gthumb.on{border-color:var(--brand);transform:translateY(-2px)}
+.gallery-thumbs{display:flex;gap:8px;padding:6px 12px 16px;justify-content:center;flex-wrap:wrap;background:transparent}
+.gthumb{width:72px;height:72px;border-radius:12px;border:2px solid var(--line);background:#f5f6f5;cursor:pointer;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.gthumb.on{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(12,166,120,.22)}
 .gthumb img{width:100%;height:100%;object-fit:cover}
-.gthumb.on{border-color:var(--brand)}
 .gthumb:hover{transform:translateY(-2px)}
 /* SHARE ROW */
 .share-row{display:flex;align-items:center;gap:9px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
@@ -588,7 +583,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .partner{grid-template-columns:1fr;text-align:center}.partner-points{justify-content:center}.partner-deco{display:none}
   .nav-search{display:none}
   .modal{grid-template-columns:1fr;max-height:90vh;display:block;overflow-y:auto}
-  .modal-img{min-height:auto;height:auto}
+  .modal-img{min-height:auto;height:auto;padding-top:0}
   .modal-body{max-height:none;overflow:visible;padding:0}
   .modal-content{padding:20px}
   .modal-topbar{padding-left:20px}
@@ -697,6 +692,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .cat-grid-dd{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .cat-item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;cursor:pointer;transition:background .14s;border:none;background:none;text-align:left;width:100%;font-family:var(--fb)}
 .cat-item:hover{background:var(--paper)}
+.cat-item-wrap{display:flex;flex-direction:column}
+.cat-item-wrap:hover .cat-item{background:var(--paper)}
+.cat-subs{display:flex;flex-wrap:wrap;gap:5px;padding:2px 10px 8px 62px}
+.cat-sub{border:1px solid var(--line);background:#fff;color:var(--ink2);font-family:var(--fb);font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;cursor:pointer;transition:all .13s}
+.cat-sub:hover{border-color:var(--brand);background:var(--brand-tint);color:var(--brand-deep)}
 .cat-ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .cat-itext{display:flex;flex-direction:column;gap:3px;min-width:0}
 .cat-iname{display:block;font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.15}
@@ -762,8 +762,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .size-chip{min-width:46px;padding:9px 12px;border:1.5px solid var(--line);background:#fff;border-radius:10px;font-family:var(--fb);font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer;transition:all .15s;position:relative}
 .size-chip:hover:not(.oos){border-color:var(--brand);color:var(--brand-deep)}
 .size-chip.on{border-color:var(--brand);background:var(--brand);color:#fff}
-.size-chip.oos{opacity:.55;cursor:not-allowed;background:var(--paper);color:var(--muted);overflow:hidden}
-.size-chip.oos::after{content:"";position:absolute;left:-10%;right:-10%;top:50%;height:1.5px;background:#e07070;transform:rotate(-24deg);pointer-events:none}
+.size-chip.oos{opacity:.4;cursor:not-allowed;text-decoration:line-through;background:var(--paper)}
 .size-low{font-size:12px;font-weight:700;color:var(--orange);margin-top:8px;display:none}
 .size-err{font-size:12.5px;font-weight:700;color:var(--orange);margin-top:8px;display:none}
 /* ===== COLOUR SWATCHES ===== */
@@ -870,8 +869,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .footer-bottom .fmeta{justify-content:center;flex-wrap:wrap;gap:12px}
   .footer-inner{padding:40px 18px 30px}
   .footer-social{flex-wrap:wrap}
-  .modal-media{padding:16px}
-  .modal-media img{object-position:center}
+  .modal-media{padding:0;margin:12px 12px 4px;max-height:none}
+  .modal-media img{object-position:center top}
   .load-more{width:100%}
 }
 @media(max-width:480px){
@@ -1321,6 +1320,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <span id="resultCount"></span>
     <div class="active-filters" id="activeFilters" style="display:none"></div>
   </div>
+  <div class="sub-filters" id="subFilters"></div>
   <div class="prod-grid" id="prodGrid"></div>
   <div id="loadMoreWrap" style="text-align:center;margin-top:26px"></div>
 </section>
@@ -1430,19 +1430,18 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <!-- PRODUCT MODAL -->
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()">
   <div class="sticky-buy" id="stickyBuy">
-    <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span><span class="sb-off" id="sbOff" style="display:none"></span></div>
+    <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
     <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add</button>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()">Buy Now</button>
   </div><div class="modal">
   <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
-    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><div class="modal-topbar-acts"><button class="modal-close modal-cartbtn" onclick="closeModal();openCart()" aria-label="Cart"><i class="ti ti-shopping-bag"></i><span class="badge" id="modalCartBadge" style="display:none">0</span></button><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div></div>
+    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
     <div class="modal-content">
     <div class="modal-name" id="modalName">Product</div>
     <div class="modal-brand" id="modalBrand">Brand</div>
     <div class="modal-rating" onclick="jumpToReviews()" title="See all reviews"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
     <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
-    <div class="modal-save" id="modalSave" style="display:none"></div>
     <div class="modal-stock" id="modalStock"></div>
     <div class="color-wrap" id="colorWrap">
       <div class="color-head">COLOUR: <span id="colorName"></span></div>
@@ -1599,18 +1598,22 @@ var db = null;
 try { db = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.warn("Supabase init", e); }
 /* ===== DEMO PRODUCTS ===== */
 var DEMO = [
-  {name:"ProAir X90 Wireless Headphones",brand:"SoundVibe",category:"Audio",price:7499,orig_price:12000,icon:"ti-headphones",tag:"Hot",stock:14,rating:4.8,reviews:126,desc:"Premium over-ear headphones with active noise cancellation, plush memory-foam earcups and a 40-hour battery.",specs:["ANC","40hr Battery","Bluetooth 5.3","Hi-Res Audio","USB-C"]},
-  {name:"BassCore Nano TWS Earbuds",brand:"BassCore",category:"Audio",price:3299,orig_price:5500,icon:"ti-ear",tag:"New",stock:8,rating:4.6,reviews:64,desc:"True-wireless earbuds with punchy 8mm drivers, IPX5 sweat resistance and 32 hours total playback.",specs:["IPX5","8mm Drivers","32hr Total","Touch Controls","ENC Mic"]},
-  {name:"PulseBeat Mini Speaker",brand:"SoundVibe",category:"Audio",price:1899,orig_price:4999,icon:"ti-speakerphone",tag:"Deal",stock:3,rating:4.5,reviews:41,desc:"Pocket-sized Bluetooth speaker with big sound, 12-hour battery and IPX7 waterproofing.",specs:["IPX7","12hr Battery","Bluetooth 5.1","TWS Pairing"]},
-  {name:"VitaWatch Ultra 3 Smartwatch",brand:"VitaTech",category:"Wearables",price:11999,orig_price:18000,icon:"ti-device-watch",tag:"New",stock:21,rating:4.7,reviews:203,desc:"A flagship health smartwatch with AMOLED display, built-in GPS, SpO2 and a 7-day battery.",specs:["AMOLED","Built-in GPS","SpO2","IP68","7-Day Battery"]},
-  {name:"FlexBand Fitness Tracker",brand:"VitaTech",category:"Wearables",price:2299,orig_price:3500,icon:"ti-activity",tag:"Deal",stock:0,rating:4.3,reviews:88,desc:"A slim fitness band tracking heart rate, sleep, steps and 14 workout modes with a 10-day battery.",specs:["Heart Rate","Sleep","14 Workouts","10-Day Battery","IP67"]},
-  {name:"LumiHome Smart Bulb Pack",brand:"LumiHome",category:"Smart Home",price:2499,orig_price:4200,icon:"ti-bulb",tag:"Deal",stock:32,rating:4.4,reviews:57,desc:"16 million colors and tunable white light. Works with Alexa and Google Home.",specs:["16M Colors","Alexa & Google","App Control","Pack of 4"]},
-  {name:"VigilCam 2K Security Camera",brand:"VigilCam",category:"Smart Home",price:5199,orig_price:8500,icon:"ti-device-cctv",tag:"New",stock:6,rating:4.6,reviews:73,desc:"Crisp 2K video, color night vision and AI motion detection with 7 days free cloud storage.",specs:["2K","Night Vision","AI Detect","Two-Way Audio","IP66"]},
-  {name:"XStrike Vortex Controller",brand:"XStrike",category:"Gaming",price:4799,orig_price:7000,icon:"ti-device-gamepad-2",tag:"Hot",stock:11,rating:4.9,reviews:158,desc:"Hall-effect joysticks eliminate stick drift. RGB, 20-hour battery, multi-platform.",specs:["Hall Effect","Zero Drift","RGB","20hr","Multi-Platform"]},
+  {name:"ProAir X90 Wireless Headphones",brand:"SoundVibe",category:"Audio",subcategory:"Headphones",price:7499,orig_price:12000,icon:"ti-headphones",tag:"Hot",stock:14,rating:4.8,reviews:126,desc:"Premium over-ear headphones with active noise cancellation, plush memory-foam earcups and a 40-hour battery.",specs:["ANC","40hr Battery","Bluetooth 5.3","Hi-Res Audio","USB-C"]},
+  {name:"BassCore Nano TWS Earbuds",brand:"BassCore",category:"Audio",subcategory:"Earbuds",price:3299,orig_price:5500,icon:"ti-ear",tag:"New",stock:8,rating:4.6,reviews:64,desc:"True-wireless earbuds with punchy 8mm drivers, IPX5 sweat resistance and 32 hours total playback.",specs:["IPX5","8mm Drivers","32hr Total","Touch Controls","ENC Mic"]},
+  {name:"PulseBeat Mini Speaker",brand:"SoundVibe",category:"Audio",subcategory:"Speakers",price:1899,orig_price:2999,icon:"ti-speakerphone",tag:"Deal",stock:3,rating:4.5,reviews:41,desc:"Pocket-sized Bluetooth speaker with big sound, 12-hour battery and IPX7 waterproofing.",specs:["IPX7","12hr Battery","Bluetooth 5.1","TWS Pairing"]},
+  {name:"VitaWatch Ultra 3 Smartwatch",brand:"VitaTech",category:"Wearables",subcategory:"Smartwatches",price:11999,orig_price:18000,icon:"ti-device-watch",tag:"New",stock:21,rating:4.7,reviews:203,desc:"A flagship health smartwatch with AMOLED display, built-in GPS, SpO2 and a 7-day battery.",specs:["AMOLED","Built-in GPS","SpO2","IP68","7-Day Battery"]},
+  {name:"FlexBand Fitness Tracker",brand:"VitaTech",category:"Wearables",subcategory:"Fitness Bands",price:2299,orig_price:3500,icon:"ti-activity",tag:"Deal",stock:0,rating:4.3,reviews:88,desc:"A slim fitness band tracking heart rate, sleep, steps and 14 workout modes with a 10-day battery.",specs:["Heart Rate","Sleep","14 Workouts","10-Day Battery","IP67"]},
+  {name:"LumiHome Smart Bulb Pack",brand:"LumiHome",category:"Smart Home",subcategory:"Lighting",price:2499,orig_price:4200,icon:"ti-bulb",tag:"Deal",stock:32,rating:4.4,reviews:57,desc:"16 million colors and tunable white light. Works with Alexa and Google Home.",specs:["16M Colors","Alexa & Google","App Control","Pack of 4"]},
+  {name:"VigilCam 2K Security Camera",brand:"VigilCam",category:"Smart Home",subcategory:"Security",price:5199,orig_price:8500,icon:"ti-device-cctv",tag:"New",stock:6,rating:4.6,reviews:73,desc:"Crisp 2K video, color night vision and AI motion detection with 7 days free cloud storage.",specs:["2K","Night Vision","AI Detect","Two-Way Audio","IP66"]},
+  {name:"XStrike Vortex Controller",brand:"XStrike",category:"Gaming",subcategory:"Controllers",price:4799,orig_price:7000,icon:"ti-device-gamepad-2",tag:"Hot",stock:11,rating:4.9,reviews:158,desc:"Hall-effect joysticks eliminate stick drift. RGB, 20-hour battery, multi-platform.",specs:["Hall Effect","Zero Drift","RGB","20hr","Multi-Platform"]},
   {name:"AeroEdge 5G Smartphone",brand:"AeroMobile",category:"Smartphones",price:24999,orig_price:32000,icon:"ti-device-mobile",tag:"New",stock:4,rating:4.5,reviews:312,desc:"6.7-inch 120Hz AMOLED, 108MP triple camera, 5000mAh battery and blazing 5G.",specs:["120Hz AMOLED","108MP Cam","5G","5000mAh","67W Charge"]},
   {name:"SnapPro 4K Action Cam",brand:"SnapPro",category:"Cameras",price:8999,orig_price:13500,icon:"ti-camera",tag:"Hot",stock:9,rating:4.7,reviews:96,desc:"Stabilized 4K60 capture, waterproof to 10m without a case, front screen for vlogging.",specs:["4K60","HyperSteady","Waterproof 10m","Front Screen","Wi-Fi"]},
-  {name:"KeyForge Mechanical Keyboard",brand:"ForgeTech",category:"Computing",price:5499,orig_price:7999,icon:"ti-keyboard",tag:"New",stock:18,rating:4.8,reviews:142,desc:"75% hot-swappable mechanical keyboard with gasket mount and tri-mode wireless.",specs:["Hot-Swap","Gasket Mount","RGB","Tri-Mode","PBT Keycaps"]},
-  {name:"VoltCore 20K Power Bank",brand:"VoltCore",category:"Power",price:2799,orig_price:4000,icon:"ti-battery-charging",tag:"Deal",stock:27,rating:4.4,reviews:69,desc:"20,000mAh with 65W USB-C output that can even charge a laptop. Charges 3 devices at once.",specs:["20000mAh","65W PD","3 Ports","Laptop Charge","LED Display"]}
+  {name:"KeyForge Mechanical Keyboard",brand:"ForgeTech",category:"Computing",subcategory:"Keyboards",price:5499,orig_price:7999,icon:"ti-keyboard",tag:"New",stock:18,rating:4.8,reviews:142,desc:"75% hot-swappable mechanical keyboard with gasket mount and tri-mode wireless.",specs:["Hot-Swap","Gasket Mount","RGB","Tri-Mode","PBT Keycaps"]},
+  {name:"VoltCore 20K Power Bank",brand:"VoltCore",category:"Power",price:2799,orig_price:4000,icon:"ti-battery-charging",tag:"Deal",stock:27,rating:4.4,reviews:69,desc:"20,000mAh with 65W USB-C output that can even charge a laptop. Charges 3 devices at once.",specs:["20000mAh","65W PD","3 Ports","Laptop Charge","LED Display"]},
+  {name:"Lunar Tides Oversized Tee",brand:"SKA Clothing",category:"Apparel",subcategory:"T-Shirts",price:599,orig_price:1799,icon:"ti-shirt",tag:"Deal",rating:4.7,reviews:0,sizes:["S","M","L","XL"],size_stock:{S:6,M:4,L:0,XL:9},desc:"Heavyweight 240 GSM cotton oversized tee with a soft-hand celestial print. Pre-shrunk, unisex fit.",specs:["240 GSM","100% Cotton","Oversized Fit","Screen Print"]},
+  {name:"Space Current Graphic Tee",brand:"SKA Clothing",category:"Apparel",subcategory:"T-Shirts",price:1799,icon:"ti-shirt",tag:"New",rating:4.6,reviews:0,sizes:["S","M","L","XL","XXL"],size_stock:{S:0,M:7,L:5,XL:3,XXL:2},desc:"All-over sublimated nebula print on a breathable poly-cotton blend. Colour-locked, fade-resistant.",specs:["Poly-Cotton","All-Over Print","Regular Fit","Machine Wash"]},
+  {name:"Meridian Linen Shirt",brand:"SKA Clothing",category:"Apparel",subcategory:"Shirts",price:1499,orig_price:2499,icon:"ti-hanger",tag:"New",rating:4.5,reviews:0,sizes:["S","M","L","XL"],size_stock:{S:4,M:6,L:5,XL:0},desc:"Breathable 100% linen half-sleeve shirt with a relaxed collar — made for Indian summers.",specs:["100% Linen","Half Sleeve","Relaxed Fit","Breathable"]},
+  {name:"Trailhead Jogger Trousers",brand:"SKA Clothing",category:"Apparel",subcategory:"Trousers",price:1299,orig_price:2199,icon:"ti-shirt-sport",tag:"Deal",rating:4.4,reviews:0,sizes:["M","L","XL","XXL"],size_stock:{M:8,L:6,XL:4,XXL:5},desc:"Tapered French-terry joggers with zip pockets and an elastic drawcord waist.",specs:["French Terry","Zip Pockets","Tapered","Drawcord Waist"]}
 ];
 /* ===== STATE ===== */
 var products = DEMO.slice(), view = [];
@@ -1618,7 +1621,7 @@ var cart = load("twipid_cart", []);
 var wish = load("twipid_wish", []);
 var recent = load("twipid_recent", []);
 var currentUser = null;
-var activeFilter = "all", searchTerm = "", modalProduct = null, modalQtyVal = 1;
+var activeFilter = "all", activeSub = null, searchTerm = "", modalProduct = null, modalQtyVal = 1;
 var sortMode = "featured", priceMin = null, priceMax = null, brandFilter = [];
 var typeFilter = [], occasionFilter = [], sizeFilter = [], colorFilter = [], ratingMin = null, inStockOnly = false;
 var PAGE_SIZE = 12, shownCount = PAGE_SIZE;
@@ -1655,6 +1658,7 @@ function handleDeepLink(){
 function currentList(){
   var list = products.filter(function(p){
     var okCat = activeFilter==="all" || slug(p.category)===activeFilter;
+    var okSub = !activeSub || slug(subOf(p))===activeSub;
     var okTag = !window._tagFilter || (p.tag||"").toLowerCase()===window._tagFilter;
     var okSearch = !searchTerm || (p.name+" "+p.brand+" "+(p.category||"")).toLowerCase().includes(searchTerm);
     var okMin = priceMin==null || Number(p.price)>=priceMin;
@@ -1666,33 +1670,13 @@ function currentList(){
     var okColor = !colorFilter.length || (p.color && colorFilter.indexOf(p.color)>=0);
     var okRating = ratingMin==null || ratingOf(p)>=ratingMin;
     var okStock = !inStockOnly || (stockOf(p)===null || stockOf(p)>0);
-    return okCat && okTag && okSearch && okMin && okMax && okBrand && okType && okOcc && okSize && okColor && okRating && okStock;
+    return okCat && okSub && okTag && okSearch && okMin && okMax && okBrand && okType && okOcc && okSize && okColor && okRating && okStock;
   });
   if(sortMode==="price-asc") list.sort(function(a,b){return a.price-b.price;});
   else if(sortMode==="price-desc") list.sort(function(a,b){return b.price-a.price;});
   else if(sortMode==="rating") list.sort(function(a,b){return ratingOf(b)-ratingOf(a);});
   else if(sortMode==="newest") list.sort(function(a,b){var ta=(a.tag==="New")?1:0,tb=(b.tag==="New")?1:0; if(tb-ta)return tb-ta; return (b.id||0)-(a.id||0);});
   return list;
-}
-/* ===== DISCOUNT HELPERS =====
-   Discount % is derived automatically from the two price fields the admin
-   panel already has: "Price" (selling price) and "Original / MRP".
-   pct = round((1 - price / orig_price) * 100). No extra backend field needed. */
-function discountPct(p){
-  if(!p) return 0;
-  var pr=Number(p.price)||0, op=Number(p.orig_price)||0;
-  if(op>pr && pr>0) return Math.round((1-pr/op)*100);
-  return 0;
-}
-/* Auto deal-tier badge. >=60% = Hot Deal; 40–59% = Super Saver; 25–39% = Big Deal.
-   Below 25% the % still shows next to the price but the manual tag (New/Hot/Deal)
-   keeps the badge spot. Auto badge wins over the manual tag when both apply. */
-function dealBadge(p){
-  var d=discountPct(p);
-  if(d>=60) return {label:"🔥 Hot Deal", cls:"tag-hotdeal"};
-  if(d>=40) return {label:"Super Saver", cls:"tag-super"};
-  if(d>=25) return {label:d+"% Off", cls:"tag-bigdeal"};
-  return null;
 }
 function render(keep){
   view = currentList();
@@ -1713,15 +1697,14 @@ function render(keep){
     var rt=ratingOf(p), rc2=reviewCountOf(p);
     return '<article class="prod-card'+(soldout?' soldout':'')+'" data-i="'+i+'">'
       +'<div class="prod-img" '+bg+'>'+media
-      +(function(){ var db=dealBadge(p); if(db) return '<span class="prod-tag '+db.cls+'">'+db.label+'</span>'; return p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':''; })()
+      +(p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':'')
       +'<button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
       +'<div class="prod-quick"><span><i class="ti ti-eye"></i> Quick View</span></div></div>'
       +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+(rc2?" ("+rc2+")":"")+'</span></div>'
       +(stockPill?'<div>'+stockPill+'</div>':'')
       +'<div class="prod-foot" style="margin-top:10px"><div><span class="prod-price">'+inr(p.price)+'</span>'
-      +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')
-      +(discountPct(p)?'<span class="prod-offpct">'+discountPct(p)+'% off</span>':'')+'</div>'
+      +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')+'</div>'
       +'<button class="prod-add" data-add="'+i+'" aria-label="Add to cart"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div></div></article>';
   }).join("");
   grid.querySelectorAll(".prod-card").forEach(function(c){ c.addEventListener("click",function(){ openModal(parseInt(this.dataset.i)); }); });
@@ -1765,7 +1748,7 @@ function removeRating(){ ratingMin=null; buildFilters(); updateRefineCount(); re
 function removeInStock(){ inStockOnly=false; buildFilters(); updateRefineCount(); render(); }
 function removeBrand(b){ removeFilterChip("brand",b); }
 function removePrice(){ priceMin=priceMax=null; buildFilters(); updateRefineCount(); render(); }
-function removeCatFilter(){ activeFilter="all"; setActiveBtn("all"); el("prodTitle").textContent="Featured Products"; render(); }
+function removeCatFilter(){ activeFilter="all"; activeSub=null; setActiveBtn("all"); el("prodTitle").textContent="Featured Products"; buildSubChips(); render(); }
 function removeTagFilter(){ window._tagFilter=null; el("prodTitle").textContent="Featured Products"; render(); }
 function removeSearch(){ searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; el("prodTitle").textContent="Featured Products"; render(); }
 function clearAllFilters(){
@@ -1999,8 +1982,9 @@ function catMenuPick(cat){
 }
 
 function pickFilter(btn,cat){
-  window._tagFilter=null; activeFilter=cat; setActiveBtn(cat);
+  window._tagFilter=null; activeFilter=cat; activeSub=null; setActiveBtn(cat);
   el("prodTitle").textContent = cat==="all" ? "Featured Products" : prettyCat(cat);
+  buildSubChips();
   render();
 }
 function prettyCat(c){
@@ -2008,6 +1992,50 @@ function prettyCat(c){
   var k=String(c||"").toLowerCase();
   if(MAP[k]) return MAP[k];
   return String(c||"").replace(/[-_]+/g," ").replace(/\b\w/g,function(m){return m.toUpperCase();});
+}
+/* ===== SUB-CATEGORIES =====
+   A product may carry an optional subcategory (field: subcategory / sub_category
+   / subcat). When a category is selected, a second chip row lists the
+   subcategories that exist within THAT category, each with a live count. */
+function subOf(p){ if(!p) return ""; var s=p.subcategory||p.sub_category||p.subcat||""; return String(s).trim(); }
+function buildSubChips(){
+  var box=el("subFilters"); if(!box) return;
+  // No sub-row on "All", on search, or on the special New/Best tag views
+  if(activeFilter==="all" || searchTerm || window._tagFilter){ box.className="sub-filters"; box.innerHTML=""; return; }
+  // Count subcategories among in-category products
+  var counts={}, order=[];
+  products.forEach(function(p){
+    if(slug(p.category)!==activeFilter) return;
+    var s=subOf(p); if(!s) return;
+    var k=slug(s);
+    if(counts[k]===undefined){ counts[k]={label:s, n:0}; order.push(k); }
+    counts[k].n++;
+  });
+  if(!order.length){ box.className="sub-filters"; box.innerHTML=""; return; }  // category has no subcategories → hide row
+  var catInCat=products.filter(function(p){return slug(p.category)===activeFilter;}).length;
+  var withSub=products.filter(function(p){return slug(p.category)===activeFilter && subOf(p);}).length;
+  // a single subcategory that covers every item offers no real choice → hide
+  if(order.length<2 && withSub>=catInCat){ box.className="sub-filters"; box.innerHTML=""; return; }
+  order.sort(function(a,b){ return counts[b].n-counts[a].n || counts[a].label.localeCompare(counts[b].label); });
+  var html='<span class="sub-lead"><i class="ti ti-arrow-guide"></i>'+esc(prettyCat(activeFilter))+'</span>';
+  html+='<button class="sbtn'+(activeSub===null?" active":"")+'" onclick="pickSub(null)">All <span class="scount">'+catInCat+'</span></button>';
+  html+=order.map(function(k){
+    return '<button class="sbtn'+(activeSub===k?" active":"")+'" data-sub="'+esc(k)+'" onclick="pickSub(\''+esc(k).replace(/'/g,"")+'\')">'+esc(counts[k].label)+' <span class="scount">'+counts[k].n+'</span></button>';
+  }).join("");
+  box.innerHTML=html;
+  box.className="sub-filters show";
+}
+function pickSub(sub){
+  activeSub=sub;
+  // reflect active state on chips without a full rebuild
+  document.querySelectorAll("#subFilters .sbtn").forEach(function(b){
+    b.classList.toggle("active", (sub===null && !b.dataset.sub) || (b.dataset.sub===sub));
+  });
+  var base=prettyCat(activeFilter);
+  var lbl = sub ? (function(){ var m=null; products.some(function(p){ if(slug(p.category)===activeFilter && slug(subOf(p))===sub){ m=subOf(p); return true; } return false; }); return base+" · "+(m||prettyCat(sub)); })() : base;
+  el("prodTitle").textContent=lbl;
+  render();
+  scrollToId("products");
 }
 function buildFooterCats(){
   var box=el("footerCatList"); if(!box) return;
@@ -2035,20 +2063,39 @@ function buildCategoryChips(){ if(typeof buildCatMenu==="function") setTimeout(b
   box.innerHTML=html;
 }
 function setActiveBtn(cat){ document.querySelectorAll(".fbtn").forEach(function(b){ b.classList.toggle("active", b.dataset.cat===cat); }); }
-function pickCategory(cat){ window._tagFilter=null; activeFilter=cat; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn(cat); el("prodTitle").textContent=prettyCat(cat); render(); scrollToId("products"); }
-function goShop(){ window._tagFilter=null; activeFilter="all"; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn("all"); el("prodTitle").textContent="All Products"; render(); scrollToId("products"); }
-function showNewArrivals(){ window._tagFilter="new"; activeFilter="all"; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="New Arrivals"; render(); scrollToId("products"); }
-function showBestSellers(){ window._tagFilter="hot"; activeFilter="all"; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="Best Sellers"; render(); scrollToId("products"); }
-function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFilter=null; if(searchTerm){ activeFilter="all"; setActiveBtn("all"); el("prodTitle").textContent='Results for "'+esc(v.trim())+'"'; } else { el("prodTitle").textContent="Featured Products"; } render(); if(searchTerm) scrollToId("products"); }
+function pickCategory(cat){ window._tagFilter=null; activeFilter=cat; activeSub=null; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn(cat); el("prodTitle").textContent=prettyCat(cat); buildSubChips(); render(); scrollToId("products"); }
+/* subcategories present for a given category slug → [{slug,label,n}] */
+function subsForCat(catSlug){
+  var counts={}, order=[];
+  products.forEach(function(p){
+    if(slug(p.category)!==catSlug) return;
+    var s=subOf(p); if(!s) return; var k=slug(s);
+    if(counts[k]===undefined){ counts[k]={slug:k,label:s,n:0}; order.push(k); }
+    counts[k].n++;
+  });
+  order.sort(function(a,b){ return counts[b].n-counts[a].n || counts[a].label.localeCompare(counts[b].label); });
+  return order.map(function(k){ return counts[k]; });
+}
+/* jump to a category then a subcategory in one go (from nav dropdown) */
+function pickCategorySub(cat, sub){
+  window._tagFilter=null; activeFilter=slug(cat); activeSub=sub||null; searchTerm="";
+  var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn(activeFilter);
+  buildSubChips();
+  var base=prettyCat(activeFilter);
+  el("prodTitle").textContent = sub ? base+" · "+prettyCat(sub) : base;
+  render(); scrollToId("products");
+}
+function goShop(){ window._tagFilter=null; activeFilter="all"; activeSub=null; searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; setActiveBtn("all"); el("prodTitle").textContent="All Products"; buildSubChips(); render(); scrollToId("products"); }
+function showNewArrivals(){ window._tagFilter="new"; activeFilter="all"; activeSub=null; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="New Arrivals"; buildSubChips(); render(); scrollToId("products"); }
+function showBestSellers(){ window._tagFilter="hot"; activeFilter="all"; activeSub=null; searchTerm=""; setActiveBtn("all"); el("prodTitle").textContent="Best Sellers"; buildSubChips(); render(); scrollToId("products"); }
+function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFilter=null; if(searchTerm){ activeFilter="all"; activeSub=null; setActiveBtn("all"); el("prodTitle").textContent='Results for "'+esc(v.trim())+'"'; } else { el("prodTitle").textContent="Featured Products"; } buildSubChips(); render(); if(searchTerm) scrollToId("products"); }
 /* ===== PRODUCT MODAL ===== */
 function openModal(i){ var p=view[i]; if(!p) return; modalReturnTo=null; openModalByProduct(p); }
 function openModalByProduct(p){
   modalProduct=p; modalQtyVal=1; el("modalQtyN").textContent="1"; pickedStars=0; paintStars(0);
   el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
   var was=el("modalWas"), off=el("modalOff");
-  var _d=discountPct(p), _sv=el("modalSave");
-  if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+_d+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
-  if(_sv){ if(_d>0){ _sv.innerHTML="You save "+inr(Number(p.orig_price)-Number(p.price))+" ("+_d+"% off)"+(_d>=60?' · <span class="hd">🔥 Hot Deal</span>':""); _sv.style.display=""; } else _sv.style.display="none"; }
+  if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+Math.round((1-p.price/p.orig_price)*100)+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
   // rating
   var rt=ratingOf(p), rcnt=reviewCountOf(p);
   el("modalStars").textContent=starString(rt);
@@ -2063,12 +2110,10 @@ function openModalByProduct(p){
   var icon=el("modalIcon"), imgs=imagesOf(p), thumbs=el("galleryThumbs");
   if(imgs.length){ icon.style.display="none"; media.style.background=""; var im=document.createElement("img"); im.id="modalMainImg"; im.src=imgs[0]; im.style.cursor="zoom-in"; im.onclick=function(){ openProductZoom(window._galIdx||0); }; im.onload=fitModalImg; media.appendChild(im); window._galIdx=0; if(im.complete)fitModalImg(); }
   else { icon.style.display=""; icon.className="ti "+(p.icon||"ti-box")+" pic"; icon.style.color=pair[1]; media.style.background="linear-gradient(155deg,#ffffff,"+pair[0]+")"; }
-  if(imgs.length>=1){ thumbs.style.display="flex"; thumbs.innerHTML=imgs.map(function(u,gi){return '<div class="gthumb'+(gi===0?' on':'')+'" onclick="setGalleryImg('+gi+')"><img src="'+esc(u)+'"></div>';}).join(""); window._galleryImgs=imgs; }
+  if(imgs.length>1){ thumbs.style.display="flex"; thumbs.innerHTML=imgs.map(function(u,gi){return '<div class="gthumb'+(gi===0?' on':'')+'" onclick="setGalleryImg('+gi+')"><img src="'+esc(u)+'"></div>';}).join(""); window._galleryImgs=imgs; }
   else { thumbs.style.display="none"; window._galleryImgs=imgs; }
   var ot=media.querySelector(".modal-tag"); if(ot)ot.remove();
-  var _db=dealBadge(p);
-  if(_db){ var t0=document.createElement("span"); t0.className="modal-tag "+_db.cls; t0.textContent=_db.label; media.appendChild(t0); }
-  else if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; media.appendChild(t); }
+  if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; media.appendChild(t); }
   var specs=Array.isArray(p.specs)?p.specs:(p.specs?String(p.specs).split(","):[]);
   var specHtml=specs.filter(Boolean).map(function(s){return '<span class="modal-spec">'+esc(s.trim())+'</span>';}).join("");
   el("modalSpecs").innerHTML=specHtml;
@@ -2100,16 +2145,10 @@ function syncStickyBuy(){
   var pr=el("sbPrice"), wa=el("sbWas"), a=el("sbAdd"), b=el("sbBuy"), dis=el("modalAddBtn").disabled;
   if(pr) pr.textContent=inr(modalProduct.price);
   if(wa){ if(modalProduct.orig_price&&modalProduct.orig_price>modalProduct.price){ wa.textContent=inr(modalProduct.orig_price); wa.style.display=""; } else wa.style.display="none"; }
-  var so=el("sbOff"), sd=discountPct(modalProduct);
-  if(so){ if(sd>0){ so.textContent=sd+"% off"; so.style.display=""; } else so.style.display="none"; }
   if(a){ a.disabled=dis; }
   if(b){ b.disabled=dis; b.textContent=dis?"Out of stock":"Buy Now"; }
 }
-/* Media box is locked to a 1:1 square (CSS aspect-ratio) so every product's
-   image area + thumbnail strip sit in the exact same place regardless of the
-   uploaded image's dimensions. Non-square images letterbox inside via
-   object-fit:contain until pictures are standardized to 1200×1200. */
-function fitModalImg(){ var w=el("modalMedia"); if(w) w.style.aspectRatio="1 / 1"; }
+function fitModalImg(){ /* fixed image frame: keep the CSS aspect-ratio; image is centered via object-fit:contain, small/landscape photos show white above & below. */ var w=el("modalMedia"); if(w) w.style.aspectRatio=""; }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
 /* ---- product image zoom ---- */
 var pzList=[], pzIdx=0;
@@ -2181,20 +2220,14 @@ function syncModalWish(){
 /* ===== BUY NOW ===== */
 /* ===== APPAREL: sizes, colours, size guide ===== */
 var selectedSize = null;
-var SIZE_SORT=["XS","S","M","L","XL","XXL","3XL","Free Size"];
 function sizesOf(p){
   if(!p) return [];
-  var s = p.sizes, list = [];
-  if(Array.isArray(s)) list = s.filter(Boolean);
-  else if(typeof s === "string" && s.trim()){
-    list = s.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+  var s = p.sizes;
+  if(Array.isArray(s)) return s.filter(Boolean);
+  if(typeof s === "string" && s.trim()){
+    return s.replace(/[{}"]/g,"").split(",").map(function(x){return x.trim();}).filter(Boolean);
   }
-  // merge in any sizes that only exist in the size_stock map (e.g. sizes that
-  // sold out and were removed from the list) so OOS sizes still render crossed
-  var ss = sizeStockOf(p);
-  Object.keys(ss).forEach(function(k){ if(list.indexOf(k)<0) list.push(k); });
-  list.sort(function(a,b){ var ia=SIZE_SORT.indexOf(a),ib=SIZE_SORT.indexOf(b); if(ia<0)ia=99; if(ib<0)ib=99; return ia-ib||String(a).localeCompare(String(b)); });
-  return list;
+  return [];
 }
 function sizeStockOf(p){
   if(!p) return {};
@@ -2219,11 +2252,18 @@ function renderSizes(p){
   if(!sizes.length){ wrap.style.display="none"; return; }
   wrap.style.display="";
   var ss = sizeStockOf(p), hasStockMap = Object.keys(ss).length > 0;
-  chips.innerHTML = sizes.map(function(s){
-    var st = hasStockMap ? (Number(ss[s])||0) : null;
-    var oos = (st !== null && st <= 0);
+  // Show the full standard size ladder and grey-out sizes this product doesn't
+  // offer or that are out of stock. (Non-standard sets like "Free Size" show as-is.)
+  var LADDER = ["XS","S","M","L","XL","XXL","3XL"];
+  var standard = sizes.every(function(s){ return LADDER.indexOf(s) > -1; });
+  var display = standard ? LADDER : sizes;
+  chips.innerHTML = display.map(function(s){
+    var offered = sizes.indexOf(s) > -1;                 // does this product come in this size?
+    var st = (offered && hasStockMap) ? (Number(ss[s])||0) : (offered ? null : 0);
+    var oos = !offered || (st !== null && st <= 0);      // unavailable = not offered OR sold out
+    var label = !offered ? (esc(s)+" not available") : (oos ? esc(s)+" out of stock" : esc(s));
     return '<button class="size-chip'+(oos?' oos':'')+'" data-size="'+esc(s)+'"'
-      + (oos?' disabled aria-label="'+esc(s)+' out of stock"':' onclick="pickSize(this)"')
+      + (oos?' disabled aria-label="'+label+'"':' onclick="pickSize(this)"')
       + '>'+esc(s)+'</button>';
   }).join("");
   // hide guide button if no guide
@@ -2761,7 +2801,6 @@ function addToCartObj(p,q,silent,size){
 function updateCart(){
   var n=cart.reduce(function(s,i){return s+i.qty;},0);
   var b=el("cartBadge"); b.textContent=n; b.style.display=n>0?"flex":"none";
-  var mb2=el("modalCartBadge"); if(mb2){ mb2.textContent=n; mb2.style.display=n>0?"flex":"none"; }
   el("cartCount").textContent=n+" item"+(n!==1?"s":"");
   var items=el("cartItems"), foot=el("cartFoot");
   if(!cart.length){ items.innerHTML='<div class="drawer-empty"><i class="ti ti-shopping-bag"></i><h4>Your cart is empty</h4><p>Browse our products and add something you love.</p><button onclick="closeCart();goShop()">Start Shopping</button></div>'; foot.style.display="none"; return; }
@@ -2983,17 +3022,26 @@ function reorderOrder(id){
 function orderHelp(id){ var msg="Hi twipid! I need help with my order #"+id; window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank"); }
 /* ===== CANCEL ORDER ===== */
 function toggleCancel(id){ var f=el("cancel"+id); if(f) f.style.display=(f.style.display==="block"?"none":"block"); }
+function waProductLines(items){
+  if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
+  items=items||[]; var base="https://www.twipid.com/#product=";
+  var lines=items.slice(0,5).map(function(it){ return "\u2022 "+it.name+" \u2014 "+base+encodeURIComponent(slug(it.name)); });
+  if(items.length>5) lines.push("\u2026and "+(items.length-5)+" more");
+  return lines.length?lines.join("\n"):"";
+}
 function notifyOrderCancelled(o){
   if(!db || !db.functions || !o) return;
   var name=String(o.customer_name||"there").split(" ")[0];
   var pay=(o.payment_id||o.payment_method&&/online|razorpay/i.test(o.payment_method))?"online":"cod";
-  var refundLine=(pay==="online")?" Since you paid online, your refund will be processed to your original payment method within 5–7 business days.":"";
+  var refundLine=(pay==="online")?" Since you paid online, your refund will be processed to your original payment method within 5\u20137 business days.":"";
   var msg="Hi "+name+", your twipid order #"+o.id+" has been cancelled."+refundLine+" Questions? WhatsApp us at +91 88609 31112.";
+  var pl=waProductLines(o.items);
+  var waMsg=msg+(pl?("\n\nCancelled items:\n"+pl):"")+"\n\nBrowse again: https://www.twipid.com/";
   var raw=String(o.customer_phone||"").replace(/\D/g,"");
   var e164=raw.length===10?("+91"+raw):("+"+raw.replace(/^\+/,""));
   if(raw){
     try{ db.functions.invoke("send-order-message",{body:{channel:"sms",to:e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
-    try{ db.functions.invoke("send-order-message",{body:{channel:"whatsapp",to:"whatsapp:"+e164,message:msg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
+    try{ db.functions.invoke("send-order-message",{body:{channel:"whatsapp",to:"whatsapp:"+e164,message:waMsg,orderId:o.id,type:"cancelled"}}).then(function(){},function(){}); }catch(e){}
   }
   try{ db.functions.invoke("send-order-email",{body:{orderId:o.id,type:"cancelled",message:msg}}).then(function(){},function(){}); }catch(e){}
 }
@@ -3180,6 +3228,7 @@ async function saveOrder(order, onSuccess) {
       "Hi " + (newOrder.customer_name || "there") +
       ", your twipid order #" + newOrder.id +
       " has been placed successfully.";
+    var waMsg = msg + (typeof waProductLines==="function" && waProductLines(newOrder.items) ? ("\n\nYour items:\n"+waProductLines(newOrder.items)) : "") + "\n\nShop more: https://www.twipid.com/";
     console.log("About to trigger SMS/WhatsApp", {
       orderId: newOrder.id,
       customer_name: newOrder.customer_name,
@@ -3209,7 +3258,7 @@ async function saveOrder(order, onSuccess) {
         body: {
           channel: "whatsapp",
           to: whatsappTo,
-          message: msg,
+          message: waMsg,
           orderId: newOrder.id
         }
       });
@@ -3501,6 +3550,7 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
    {cat:"smartphones",name:"Smartphones",desc:"Phones & accessories",icon:"ti-device-mobile",bg:"#ffeee9",fg:"#ff5d73"},
    {cat:"cameras",name:"Cameras",desc:"Action cams & drones",icon:"ti-camera",bg:"#fdf4e2",fg:"#e0901a"},
    {cat:"computing",name:"Computing",desc:"Laptops, mice, drives",icon:"ti-device-laptop",bg:"#e8f5f0",fg:"#0ca678"},
+   {cat:"apparel",name:"Apparel",desc:"Tees, shirts, trousers",icon:"ti-shirt",bg:"#eef7ec",fg:"#0ca678"},
    {cat:"power",name:"Power",desc:"Power banks & chargers",icon:"ti-battery-charging",bg:"#fff1e9",fg:"#ff7a3d"}
   ];
   function go(cat){ if(typeof pickCategory==="function"){ if(cat==="all"){ if(typeof removeCatFilter==="function"){removeCatFilter();} if(typeof scrollToId==="function"){scrollToId("products");} } else { pickCategory(cat); } } }
@@ -3591,11 +3641,17 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
   var ddGrid=document.getElementById("catGridDD"), panel=document.getElementById("catPanel"), trigger=document.getElementById("catTrigger");
   if(ddGrid){
     ddGrid.innerHTML=DD_CATS.map(function(c){
-      return '<button class="cat-item" data-cat="'+c.cat+'"><span class="cat-ic" style="background:'+c.bg+';color:'+c.fg+'"><i class="ti '+c.icon+'"></i></span><span class="cat-itext"><span class="cat-iname">'+c.name+'</span><span class="cat-idesc">'+c.desc+'</span></span></button>';
+      var subs = (typeof subsForCat==="function") ? subsForCat(c.cat) : [];
+      var subHtml = subs.length ? '<span class="cat-subs">'+subs.slice(0,4).map(function(s){
+          return '<button class="cat-sub" data-cat="'+c.cat+'" data-sub="'+s.slug+'">'+s.label+'</button>';
+        }).join("")+'</span>' : "";
+      return '<div class="cat-item-wrap"><button class="cat-item" data-cat="'+c.cat+'"><span class="cat-ic" style="background:'+c.bg+';color:'+c.fg+'"><i class="ti '+c.icon+'"></i></span><span class="cat-itext"><span class="cat-iname">'+c.name+'</span><span class="cat-idesc">'+c.desc+'</span></span></button>'+subHtml+'</div>';
     }).join("");
     window.toggleCat=function(e){ if(e){e.stopPropagation();} var open=panel.classList.toggle("open"); trigger.classList.toggle("open",open); };
     window.catPick=function(cat){ panel.classList.remove("open"); trigger.classList.remove("open"); go(cat); };
-    Array.prototype.forEach.call(ddGrid.children,function(b){ b.addEventListener("click",function(){ window.catPick(b.getAttribute("data-cat")); }); });
+    window.catSubPick=function(cat,sub){ panel.classList.remove("open"); trigger.classList.remove("open"); if(typeof pickCategorySub==="function") pickCategorySub(cat,sub); };
+    Array.prototype.forEach.call(ddGrid.querySelectorAll(".cat-item"),function(b){ b.addEventListener("click",function(){ window.catPick(b.getAttribute("data-cat")); }); });
+    Array.prototype.forEach.call(ddGrid.querySelectorAll(".cat-sub"),function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); window.catSubPick(b.getAttribute("data-cat"), b.getAttribute("data-sub")); }); });
     document.addEventListener("click",function(e){ if(!e.target.closest(".cat-li")){ panel.classList.remove("open"); trigger.classList.remove("open"); } });
     document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ panel.classList.remove("open"); trigger.classList.remove("open"); } });
   }
