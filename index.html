@@ -329,7 +329,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-topbar-name{font-family:var(--fd);font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .2s;pointer-events:none}
 .modal-topbar.scrolled .modal-topbar-name{opacity:1;transform:none}
 .modal-content{padding:6px 28px 28px;display:flex;flex-direction:column;flex:1}
-.modal-close{position:static;flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
+.modal-topbar-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.modal-fab{position:static;flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;font-size:19px;transition:all .16s;padding:0}
+.modal-fab:hover{background:#fff;color:var(--ink);border-color:var(--line2)}
+.modal-fab.on{color:#e11d48;border-color:#f3c3cd;background:#fff}
+.modal-fab.on i{color:#e11d48}
 .modal-close .ti{font-size:18px;line-height:1}
 .modal-close:hover{background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
 .modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin:0 0 10px}
@@ -630,7 +634,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .modal-topbar{position:fixed;top:0;right:0;left:auto;width:auto;padding:12px;background:none;border:none;box-shadow:none;z-index:410}
   .modal-topbar.scrolled{background:none;box-shadow:none;border-color:transparent}
   .modal-topbar-name{display:none}
-  .modal-close{background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 12px rgba(0,0,0,.2);border-radius:50%;width:38px;height:38px;z-index:411}
+  .modal-fab{background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 12px rgba(0,0,0,.2);border-color:transparent;z-index:411}
+  .modal-fab.on{background:rgba(255,255,255,.96);border-color:transparent}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
 @media(max-width:768px){
@@ -1129,23 +1134,19 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 /* ===== MODAL ACTIONS — mobile ===== */
 .mw-lb{display:none}
 @media(max-width:760px){
-  /* the sticky bar already carries Add to Cart + Buy Now, so drop the
-     duplicates here. That frees the row so the wishlist stops being
-     pushed off the right edge on narrow phones. */
-  .modal-add,.modal-buynow{display:none!important}
+  /* inline row keeps Add to Cart; the sticky bar carries Buy Now only */
+  .modal-buynow{display:none!important}
   .modal-actions{margin-top:10px;gap:10px}
-  .modal-qty{flex:1;min-width:0}
-  .modal-qty button{width:46px;height:48px;flex-shrink:0}
-  .modal-qty span{flex:1;text-align:center;min-width:0}
-  .modal-wishbtn{width:auto;height:48px;padding:0 16px;gap:8px;flex-shrink:0;font-size:18px}
-  .mw-lb{display:inline;font-family:var(--fb);font-size:13.5px;font-weight:700}
+  .modal-qty{flex-shrink:0;min-width:0}
+  .modal-qty button{width:44px;height:48px;flex-shrink:0}
+  .modal-qty span{min-width:36px;text-align:center}
+  .modal-add{flex:1;height:48px;min-width:0}
   /* breathing room: 24px each side was eating the narrow screens */
   .modal-ov{padding:12px}
   /* sticky bar */
   .sticky-buy{padding:9px 12px calc(9px + env(safe-area-inset-bottom));gap:8px}
   .sticky-buy .sb-price{font-size:16px}
-  .sticky-buy .sb-add,.sticky-buy .sb-buy{padding:12px 8px;font-size:13.5px;min-width:0}
-  .sticky-buy .sb-add i{flex-shrink:0}
+  .sticky-buy .sb-buy{padding:13px 8px;font-size:14px;min-width:0}
 }
 @media(max-width:360px){
   .modal-ov{padding:8px}
@@ -1513,12 +1514,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()">
   <div class="sticky-buy" id="stickyBuy">
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
-    <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add</button>
-    <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()">Buy Now</button>
+    <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
   </div><div class="modal">
   <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
-    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
+    <div class="modal-topbar"><span class="modal-topbar-name" id="modalTopName">Product</span><div class="modal-topbar-acts"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div></div>
     <div class="modal-content">
     <div class="modal-name" id="modalName">Product</div>
     <div class="modal-brand" id="modalBrand">Brand</div>
@@ -1541,7 +1541,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div class="modal-actions">
       <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
       <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
-      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i><span class="mw-lb">Save</span></button>
     </div>
     <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="deliv-box">
@@ -2248,11 +2247,10 @@ function openModalByProduct(p){
 /* keep mobile sticky bar in sync with the modal */
 function syncStickyBuy(){
   if(!modalProduct) return;
-  var pr=el("sbPrice"), wa=el("sbWas"), a=el("sbAdd"), b=el("sbBuy"), dis=el("modalAddBtn").disabled;
+  var pr=el("sbPrice"), wa=el("sbWas"), b=el("sbBuy"), dis=el("modalAddBtn").disabled;
   if(pr) pr.textContent=inr(modalProduct.price);
   if(wa){ if(modalProduct.orig_price&&modalProduct.orig_price>modalProduct.price){ wa.textContent=inr(modalProduct.orig_price); wa.style.display=""; } else wa.style.display="none"; }
-  if(a){ a.disabled=dis; }
-  if(b){ b.disabled=dis; b.textContent=dis?"Out of stock":"Buy Now"; }
+  if(b){ b.disabled=dis; b.innerHTML=dis?"Out of stock":'<i class="ti ti-bolt"></i> Buy Now'; }
 }
 function fitModalImg(){ /* fixed image frame: keep the CSS aspect-ratio; image is centered via object-fit:contain, small/landscape photos show white above & below. */ var w=el("modalMedia"); if(w) w.style.aspectRatio=""; }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
@@ -2317,10 +2315,6 @@ function syncModalWish(){
   var b=el("modalWish"); if(!b || !modalProduct) return;
   var on = wish.some(function(w){ return w.key===keyOf(modalProduct); });
   b.classList.toggle("on", on);
-  var ic=b.querySelector("i");
-  if(ic) ic.className = on ? "ti ti-heart-filled" : "ti ti-heart";
-  var lb=b.querySelector(".mw-lb");
-  if(lb) lb.textContent = on ? "Saved" : "Save";
   b.setAttribute("aria-pressed", on ? "true" : "false");
   b.setAttribute("aria-label", on ? "Remove from wishlist" : "Add to wishlist");
 }
