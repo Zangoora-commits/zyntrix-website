@@ -1204,6 +1204,20 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .cat-menu-list button .cm-n{font-size:11px;font-weight:700;color:var(--muted);background:var(--paper);border-radius:100px;padding:2px 8px}
 .cat-menu-list button.on .cm-n{background:#fff}
 .cat-menu-sep{height:1px;background:var(--line);margin:6px 4px}
+.retform.flash{animation:retflash 1s ease}
+@keyframes retflash{0%{box-shadow:0 0 0 0 rgba(12,166,120,.0)}25%{box-shadow:0 0 0 3px rgba(12,166,120,.28)}100%{box-shadow:0 0 0 0 rgba(12,166,120,0)}}
+/* mobile category menu — sub-category accordion */
+.cmi{display:flex;flex-direction:column}
+.cmi-head{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:none;padding:11px 13px;border-radius:10px;cursor:pointer;font-family:var(--fb);font-size:14px;font-weight:600;color:var(--ink);text-align:left;transition:background .14s}
+.cmi-head:hover,.cmi-head.on{background:var(--brand-tint);color:var(--brand-deep)}
+.cmi-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.cmi-chev{font-size:16px;color:var(--muted);transition:transform .2s}
+.cmi.open .cmi-chev{transform:rotate(180deg);color:var(--brand-deep)}
+.cmi-subs{display:none;flex-direction:column;gap:1px;padding:2px 0 6px 6px;margin:0 4px 4px 16px;border-left:2px solid var(--brand-soft)}
+.cmi.open .cmi-subs{display:flex}
+.cmi-subs button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:none;border:none;padding:9px 12px;border-radius:9px;cursor:pointer;font-family:var(--fb);font-size:13px;font-weight:600;color:var(--ink2);text-align:left;transition:background .13s}
+.cmi-subs button:hover{background:var(--brand-tint);color:var(--brand-deep)}
+.cmi-subs .cm-n{font-size:10.5px;font-weight:700;color:var(--muted);background:var(--paper);border-radius:100px;padding:2px 7px}
 
 @media(max-width:760px){
   .cat-menu-btn{display:flex}
@@ -1999,9 +2013,31 @@ function buildCatMenu(){
   var html='<button class="'+(activeFilter==="all"?"on":"")+'" onclick="catMenuPick(\'all\')">All products <span class="cm-n">'+products.length+'</span></button>';
   html+='<div class="cat-menu-sep"></div>';
   html+=cats.map(function(c){
-    return '<button class="'+(activeFilter===c?"on":"")+'" onclick="catMenuPick(\''+esc(c).replace(/'/g,"")+'\')">'+esc(prettyCat(c))+' <span class="cm-n">'+counts[c]+'</span></button>';
+    var cs=slug(c), nm=esc(prettyCat(c));
+    var subs=(typeof subsForCat==="function")?subsForCat(cs):[];
+    if(!subs.length){
+      return '<button class="'+(activeFilter===cs?"on":"")+'" onclick="catMenuGo(\''+cs+'\',null)">'+nm+' <span class="cm-n">'+counts[c]+'</span></button>';
+    }
+    var subHtml='<button onclick="catMenuGo(\''+cs+'\',null)">All '+nm+' <span class="cm-n">'+counts[c]+'</span></button>'
+      + subs.map(function(s){ return '<button onclick="catMenuGo(\''+cs+'\',\''+esc(s.slug)+'\')">'+esc(s.label)+' <span class="cm-n">'+s.n+'</span></button>'; }).join("");
+    return '<div class="cmi'+(activeFilter===cs?" open":"")+'" id="cmi-'+cs+'">'
+      +'<button class="cmi-head'+(activeFilter===cs?" on":"")+'" onclick="catMenuExpand(\''+cs+'\')">'+nm
+      +' <span class="cmi-right"><span class="cm-n">'+counts[c]+'</span><i class="ti ti-chevron-down cmi-chev"></i></span></button>'
+      +'<div class="cmi-subs">'+subHtml+'</div></div>';
   }).join("");
   box.innerHTML=html;
+}
+function catMenuExpand(cat){
+  var wrap=el("cmi-"+cat); if(!wrap) return;
+  var open=wrap.classList.contains("open");
+  var box=el("catMenuList"); if(box){ Array.prototype.forEach.call(box.querySelectorAll(".cmi"),function(w){ w.classList.remove("open"); }); }
+  if(!open) wrap.classList.add("open");
+}
+function catMenuGo(cat,sub){
+  closeCatMenu();
+  if(sub){ if(typeof pickCategorySub==="function") pickCategorySub(cat,sub); }
+  else { pickCategory(cat); }
+  scrollToId("products");
 }
 function toggleCatMenu(){
   var m=el("catMenu"); if(!m) return;
@@ -3059,7 +3095,20 @@ function reorderOrder(id){
 }
 function orderHelp(id){ var msg="Hi twipid! I need help with my order #"+id; window.open("https://wa.me/918860931112?text="+encodeURIComponent(msg),"_blank"); }
 /* ===== CANCEL ORDER ===== */
-function toggleCancel(id){ var f=el("cancel"+id); if(f) f.style.display=(f.style.display==="block"?"none":"block"); }
+function toggleCancel(id){
+  var f=el("cancel"+id); if(!f) return;
+  var r=el("ret"+id); if(r) r.style.display="none";            // close return form if open
+  var open=(f.style.display==="block");
+  f.style.display= open ? "none" : "block";
+  if(!open){ try{ f.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){} f.classList.remove("flash"); void f.offsetWidth; f.classList.add("flash"); }
+}
+function toggleReturn(id){
+  var f=el("ret"+id); if(!f) return;
+  var c=el("cancel"+id); if(c) c.style.display="none";         // close cancel box if open
+  var open=(f.style.display==="block");
+  f.style.display= open ? "none" : "block";
+  if(!open){ try{ f.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){} f.classList.remove("flash"); void f.offsetWidth; f.classList.add("flash"); }
+}
 function waProductLines(items){
   if(typeof items==="string"){ try{items=JSON.parse(items);}catch(e){items=[];} }
   items=items||[]; var base="https://www.twipid.com/#product=";
@@ -3132,7 +3181,7 @@ function saveInstructions(id){
     showToast("Delivery instructions saved");
   }).catch(function(){ showToast("Could not save instructions"); });
 }
-function toggleReturn(id){ var f=el("ret"+id); if(f) f.style.display=(f.style.display==="block"?"none":"block"); }
+/* toggleReturn defined above (with scroll-into-view) */
 function returnFee(reason){ return (reason==="Changed my mind")?99:0; }
 function updateRefund(id,total){
   var rs=el("retreason"+id), box=el("retref"+id); if(!box) return;
