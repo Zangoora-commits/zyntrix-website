@@ -1538,6 +1538,12 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       <div class="size-low" id="sizeLow"></div>
       <div class="size-err" id="sizeErr">Please select a size first.</div>
     </div>
+    <div class="modal-actions">
+      <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
+      <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
+      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i><span class="mw-lb">Save</span></button>
+    </div>
+    <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="deliv-box">
       <div class="deliv-lbl"><i class="ti ti-truck-delivery"></i> Check delivery &amp; COD</div>
       <div class="deliv-row">
@@ -1546,12 +1552,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       </div>
       <div class="deliv-res" id="delivRes"></div>
     </div>
-    <div class="modal-actions">
-      <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
-      <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
-      <button class="modal-wishbtn" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i><span class="mw-lb">Save</span></button>
-    </div>
-    <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
       <div class="acc" id="accDesc">
