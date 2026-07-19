@@ -193,11 +193,12 @@ section.first{padding-top:44px}
 .prod-rating{display:flex;align-items:center;gap:5px;margin-bottom:12px}
 .prod-stars{color:var(--amber);font-size:12px;letter-spacing:1px}
 .prod-rnum{font-size:11.5px;color:var(--muted);font-weight:500}
-.prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+.prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:12px}
+.prod-priceblock{min-width:0}
 .prod-price{font-family:var(--fd);font-weight:800;font-size:17.5px;color:var(--ink)}
 .prod-orig{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:5px;font-weight:400}
-.prod-add{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-deep);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
-.prod-add:hover{background:var(--brand);color:#fff;transform:scale(1.08)}
+.prod-add{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-deep);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .16s,color .16s;flex-shrink:0}
+.prod-add:hover{background:var(--brand);color:#fff}
 .prod-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
 .prod-empty i{font-size:46px;color:var(--line2);display:block;margin-bottom:14px}
 .prod-empty h4{font-family:var(--fd);font-size:18px;color:var(--ink2);margin-bottom:6px;font-weight:700}
@@ -331,6 +332,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-content{padding:6px 28px 28px;display:flex;flex-direction:column;flex:1}
 .modal-topbar-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .media-fabs{position:absolute;top:12px;right:12px;z-index:30;display:flex;align-items:center;gap:8px}
+.media-rating{position:absolute;left:12px;bottom:12px;z-index:30;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:100px;padding:5px 11px 5px 9px;font-family:var(--fb);font-size:12.5px;font-weight:800;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.14);cursor:pointer}
+.media-rating i{color:#f5a623;font-size:14px}
+.modal-priceline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 18px}
+.modal-priceline .modal-price{margin:0}
+.modal-priceline .modal-stock{margin:0}
 .media-fabs .modal-fab{background:rgba(255,255,255,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-color:transparent;box-shadow:0 2px 10px rgba(0,0,0,.16)}
 .media-fabs .modal-fab:hover{background:#fff}
 .media-fabs .modal-fab.on{background:#fff;color:#e11d48}
@@ -340,8 +346,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-fab.on i{color:#e11d48}
 .modal-close .ti{font-size:18px;line-height:1}
 .modal-close:hover{background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
-.modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin:0 0 10px}
-.modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:5px}
+.modal-brand{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.7px;margin:0 0 14px}
+.modal-name{font-family:var(--fd);font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin-bottom:4px}
 .modal-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px}
 .modal-rating .stars{color:var(--amber);font-size:14px;letter-spacing:1px}
 .modal-rating .rnum{font-size:13px;color:var(--muted)}
@@ -1520,14 +1526,15 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
   </div><div class="modal">
-  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
+  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
     <div class="modal-content">
     <div class="modal-name" id="modalName">Product</div>
     <div class="modal-brand" id="modalBrand">Brand</div>
-    <div class="modal-rating" onclick="jumpToReviews()" title="See all reviews"><span class="stars" id="modalStars">★★★★★</span><span class="rnum" id="modalRnum">—</span></div>
-    <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
-    <div class="modal-stock" id="modalStock"></div>
+    <div class="modal-priceline">
+      <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
+      <div class="modal-stock" id="modalStock"></div>
+    </div>
     <div class="color-wrap" id="colorWrap">
       <div class="color-head">COLOUR: <span id="colorName"></span></div>
       <div class="color-chips" id="colorChips"></div>
@@ -1787,7 +1794,7 @@ function render(keep){
       +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+(rc2?" ("+rc2+")":"")+'</span></div>'
       +(stockPill?'<div>'+stockPill+'</div>':'')
-      +'<div class="prod-foot" style="margin-top:10px"><div><span class="prod-price">'+inr(p.price)+'</span>'
+      +'<div class="prod-foot"><div class="prod-priceblock"><span class="prod-price">'+inr(p.price)+'</span>'
       +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')+'</div>'
       +'<button class="prod-add" data-add="'+i+'" aria-label="Add to cart"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div></div></article>';
   }).join("");
@@ -2203,10 +2210,13 @@ function openModalByProduct(p){
   el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
   var was=el("modalWas"), off=el("modalOff");
   if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+Math.round((1-p.price/p.orig_price)*100)+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
-  // rating
+  // rating — shown as a chip on the image, using the same count shown on cards
   var rt=ratingOf(p), rcnt=reviewCountOf(p);
-  el("modalStars").textContent=starString(rt);
-  el("modalRnum").textContent=rt.toFixed(1)+(rcnt?" · "+rcnt+" review"+(rcnt!==1?"s":""):" · No reviews yet");
+  var dispCount = rcnt>0 ? rcnt : (Number(p.reviews)||0);
+  var dispAvg   = rcnt>0 ? rt   : (Number(p.rating)||4.7);
+  var chip=el("modalRatingChip"), cn=el("modalRnum");
+  if(dispCount>0){ if(cn) cn.textContent=dispAvg.toFixed(1)+" ("+dispCount+")"; if(chip) chip.style.display=""; }
+  else { if(chip) chip.style.display="none"; }
   // stock
   var st=stockOf(p), sEl=el("modalStock"), addBtn=el("modalAddBtn");
   if(st!==null && st<=0){ sEl.innerHTML='<span class="stock-pill stock-out"><i class="ti ti-x" style="font-size:12px"></i> Out of stock</span>'; addBtn.disabled=true; addBtn.style.opacity=".5"; addBtn.style.cursor="not-allowed"; var bb=el("modalBuyBtn"); if(bb){bb.disabled=true;} }
@@ -2614,8 +2624,11 @@ function loadReviews(p){
     var count=list.length, avg=count?(list.reduce(function(s,r){return s+(Number(r.rating)||0);},0)/count):(p.rating||0);
     reviewCache[k]={avg:avg,count:count,list:list};
     el("tabRevCount").textContent=count?"("+count+")":"";
-    el("modalStars").textContent=starString(ratingOf(p));
-    el("modalRnum").textContent=ratingOf(p).toFixed(1)+(count?" · "+count+" review"+(count!==1?"s":""):" · No reviews yet");
+    var _chip=el("modalRatingChip"), _cn=el("modalRnum");
+    var _c = count>0 ? count : (Number(p.reviews)||0);
+    var _a = count>0 ? avg   : (Number(p.rating)||4.7);
+    if(_c>0){ if(_cn) _cn.textContent=_a.toFixed(1)+" ("+_c+")"; if(_chip) _chip.style.display=""; }
+    else { if(_chip) _chip.style.display="none"; }
     el("revSummary").innerHTML='<div class="rev-big">'+(count?avg.toFixed(1):(p.rating||4.7).toFixed(1))+'</div><div class="rev-sumright"><div class="rstars">'+starString(count?avg:(p.rating||4.7))+'</div><div class="rcount">'+(count?("Based on "+count+" review"+(count!==1?"s":"")):"Be the first to review")+'</div></div>';
     renderDistribution();
     if(tb) tb.style.display = count ? "flex" : "none";
