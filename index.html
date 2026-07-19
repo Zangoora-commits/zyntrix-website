@@ -361,12 +361,13 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .desc-more:hover{text-decoration:underline}
 .modal-specs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
 .modal-spec{font-size:12px;font-weight:600;color:var(--ink2);background:var(--paper);border:1px solid var(--line);padding:6px 12px;border-radius:8px}
-.modal-actions{margin-top:8px;display:flex;gap:11px;align-items:center}
-.modal-qty{display:flex;align-items:center;border:1px solid var(--line2);border-radius:13px;overflow:hidden;flex-shrink:0}
+.modal-qty-row{margin-top:8px;margin-bottom:11px}
+.modal-actions{display:flex;gap:11px;align-items:stretch}
+.modal-qty{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:13px;overflow:hidden;flex-shrink:0}
 .modal-qty button{width:42px;height:52px;background:var(--paper);border:none;cursor:pointer;font-size:18px;color:var(--ink);transition:background .15s}
 .modal-qty button:hover{background:var(--brand-soft);color:var(--brand-deep)}
 .modal-qty span{width:40px;text-align:center;font-family:var(--fd);font-weight:700;font-size:15px}
-.modal-add{flex:1;background:var(--brand);color:#fff;border:none;min-height:52px;padding:0 22px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s;white-space:nowrap;line-height:1}
+.modal-add{flex:1 1 0;min-width:0;background:var(--brand);color:#fff;border:none;min-height:52px;padding:0 22px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s;white-space:nowrap;line-height:1}
 .modal-add:hover{background:var(--brand-deep)}
 .modal-wishbtn{width:52px;height:52px;border-radius:13px;border:1px solid var(--line2);background:#fff;cursor:pointer;color:var(--ink2);font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
 .modal-wishbtn.on{color:#fff;background:var(--orange);border-color:var(--orange)}
@@ -818,8 +819,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .ship-bar span{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--brand),var(--brand-deep));transition:width .35s ease}
 .ship-nudge.done .sn-t{color:var(--brand-deep)}
 /* ===== BUY NOW ===== */
-.modal-buynow{width:100%;margin-top:9px;background:var(--ink);color:#fff;border:none;border-radius:12px;padding:13px 18px;font-family:var(--fb);font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s}
-.modal-buynow:hover{background:var(--brand-deep)}
+.modal-buynow{flex:1 1 0;min-width:0;background:var(--ink);color:#fff;border:none;min-height:52px;border-radius:13px;padding:0 18px;font-family:var(--fb);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s;white-space:nowrap;line-height:1}
+.modal-buynow:hover{background:#000}
 .modal-buynow:disabled{opacity:.5;cursor:not-allowed}
 /* ===== MOBILE STICKY CTA ===== */
 .sticky-buy{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));gap:10px;align-items:center;box-shadow:0 -6px 20px rgba(0,0,0,.07)}
@@ -1144,13 +1145,12 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 /* ===== MODAL ACTIONS — mobile ===== */
 .mw-lb{display:none}
 @media(max-width:760px){
-  /* inline row keeps Add to Cart; the sticky bar carries Buy Now only */
-  .modal-buynow{display:none!important}
+  /* Add to Cart + Buy Now share a 50/50 row inline; sticky bar is the safety-net */
   .modal-actions{margin-top:10px;gap:10px}
   .modal-qty{flex-shrink:0;min-width:0}
-  .modal-qty button{width:44px;height:48px;flex-shrink:0}
+  .modal-qty button{width:44px;height:46px;flex-shrink:0}
   .modal-qty span{min-width:36px;text-align:center}
-  .modal-add{flex:1;height:48px;min-width:0}
+  .modal-add,.modal-buynow{flex:1;height:48px;min-height:48px;min-width:0;font-size:14.5px;padding:0 10px}
   /* breathing room: 24px each side was eating the narrow screens */
   .modal-ov{padding:12px}
   /* sticky bar */
@@ -1548,11 +1548,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       <div class="size-low" id="sizeLow"></div>
       <div class="size-err" id="sizeErr">Please select a size first.</div>
     </div>
+    <div class="modal-qty-row"><div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div></div>
     <div class="modal-actions">
-      <div class="modal-qty"><button onclick="modalQty(-1)">−</button><span id="modalQtyN">1</span><button onclick="modalQty(1)">+</button></div>
       <button class="modal-add" id="modalAddBtn" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> Add to Cart</button>
+      <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     </div>
-    <button class="modal-buynow" id="modalBuyBtn" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
     <div class="deliv-box">
       <div class="deliv-lbl"><i class="ti ti-truck-delivery"></i> Check delivery &amp; COD</div>
       <div class="deliv-row">
