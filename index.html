@@ -325,7 +325,16 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-img i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
 .modal-body{padding:0;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
-.modal-content{padding:30px 28px 28px;display:flex;flex-direction:column;flex:1}
+/* desktop sticky bar: close pinned at top, product name fades in on scroll */
+.modal-topbar2{position:sticky;top:0;z-index:35;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 12px 28px;background:#fff;border-bottom:1px solid transparent;transition:border-color .2s}
+.modal-topbar2.scrolled{border-bottom-color:var(--line)}
+.mtb-name{font-family:var(--fd);font-weight:800;font-size:16px;letter-spacing:-.3px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transform:translateX(-4px);transition:opacity .22s,transform .22s;pointer-events:none}
+.modal-topbar2.scrolled .mtb-name{opacity:1;transform:none}
+.mtb-close{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--paper);border:1px solid var(--line);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
+.mtb-close:hover{background:#fff;color:var(--ink);border-color:var(--line2)}
+.mtb-close .ti{font-size:18px;line-height:1}
+.media-fabs .modal-close{display:none}
+.modal-content{padding:4px 28px 28px;display:flex;flex-direction:column;flex:1}
 .media-fabs{position:absolute;top:12px;right:12px;z-index:30;display:flex;align-items:center;gap:8px}
 .media-rating{position:absolute;left:12px;bottom:12px;z-index:30;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:100px;padding:5px 11px 5px 9px;font-family:var(--fb);font-size:12.5px;font-weight:800;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.14);cursor:pointer}
 .media-rating i{color:#f5a623;font-size:14px}
@@ -356,7 +365,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .desc-more:hover{text-decoration:underline}
 .modal-specs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
 .modal-spec{font-size:12px;font-weight:600;color:var(--ink2);background:var(--paper);border:1px solid var(--line);padding:6px 12px;border-radius:8px}
-.modal-qty-row{margin-top:8px;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.modal-qty-row{margin-top:8px;margin-bottom:11px;display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap}
 .modal-qty-row .modal-stock{margin:0}
 .modal-actions{display:flex;gap:11px;align-items:stretch}
 .modal-qty{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:13px;overflow:hidden;flex-shrink:0}
@@ -640,7 +649,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* details-column bar pinned to the top on mobile: transparent over the image, frosts on scroll */
   .modal-fab{background:rgba(255,255,255,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 12px rgba(0,0,0,.2);border-color:transparent;z-index:411}
   .modal-fab.on{background:rgba(255,255,255,.96);border-color:transparent}
-  /* mobile: heart to the left corner, close to the right, so they don't crowd each other */
+  /* mobile: no sticky bar; heart to the left corner, close to the right on the image */
+  .modal-topbar2{display:none}
+  .media-fabs .modal-close{display:flex}
   .media-fabs{left:12px;right:12px;justify-content:space-between}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
@@ -1523,6 +1534,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   </div><div class="modal">
   <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
   <div class="modal-body">
+    <div class="modal-topbar2" id="modalTopbar2"><span class="mtb-name" id="modalTopName2">Product</span><button class="mtb-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
     <div class="modal-content">
     <div class="modal-name" id="modalName">Product</div>
     <div class="modal-brand" id="modalBrand">Brand</div>
@@ -2201,7 +2213,7 @@ function openModal(i){ var p=view[i]; if(!p) return; modalReturnTo=null; openMod
 function openModalByProduct(p){
   try{ track("view_item",{currency:"INR",value:Number(p.price)||0,items:[{item_id:String(p.sku||keyOf(p)),item_name:p.name,item_brand:p.brand||"",item_category:p.category||"",price:Number(p.price)||0}]}); }catch(e){}
   modalProduct=p; modalQtyVal=1; el("modalQtyN").textContent="1"; pickedStars=0; paintStars(0);
-  el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; el("modalNow").textContent=inr(p.price);
+  el("modalBrand").textContent=p.brand||""; el("modalName").textContent=p.name; var mt=el("modalTopName2"); if(mt)mt.textContent=p.name; el("modalNow").textContent=inr(p.price);
   var was=el("modalWas"), off=el("modalOff");
   if(p.orig_price&&p.orig_price>p.price){ was.textContent=inr(p.orig_price); was.style.display=""; off.textContent="-"+Math.round((1-p.price/p.orig_price)*100)+"%"; off.style.display=""; } else { was.style.display="none"; off.style.display="none"; }
   // rating — shown as a chip on the image, using the same count shown on cards
@@ -2249,7 +2261,7 @@ function openModalByProduct(p){
   if(dRes){ dRes.textContent=""; dRes.className="deliv-res"; }
   if(dPin){ var lastPin=""; try{ lastPin=localStorage.getItem("twipid_pin")||""; }catch(e){} dPin.value=lastPin; if(lastPin.length===6) checkDelivery(); }
   syncStickyBuy();
-  el("modalOv").classList.add("open"); document.body.style.overflow="hidden";
+  el("modalOv").classList.add("open"); document.body.style.overflow="hidden"; var _tb=document.querySelector("#modalOv .modal-topbar2"); if(_tb)_tb.classList.remove("scrolled");
 }
 /* keep mobile sticky bar in sync with the modal */
 function syncStickyBuy(){
