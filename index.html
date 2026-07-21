@@ -1216,18 +1216,18 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .sb-inner{max-width:1300px;margin:0 auto;padding:0 28px;height:60px;display:flex;align-items:center;gap:16px}
 .sb-tools{display:flex;align-items:center;gap:9px;margin-left:auto;flex-shrink:0}
 .rb-lb{display:inline}
-/* mobile search: a nav icon opens a full-width search bar pinned to the very top */
-.nav-search-btn{display:none}
+/* mobile search: an icon in the shop bar toggles a full-width search bar under the nav */
+.sb-search-btn{display:none}
 .msearch-drop{display:none}
 @media(max-width:768px){
-  .nav-search-btn{display:flex}
-  .nav-search-btn.on{background:var(--brand);border-color:var(--brand);color:#fff}
-  .msearch-drop{display:block;position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 8px 22px rgba(12,22,17,.14);transform:translateY(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+  .sb-search-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink2);font-size:18px;cursor:pointer;flex-shrink:0}
+  .sb-search-btn.on{background:var(--brand);border-color:var(--brand);color:#fff}
+  .msearch-drop{display:block;position:fixed;top:64px;left:0;right:0;z-index:96;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 10px 24px rgba(12,22,17,.10);transform:translateY(-130%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
   .msearch-drop.open{transform:translateY(0)}
-  .msd-inner{display:flex;align-items:center;gap:10px;padding:11px 14px calc(11px + env(safe-area-inset-top));max-width:1300px;margin:0 auto}
-  .msd-inner .ti-search{font-size:21px;color:var(--muted);flex-shrink:0}
-  .msd-inner input{flex:1;min-width:0;border:none;outline:none;background:var(--paper);border-radius:11px;padding:12px 13px;font-family:var(--fb);font-size:16px;color:var(--ink)}
-  .msd-close{width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--bg);color:var(--ink2);font-size:19px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .msd-inner{display:flex;align-items:center;gap:10px;padding:10px 16px;max-width:1300px;margin:0 auto}
+  .msd-inner .ti-search{font-size:20px;color:var(--muted);flex-shrink:0}
+  .msd-inner input{flex:1;min-width:0;border:none;outline:none;background:var(--paper);border-radius:10px;padding:11px 12px;font-family:var(--fb);font-size:16px;color:var(--ink)}
+  .msd-close{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink2);font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 }
 
 /* chips scroll horizontally with a soft fade instead of wrapping */
@@ -1380,7 +1380,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   </ul>
   <div class="nav-right">
     <div class="nav-search"><i class="ti ti-search"></i><input type="text" id="navSearch" placeholder="Search products..." oninput="searchProds(this.value)"></div>
-    <button class="icon-btn nav-search-btn" id="navSearchBtn" aria-label="Search" onclick="toggleMSearch()"><i class="ti ti-search"></i></button>
     <button class="icon-btn cat-menu-btn" id="catMenuBtn" aria-label="Categories" onclick="toggleCatMenu()"><i class="ti ti-category-2"></i></button>
     <button class="icon-btn" id="acctBtn" aria-label="Account" onclick="onAccountClick()"><i class="ti ti-user"></i></button>
     <button class="icon-btn" aria-label="Wishlist" onclick="openWishlist()"><i class="ti ti-heart"></i><span class="badge wish" id="wishBadge" style="display:none">0</span></button>
@@ -1398,7 +1397,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     </div>
   </div>
 </div></nav>
-<!-- MOBILE SEARCH OVERLAY (pinned to top, mobile only) -->
+<!-- MOBILE SEARCH DROP -->
 <div class="msearch-drop" id="mSearchDrop">
   <div class="msd-inner">
     <i class="ti ti-search"></i>
@@ -1436,6 +1435,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       <button class="fbtn active" data-cat="all" onclick="pickFilter(this,'all')">All</button>
     </div>
     <div class="sb-tools">
+      <button class="sb-search-btn" id="sbSearchBtn" onclick="toggleMSearch()" aria-label="Search products"><i class="ti ti-search"></i></button>
       <button class="refine-btn" onclick="toggleRefine()" aria-label="Filters"><i class="ti ti-adjustments-horizontal"></i><span class="rb-lb">Filters</span><span class="cnt" id="refineCount" style="display:none">0</span></button>
       <div class="sort-wrap">
         <select class="sort-sel" id="sortSel" onchange="setSort(this.value)" aria-label="Sort products">
@@ -1902,7 +1902,7 @@ function removeBrand(b){ removeFilterChip("brand",b); }
 function removePrice(){ priceMin=priceMax=null; buildFilters(); updateRefineCount(); render(); }
 function removeCatFilter(){ activeFilter="all"; activeSub=null; setActiveBtn("all"); el("prodTitle").textContent="Featured Products"; buildSubChips(); render(); }
 function removeTagFilter(){ window._tagFilter=null; el("prodTitle").textContent="Featured Products"; render(); }
-function removeSearch(){ searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; var ms=el("mSearchInput"); if(ms)ms.value=""; var sb=el("navSearchBtn"); if(sb)sb.classList.remove("on"); el("prodTitle").textContent="Featured Products"; render(); }
+function removeSearch(){ searchTerm=""; var ns=el("navSearch"); if(ns)ns.value=""; var ms=el("mSearchInput"); if(ms)ms.value=""; var sb=el("sbSearchBtn"); if(sb)sb.classList.remove("on"); el("prodTitle").textContent="Featured Products"; render(); }
 function clearAllFilters(){
   priceMin=priceMax=null; brandFilter=[]; typeFilter=[]; occasionFilter=[]; sizeFilter=[]; colorFilter=[];
   ratingMin=null; inStockOnly=false; activeFilter="all"; searchTerm=""; window._tagFilter=null;
@@ -2265,7 +2265,7 @@ function showBestSellers(){ window._tagFilter="hot"; activeFilter="all"; activeS
 function searchProds(v){ searchTerm=(v||"").toLowerCase().trim(); window._tagFilter=null; if(searchTerm){ activeFilter="all"; activeSub=null; setActiveBtn("all"); el("prodTitle").textContent='Results for "'+esc(v.trim())+'"'; try{ if(window._searchT)clearTimeout(window._searchT); window._searchT=setTimeout(function(){ track("search",{search_term:searchTerm}); },900); }catch(e){} } else { el("prodTitle").textContent="Featured Products"; } buildSubChips(); render(); if(searchTerm) scrollToId("products"); }
 /* Mobile search: shop-bar icon drops a full-width search bar under the nav.
    mSearch mirrors the value into the (hidden) nav input so clear/state logic stays in sync. */
-function mSearch(v){ var nv=el("navSearch"); if(nv)nv.value=v; var sb=el("navSearchBtn"); if(sb)sb.classList.toggle("on", !!(v||"").trim()); searchProds(v); }
+function mSearch(v){ var nv=el("navSearch"); if(nv)nv.value=v; var sb=el("sbSearchBtn"); if(sb)sb.classList.toggle("on", !!(v||"").trim()); searchProds(v); }
 function toggleMSearch(){ var d=el("mSearchDrop"); if(!d)return; var willOpen=!d.classList.contains("open"); d.classList.toggle("open",willOpen); if(willOpen){ var mi=el("mSearchInput"), nv=el("navSearch"); if(mi){ if(nv)mi.value=nv.value; setTimeout(function(){ try{mi.focus();}catch(e){} },60); } } }
 function closeMSearch(){ var d=el("mSearchDrop"); if(d)d.classList.remove("open"); }
 /* ===== PRODUCT MODAL ===== */
