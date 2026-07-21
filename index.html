@@ -86,16 +86,17 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}button{fon
 .logo-word .t{color:var(--brand)}.logo-word .rest{color:var(--ink)}
 /* UTILITY BAR */
 .util-bar{background:var(--ink);color:#fff;font-size:12.5px;font-weight:500;overflow:hidden}
-.util-track{max-width:1300px;margin:0 auto;padding:9px 28px;display:flex;align-items:center;justify-content:center;gap:26px}
-.util-set{display:flex;align-items:center;gap:26px;flex-shrink:0}
-.util-set:nth-child(2){display:none}
+.util-track{width:max-content;margin:0;padding:9px 0;display:flex;align-items:center;justify-content:flex-start;gap:0;animation:utilScroll 38s linear infinite}
+.util-set{display:flex;align-items:center;gap:26px;flex-shrink:0;padding:0 13px}
+.util-set:nth-child(2){display:flex}
 .util-set span{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.82);white-space:nowrap}
 .util-set i{font-size:15px;color:#5ee3b6}
 .util-sep{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.25);flex-shrink:0}
+@media(hover:hover) and (pointer:fine){ .util-track:hover{animation-play-state:paused} }
+@media(prefers-reduced-motion:reduce){ .util-track{animation:none;width:auto;max-width:1300px;margin:0 auto;justify-content:center;flex-wrap:wrap;gap:12px 26px;padding:9px 28px} .util-set:nth-child(2){display:none} }
 @media(max-width:768px){
-  .util-track{padding:8px 0;justify-content:flex-start;gap:0;width:max-content;animation:utilScroll 20s linear infinite}
+  .util-track{padding:8px 0;animation-duration:20s}
   .util-set{gap:20px;padding:0 10px}
-  .util-set:nth-child(2){display:flex}
   .util-set span{font-size:11.5px}
 }
 @keyframes utilScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -197,6 +198,10 @@ section.first{padding-top:44px}
 .prod-priceblock{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:6px;row-gap:1px}
 .prod-price{font-family:var(--fd);font-weight:800;font-size:17.5px;color:var(--ink)}
 .prod-orig{font-size:12px;color:var(--muted);text-decoration:line-through;font-weight:400}
+.prod-offpct{flex-basis:100%;font-size:11px;font-weight:800;color:var(--brand-deep);margin-top:1px}
+.tag-hotdeal{background:linear-gradient(120deg,#f43f5e,#f97316)!important;color:#fff;box-shadow:0 3px 10px rgba(244,63,94,.35)}
+.tag-super{background:linear-gradient(120deg,#f59e0b,#eab308)!important;color:#fff}
+.tag-bigdeal{background:var(--amber)!important;color:#fff}
 .prod-add{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-deep);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .16s,color .16s;flex-shrink:0}
 .prod-add:hover{background:var(--brand);color:#fff}
 .prod-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
@@ -623,6 +628,12 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .wa-fab::before{content:"";position:absolute;inset:0;border-radius:50%;background:#25D366;opacity:.5;animation:waPulse 2.4s ease-out infinite;z-index:-1}
 @keyframes waPulse{0%{transform:scale(1);opacity:.5}70%,100%{transform:scale(1.7);opacity:0}}
 @media(max-width:768px){.wa-fab{width:52px;height:52px;font-size:27px;bottom:18px;right:18px}}
+/* BACK TO TOP */
+.totop-fab{position:fixed;bottom:96px;right:30px;width:46px;height:46px;border-radius:50%;background:var(--brand);color:#fff;border:2px solid #d4ff3f;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 22px rgba(10,125,94,.4);z-index:245;opacity:0;visibility:hidden;transform:translateY(12px) scale(.9);transition:opacity .3s,transform .3s,visibility .3s}
+.totop-fab.show{opacity:1;visibility:visible;transform:none}
+.totop-fab:active{transform:scale(.93)}
+@media(hover:hover) and (pointer:fine){.totop-fab:hover{background:var(--brand-deep);transform:translateY(-3px) scale(1.05)}}
+@media(max-width:768px){.totop-fab{bottom:80px;right:22px;width:44px;height:44px;font-size:21px}}
 /* MOBILE MENU */
 .mobile-menu{position:fixed;top:0;right:0;bottom:0;width:286px;background:#fff;z-index:301;transform:translateX(100%);transition:transform .3s;padding:22px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow-lg);overflow-y:auto}
 .mobile-menu.open{transform:translateX(0)}
@@ -651,7 +662,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .modal-fab.on{background:rgba(255,255,255,.96);border-color:transparent}
   /* mobile: heart on the image (top-left); a small glassy close stays pinned top-right while scrolling */
   .modal-topbar2{display:none}
-  .media-fabs{left:12px;right:12px;justify-content:space-between}
+  .media-fabs{position:static}
+  #modalWish{position:absolute;bottom:12px;right:12px;top:auto;left:auto;z-index:31}
   .media-fabs .modal-close{display:flex;position:fixed;top:12px;right:12px;z-index:420;width:34px;height:34px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(0,0,0,.16);color:var(--ink)}
   .media-fabs .modal-close .ti{font-size:16px}
   .media-fabs .modal-close:active{background:rgba(255,255,255,.92)}
@@ -1319,14 +1331,14 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <div class="util-bar"><div class="util-track" id="utilTrack">
   <div class="util-set">
     <span><i class="ti ti-truck-delivery"></i> Free shipping over ₹999</span><span class="util-sep"></span>
-    <span><i class="ti ti-shield-check"></i> 1-year warranty</span><span class="util-sep"></span>
+    <span><i class="ti ti-lock"></i> 100% secure payments</span><span class="util-sep"></span>
     <span><i class="ti ti-refresh"></i> 15-day easy returns</span><span class="util-sep"></span>
     <span><i class="ti ti-bolt"></i> 24-hour dispatch</span><span class="util-sep"></span>
     <span><i class="ti ti-headset"></i> 7-day human support</span>
   </div>
   <div class="util-set" aria-hidden="true">
     <span><i class="ti ti-truck-delivery"></i> Free shipping over ₹999</span><span class="util-sep"></span>
-    <span><i class="ti ti-shield-check"></i> 1-year warranty</span><span class="util-sep"></span>
+    <span><i class="ti ti-lock"></i> 100% secure payments</span><span class="util-sep"></span>
     <span><i class="ti ti-refresh"></i> 15-day easy returns</span><span class="util-sep"></span>
     <span><i class="ti ti-bolt"></i> 24-hour dispatch</span><span class="util-sep"></span>
     <span><i class="ti ti-headset"></i> 7-day human support</span>
@@ -1334,7 +1346,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 </div></div>
 <!-- NAV -->
 <nav><div class="nav-inner">
-  <a class="logo" onclick="scrollTop()">
+  <a class="logo" onclick="goTop()">
     <svg class="logo-mark" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="twipid"><rect x="4" y="4" width="36" height="36" rx="12" fill="#0ca678"/><path d="M22 12 V28 Q22 31.5 25.5 30.5" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="15" y1="17.5" x2="29" y2="17.5" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="31" cy="31" r="6" fill="#d4ff3f" stroke="#0ca678" stroke-width="2"/></svg>
     <span class="logo-word"><span class="t">t</span><span class="rest">wipid</span></span>
   </a>
@@ -1463,7 +1475,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       <div class="aval"><div class="aval-ic"><i class="ti ti-hand-finger"></i></div><div><h4>Curated, not crowded</h4><p>A tight edit of products worth your money.</p></div></div>
       <div class="aval"><div class="aval-ic"><i class="ti ti-heart-handshake"></i></div><div><h4>Honest by default</h4><p>Real specs, fair prices, no dark patterns.</p></div></div>
       <div class="aval"><div class="aval-ic"><i class="ti ti-rocket"></i></div><div><h4>Built in India</h4><p>Fast local dispatch and human support.</p></div></div>
-      <div class="aval"><div class="aval-ic"><i class="ti ti-shield-check"></i></div><div><h4>Buy with confidence</h4><p>Warranty & easy returns on everything.</p></div></div>
+      <div class="aval"><div class="aval-ic"><i class="ti ti-shield-check"></i></div><div><h4>Buy with confidence</h4><p>Easy 15-day returns on every order.</p></div></div>
     </div>
   </div>
   <div class="about-visual">
@@ -1483,7 +1495,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 <footer><div class="footer-inner">
   <div class="footer-top">
     <div class="footer-brand">
-      <a class="logo" onclick="scrollTop()"><svg class="logo-mark" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="12" fill="#0ca678"/><path d="M22 12 V28 Q22 31.5 25.5 30.5" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="15" y1="17.5" x2="29" y2="17.5" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="31" cy="31" r="6" fill="#d4ff3f" stroke="#0ca678" stroke-width="2"/></svg><span class="logo-word"><span class="t">t</span><span class="rest">wipid</span></span></a>
+      <a class="logo" onclick="goTop()"><svg class="logo-mark" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="12" fill="#0ca678"/><path d="M22 12 V28 Q22 31.5 25.5 30.5" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="15" y1="17.5" x2="29" y2="17.5" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="31" cy="31" r="6" fill="#d4ff3f" stroke="#0ca678" stroke-width="2"/></svg><span class="logo-word"><span class="t">t</span><span class="rest">wipid</span></span></a>
       <p>India's curated tech marketplace. Discover the future, delivered to your door.</p>
       <div class="footer-social">
         <a class="fsoc" href="https://www.facebook.com/profile.php?id=61591698672126" target="_blank" rel="noopener" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
@@ -1687,6 +1699,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 </div></div>
 <!-- WHATSAPP FLOATING BUTTON -->
 <a class="wa-fab" id="waFab" href="https://wa.me/918860931112?text=Hi%20twipid!%20I%20have%20a%20question." target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
+<button class="totop-fab" id="toTopFab" onclick="goTop()" aria-label="Back to top"><i class="ti ti-arrow-up"></i></button>
 <div class="toast" id="toast"></div>
 <script>
 /* ===== SUPABASE ===== */
@@ -1777,6 +1790,23 @@ function currentList(){
   else if(sortMode==="newest") list.sort(function(a,b){var ta=(a.tag==="New")?1:0,tb=(b.tag==="New")?1:0; if(tb-ta)return tb-ta; return (b.id||0)-(a.id||0);});
   return list;
 }
+/* Discount % derived from the two price fields the admin panel already has:
+   pct = round((1 - price/orig_price) * 100). No extra backend field needed. */
+function discountPct(p){
+  if(!p) return 0;
+  var pr=Number(p.price)||0, op=Number(p.orig_price)||0;
+  if(op>pr && pr>0) return Math.round((1-pr/op)*100);
+  return 0;
+}
+/* Auto deal-tier badge: >=60% = Hot Deal, 40-59% = Super Saver, 25-39% = X% Off.
+   When it applies it wins over the manual New/Hot/Deal tag. */
+function dealBadge(p){
+  var d=discountPct(p);
+  if(d>=60) return {label:"\uD83D\uDD25 Hot Deal", cls:"tag-hotdeal"};
+  if(d>=40) return {label:"Super Saver", cls:"tag-super"};
+  if(d>=25) return {label:d+"% Off", cls:"tag-bigdeal"};
+  return null;
+}
 function render(keep){
   view = currentList();
   if(!keep) shownCount = PAGE_SIZE;
@@ -1796,14 +1826,15 @@ function render(keep){
     var rt=ratingOf(p), rc2=reviewCountOf(p);
     return '<article class="prod-card'+(soldout?' soldout':'')+'" data-i="'+i+'">'
       +'<div class="prod-img" '+bg+'>'+media
-      +(p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':'')
+      +(function(){ var db=dealBadge(p); if(db) return '<span class="prod-tag '+db.cls+'">'+db.label+'</span>'; return p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':''; })()
       +'<button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
       +'<div class="prod-quick"><span><i class="ti ti-eye"></i> Quick View</span></div></div>'
       +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +(rc2>0?'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+' ('+rc2+')</span></div>':'')
       +(stockPill?'<div>'+stockPill+'</div>':'')
       +'<div class="prod-foot"><div class="prod-priceblock"><span class="prod-price">'+inr(p.price)+'</span>'
-      +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')+'</div>'
+      +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')
+      +(discountPct(p)>0?'<span class="prod-offpct">'+discountPct(p)+'% off</span>':'')+'</div>'
       +'<button class="prod-add" data-add="'+i+'" aria-label="Add to cart"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div></div></article>';
   }).join("");
   grid.querySelectorAll(".prod-card").forEach(function(c){ c.addEventListener("click",function(){ openModal(parseInt(this.dataset.i)); }); });
@@ -2239,7 +2270,9 @@ function openModalByProduct(p){
   if(imgs.length>1){ thumbs.style.display="flex"; thumbs.innerHTML=imgs.map(function(u,gi){return '<div class="gthumb'+(gi===0?' on':'')+'" onclick="setGalleryImg('+gi+')"><img src="'+esc(u)+'" alt="'+esc(p.name)+' view '+(gi+1)+'" loading="lazy" decoding="async"></div>';}).join(""); window._galleryImgs=imgs; }
   else { thumbs.style.display="none"; window._galleryImgs=imgs; }
   var ot=media.querySelector(".modal-tag"); if(ot)ot.remove();
-  if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; media.appendChild(t); }
+  var _mdb=dealBadge(p);
+  if(_mdb){ var t=document.createElement("span"); t.className="modal-tag "+_mdb.cls; t.textContent=_mdb.label; media.appendChild(t); }
+  else if(p.tag){ var t=document.createElement("span"); t.className="modal-tag"; t.style.background=p.tag==="Hot"?"var(--orange)":p.tag==="Deal"?"var(--amber)":"var(--brand)"; t.textContent=p.tag; media.appendChild(t); }
   var specs=Array.isArray(p.specs)?p.specs:(p.specs?String(p.specs).split(","):[]);
   var specHtml=specs.filter(Boolean).map(function(s){return '<span class="modal-spec">'+esc(s.trim())+'</span>';}).join("");
   el("modalSpecs").innerHTML=specHtml;
@@ -3634,7 +3667,16 @@ function subscribe(){
     .catch(function(err){ console.warn("subscribe failed:", err); done(); });
 }
 function scrollToId(id){ var e=el(id); if(e && e.scrollIntoView){ try{ e.scrollIntoView({behavior:"smooth"}); }catch(x){} } }
-function scrollTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+function goTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+/* show/hide the floating back-to-top button after scrolling ~1.2 screens */
+(function(){
+  var btn=document.getElementById("toTopFab");
+  if(!btn) return;
+  var ticking=false;
+  function upd(){ ticking=false; if(window.pageYOffset>window.innerHeight*1.2){ btn.classList.add("show"); } else { btn.classList.remove("show"); } }
+  window.addEventListener("scroll",function(){ if(!ticking){ ticking=true; requestAnimationFrame(upd); } },{passive:true});
+  upd();
+})();
 function showToast(msg){ var t=el("toast"); t.innerHTML='<i class="ti ti-circle-check"></i> '+esc(msg); t.classList.add("show"); clearTimeout(window._t); window._t=setTimeout(function(){t.classList.remove("show");},2400); }
 function comingSoon(name){ showInfo("ti-tools","Under Construction",(name||"This page")+" is coming soon. We're building it with care and it'll be ready shortly — thanks for your patience!"); }
 /* ===== CONTENT PAGES (FAQ / Shipping / Returns / Contact) ===== */
@@ -3644,7 +3686,7 @@ var CONTENT = {
     +'<details class="faq-q"><summary>What payment methods do you accept?</summary><div class="faq-a">We\'re launching with UPI, all major debit/credit cards, RuPay and Cash on Delivery. Online payments are being finalised — for now you can place test orders.</div></details>'
     +'<details class="faq-q"><summary>Can I cancel my order?</summary><div class="faq-a">Yes — you can cancel from “My Orders” any time before your order ships (while it\'s Pending or Processing). Prepaid amounts are refunded to your original payment method within 5–7 business days. Once shipped, use the Return option instead.</div></details>'
     +'<details class="faq-q"><summary>Can I return a product?</summary><div class="faq-a">Yes — within 15 days of delivery on most items, unused and in original packaging. Returns are free when the item is defective, damaged or wrong; for change-of-mind returns a flat ₹99 pickup fee applies. See our Returns page for full details.</div></details>'
-    +'<details class="faq-q"><summary>Do products come with a warranty?</summary><div class="faq-a">Every product carries the manufacturer\'s warranty (typically 1 year). The exact period is listed on each product page.</div></details>'
+    +'<details class="faq-q"><summary>What if my product has a defect?</summary><div class="faq-a">If an item arrives defective, damaged or not as described, we\'ll replace it or refund you in full — just raise a return within 15 days of delivery. Where a brand offers its own manufacturer warranty, any applicable terms are noted on that product\'s page.</div></details>'
     +'<details class="faq-q"><summary>Is it safe to shop on twipid?</summary><div class="faq-a">Absolutely. Your connection is secured with SSL, payments are processed by trusted gateways, and we never store your card details.</div></details>'
     +'<details class="faq-q"><summary>How do I track my order?</summary><div class="faq-a">Sign in and open “My Orders” from the account menu, or use the Track Order link in the footer. You\'ll see live status for every order.</div></details>'},
   terms:{ic:"ti-file-text",title:"Terms & Conditions",html:
