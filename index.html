@@ -672,7 +672,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* mobile: heart on the image (top-left); a small glassy close stays pinned top-right while scrolling */
   .modal-topbar2{display:none}
   .media-fabs{position:static}
-  #modalWish{position:absolute;bottom:12px;right:12px;top:auto;left:auto;z-index:31}
+  /* back bar replaced the floating X, so the heart takes the top-right corner */
+  #modalWish{position:absolute;top:12px;right:12px;bottom:auto;left:auto;z-index:31}
   .media-fabs .modal-close{display:flex;position:fixed;top:12px;right:12px;z-index:420;width:34px;height:34px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(0,0,0,.16);color:var(--ink)}
   .media-fabs .modal-close .ti{font-size:16px}
   .media-fabs .modal-close:active{background:rgba(255,255,255,.92)}
