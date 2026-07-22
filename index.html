@@ -970,7 +970,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .sec-tag{margin-bottom:6px;font-size:11px}
   .sec-title{font-size:21px;letter-spacing:-.4px;line-height:1.15}
   section{padding:30px 16px}
-  section.first{padding-top:20px}
+  section.first{padding-top:10px}
+  #categories{padding-bottom:14px}
+  .hc{margin-top:0}
   .prod-filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin-bottom:16px;gap:7px}
   .prod-filters::-webkit-scrollbar{display:none}
   .fbtn{flex-shrink:0;padding:8px 14px;font-size:13px}
@@ -1309,7 +1311,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* hide the chip strip on phones — categories live in the nav menu now.
      this also removes the mask-fade that was washing out the "All" chip. */
   .shopbar{display:none}
-  #products{padding-top:20px}
+  #products{padding-top:12px}
 }
 </style>
 </head>
@@ -1858,7 +1860,7 @@ function render(keep){
       +'<div class="prod-img" '+bg+'>'+media
       +(function(){ var db=dealBadge(p); if(db) return '<span class="prod-tag '+db.cls+'">'+db.label+'</span>'; return p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':''; })()
       +'<div class="prod-actions"><button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
-      +(isApparel(p)?'':'<button class="prod-add" data-add="'+i+'" aria-label="Add to cart"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button>')+'</div>'
+      +'<button class="prod-add" data-add="'+i+'" aria-label="'+(isApparel(p)?'Choose size':'Add to cart')+'"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div>'
       +'<div class="prod-quick"><span><i class="ti ti-eye"></i> Quick View</span></div></div>'
       +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +(rc2>0?'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+' ('+rc2+')</span></div>':'')
@@ -1868,7 +1870,7 @@ function render(keep){
       +(discountPct(p)>0?'<span class="prod-offpct">'+discountPct(p)+'% off</span>':'')+'</div></div></div></article>';
   }).join("");
   grid.querySelectorAll(".prod-card").forEach(function(c){ c.addEventListener("click",function(){ openModal(parseInt(this.dataset.i)); }); });
-  grid.querySelectorAll(".prod-add").forEach(function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); if(this.disabled){return;} addToCart(parseInt(this.dataset.add),1); }); });
+  grid.querySelectorAll(".prod-add").forEach(function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); if(this.disabled){return;} var _i=parseInt(this.dataset.add), _p=view[_i]; if(_p && isApparel(_p)){ openModal(_i); showToast("Please pick a size"); return; } addToCart(_i,1); }); });
   grid.querySelectorAll(".prod-wish").forEach(function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); toggleWish(parseInt(this.dataset.wish)); }); });
   renderLoadMore();
   renderActiveFilters();
