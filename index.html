@@ -333,7 +333,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .modal-media img{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:0}
 .modal-media i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
 .modal-img i.pic{font-size:120px;filter:drop-shadow(0 10px 22px rgba(12,22,17,.14))}
-.modal-tag{position:absolute;top:18px;left:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
+.modal-tag{position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:6px 13px;border-radius:100px;color:#fff}
 .modal-body{padding:0;overflow-y:auto;display:flex;flex-direction:column;min-height:0;max-height:90vh}
 /* desktop sticky bar: close pinned at top, product name fades in on scroll */
 .modal-topbar2{position:sticky;top:0;z-index:35;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 12px 28px;background:#fff;border-bottom:1px solid transparent;transition:border-color .2s}
@@ -2333,7 +2333,11 @@ function openModalByProduct(p){
   addRecent(p);
   // Fresh start on every open: gallery on first image (handled above), details scrolled to top,
   // default tab, quantity 1, star rating cleared, and review form emptied.
-  var mb=document.querySelector("#modalOv .modal-body"); if(mb) mb.scrollTop=0;
+  (function(){
+    var targets=[document.querySelector("#modalOv .modal-body"),document.querySelector("#modalOv .modal"),el("modalOv")];
+    function toTop(){ targets.forEach(function(x){ if(x) x.scrollTop=0; }); }
+    toTop(); requestAnimationFrame(toTop);
+  })();
   var rn=el("revName"), rt2=el("revTitle"), rb=el("revBody");
   if(rn)rn.value=""; if(rt2)rt2.value=""; if(rb)rb.value="";
   renderColors(p);
