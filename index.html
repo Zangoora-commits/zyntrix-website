@@ -1320,6 +1320,40 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .shopbar{display:none}
   #products{padding-top:12px}
 }
+
+/* ===== FULL-PAGE PRODUCT VIEW (converts the product popup into a page) ===== */
+#modalOv{position:fixed;inset:0;z-index:400;background:var(--bg);display:block;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:none}
+#modalOv.open{opacity:1;pointer-events:all}
+#modalOv .modal{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;width:100%;max-width:1180px;margin:0 auto;padding:0 28px 64px;background:transparent;border-radius:0;box-shadow:none;max-height:none;overflow:visible;transform:none}
+#modalOv .pp-bar{position:sticky;top:0;z-index:25;grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:14px 2px;margin-bottom:6px;background:var(--bg);border-bottom:1px solid var(--line)}
+#modalOv .pp-back{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14px;color:var(--ink2)}
+#modalOv .pp-back:hover{color:var(--brand-deep)}
+#modalOv .pp-crumb{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#modalOv .pp-crumb b{color:var(--ink);font-weight:700}
+#modalOv .modal-img{position:static;padding:0;background:transparent;display:block;align-self:start}
+#modalOv .modal-media,#modalOv .gallery-thumbs{display:none!important}
+#modalOv .pp-gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#modalOv .pp-gallery .pp-cell{aspect-ratio:3/4;background:#f5f6f5;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in}
+#modalOv .pp-gallery .pp-cell img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+#modalOv .pp-gallery .pp-cell:hover img{transform:scale(1.03)}
+#modalOv .modal-body{max-height:none;overflow:visible;position:sticky;top:66px;align-self:start;padding:0}
+#modalOv .modal-topbar2{display:none}
+#modalOv .modal-content{padding:0}
+.pp-offers{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
+.pp-offers h4{font-family:var(--fd);font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;display:flex;align-items:center;gap:7px}
+.pp-offers h4 i{color:var(--brand);font-size:16px}
+.pp-offer{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--ink2);line-height:1.5;padding:7px 0;border-top:1px dashed var(--line)}
+.pp-offer:first-of-type{border-top:none}
+.pp-offer i{color:var(--brand-deep);font-size:16px;margin-top:1px;flex-shrink:0}
+.pp-offer b{color:var(--ink)}
+@media(max-width:900px){
+  #modalOv .modal{grid-template-columns:1fr;gap:16px;padding:0 16px 48px}
+  #modalOv .modal-body{position:static;top:auto}
+}
+@media(max-width:560px){
+  #modalOv .pp-gallery{grid-template-columns:1fr}
+}
+  
 </style>
 </head>
 <body>
@@ -1590,7 +1624,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
   </div><div class="modal">
-  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div></div>
+  <div class="pp-bar"><button class="pp-back" onclick="closeProductPage()"><i class="ti ti-arrow-left"></i> Back</button><div class="pp-crumb" id="ppCrumb"></div></div>
+  <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div><div class="pp-gallery" id="ppGallery"></div></div>
   <div class="modal-body">
     <div class="modal-topbar2" id="modalTopbar2"><span class="mtb-name" id="modalTopName2">Product</span><button class="mtb-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div>
     <div class="modal-content">
@@ -1625,6 +1660,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
       </div>
       <div class="deliv-res" id="delivRes"></div>
     </div>
+    <div class="pp-offers" id="ppOffers"></div>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
       <div class="acc" id="accDesc">
@@ -3818,6 +3854,58 @@ document.addEventListener("click",function(e){
   ["#modalOv .modal-body","#modalOv .modal"].forEach(function(sel){ var e=document.querySelector(sel); if(e) e.addEventListener("scroll",syncTopName,{passive:true}); });
 })();
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModal(); closeCart(); closeWishlist(); closeOrders(); closeFilters(); closeMenu(); closeInfo(); closeAuth(); closeCheckout(); closeAcct(); closeCatMenu(); closeContent(); closePZoom(); closeLightbox(); closeSizeGuide(); closeEnq(); } });
+
+/* ===== FULL-PAGE PRODUCT VIEW ===== */
+function ppRenderGallery(p){
+  var box=el("ppGallery"); if(!box) return;
+  var imgs=(typeof imagesOf==="function")?imagesOf(p):[];
+  window._galleryImgs=imgs;
+  if(imgs.length){
+    box.innerHTML=imgs.map(function(u,i){
+      return '<div class="pp-cell" onclick="openProductZoom('+i+')"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'" loading="lazy" decoding="async"></div>';
+    }).join("");
+  } else {
+    var pair=(typeof catPair==="function")?catPair(p.category):["#eef3f0","#0ca678"];
+    box.innerHTML='<div class="pp-cell" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#fff,'+pair[0]+');cursor:default"><i class="ti '+(p.icon||"ti-box")+'" style="font-size:92px;color:'+pair[1]+'"></i></div>';
+  }
+}
+function ppRenderOffers(p){
+  var box=el("ppOffers"); if(!box) return;
+  var d=(typeof discountPct==="function")?discountPct(p):0;
+  var rows=[];
+  if(d>0) rows.push('<i class="ti ti-discount-2"></i><span><b>'+d+'% OFF</b> — this price already includes the discount.</span>');
+  rows.push('<i class="ti ti-truck-delivery"></i><span><b>Free shipping</b> on orders over ₹999.</span>');
+  rows.push('<i class="ti ti-building-bank"></i><span>Extra <b>10% off</b> on select bank cards, applied at payment.</span>');
+  rows.push('<i class="ti ti-cash"></i><span><b>Cash on Delivery</b> available.</span>');
+  rows.push('<i class="ti ti-refresh"></i><span><b>15-day</b> easy returns.</span>');
+  box.innerHTML='<h4><i class="ti ti-rosette-discount-check"></i> Best Offers</h4>'+rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("");
+}
+function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
+(function(){
+  if(typeof openModalByProduct!=="function" || typeof closeModal!=="function") return;
+  var _open=openModalByProduct, _close=closeModal;
+  window._ppPushed=false;
+  openModalByProduct=function(p){
+    _open(p);
+    try{ ppRenderGallery(p); }catch(e){}
+    try{ ppRenderOffers(p); }catch(e){}
+    try{ var cr=el("ppCrumb"); if(cr) cr.innerHTML=esc(prettyCat(p.category||""))+' <span style="opacity:.4">/</span> <b>'+esc(p.name)+'</b>'; }catch(e){}
+    try{ var h="#product="+encodeURIComponent(slug(p.name)); if(location.hash!==h){ history.pushState({pp:1},"",h); window._ppPushed=true; } }catch(e){}
+    var ov=el("modalOv"); if(ov) ov.scrollTop=0;
+  };
+  closeModal=function(){
+    var open=el("modalOv")&&el("modalOv").classList.contains("open");
+    _close();
+    try{ if(open && location.hash.indexOf("product=")>-1){ window._ppPushed=false; history.replaceState(null,"",location.pathname+location.search); } }catch(e){}
+  };
+  window.addEventListener("popstate",function(){
+    if(location.hash.indexOf("product=")<0){
+      var ov=el("modalOv");
+      if(ov && ov.classList.contains("open")){ window._ppPushed=false; _close(); }
+    }
+  });
+})();
+  
 </script>
 <script>
 /* ===== Hero carousel + Categories dropdown (added) ===== */
