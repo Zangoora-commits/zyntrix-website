@@ -198,6 +198,10 @@ section.first{padding-top:44px}
 .prod-rating{display:flex;align-items:center;gap:5px;margin-bottom:12px}
 .prod-stars{color:var(--amber);font-size:12px;letter-spacing:1px}
 .prod-rnum{font-size:11.5px;color:var(--muted);font-weight:500}
+.prod-rate{position:absolute;left:9px;bottom:9px;z-index:3;display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.72);backdrop-filter:blur(8px) saturate(1.3);-webkit-backdrop-filter:blur(8px) saturate(1.3);border:1px solid rgba(255,255,255,.55);border-radius:100px;padding:3px 9px 3px 7px;font-family:var(--fb);font-size:11.5px;font-weight:800;color:var(--ink);box-shadow:0 2px 8px rgba(12,22,17,.12);line-height:1.5}
+.prod-rate i{color:#f5a623;font-size:12px;line-height:1}
+.prod-rate .pr-c{font-weight:600;color:var(--ink2);font-size:10.5px}
+@media(max-width:480px){.prod-rate{left:7px;bottom:7px;font-size:11px;padding:3px 8px 3px 6px}.prod-rate .pr-c{display:none}}
 .prod-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:12px}
 .prod-priceblock{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:6px;row-gap:1px}
 .prod-price{font-family:var(--fd);font-weight:800;font-size:17.5px;color:var(--ink)}
@@ -668,7 +672,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* mobile: heart on the image (top-left); a small glassy close stays pinned top-right while scrolling */
   .modal-topbar2{display:none}
   .media-fabs{position:static}
-  #modalWish{position:absolute;bottom:12px;right:12px;top:auto;left:auto;z-index:31}
+  /* back bar replaced the floating X, so the heart takes the top-right corner */
+  #modalWish{position:absolute;top:12px;right:12px;bottom:auto;left:auto;z-index:31}
   .media-fabs .modal-close{display:flex;position:fixed;top:12px;right:12px;z-index:420;width:34px;height:34px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(0,0,0,.16);color:var(--ink)}
   .media-fabs .modal-close .ti{font-size:16px}
   .media-fabs .modal-close:active{background:rgba(255,255,255,.92)}
@@ -1321,24 +1326,67 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   #products{padding-top:12px}
 }
 
-/* ===== FULL-PAGE PRODUCT VIEW (converts the product popup into a page) ===== */
-#modalOv{position:fixed;inset:0;z-index:400;background:var(--bg);display:block;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:none}
-#modalOv.open{opacity:1;pointer-events:all}
-#modalOv .modal{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;width:100%;max-width:1180px;margin:0 auto;padding:0 28px 64px;background:transparent;border-radius:0;box-shadow:none;max-height:none;overflow:visible;transform:none}
-#modalOv .pp-bar{position:sticky;top:0;z-index:25;grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:14px 2px;margin-bottom:6px;background:var(--bg);border-bottom:1px solid var(--line)}
-#modalOv .pp-back{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14px;color:var(--ink2)}
-#modalOv .pp-back:hover{color:var(--brand-deep)}
-#modalOv .pp-crumb{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-#modalOv .pp-crumb b{color:var(--ink);font-weight:700}
-#modalOv .modal-img{position:static;padding:0;background:transparent;display:block;align-self:start}
-#modalOv .modal-media,#modalOv .gallery-thumbs{display:none!important}
-#modalOv .pp-gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-#modalOv .pp-gallery .pp-cell{aspect-ratio:3/4;background:#f5f6f5;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in}
-#modalOv .pp-gallery .pp-cell img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-#modalOv .pp-gallery .pp-cell:hover img{transform:scale(1.03)}
-#modalOv .modal-body{max-height:none;overflow:visible;position:sticky;top:66px;align-self:start;padding:0}
-#modalOv .modal-topbar2{display:none}
-#modalOv .modal-content{padding:0}
+.tp-fab{position:fixed;bottom:18px;right:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(150deg,#1dd99a,#0a7d5e);border:2px solid #d4ff3f;cursor:pointer;z-index:250;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(10,125,94,.42);transition:transform .18s;padding:0}
+.tp-fab svg{width:34px;height:34px;display:block}
+.tp-fab .tp-dot{position:absolute;top:1px;right:1px;width:13px;height:13px;border-radius:50%;background:#d4ff3f;border:2.5px solid #fff}
+@media(hover:hover) and (pointer:fine){.tp-fab:hover{transform:scale(1.07)}}
+.tp-panel{position:fixed;bottom:86px;right:18px;width:344px;max-width:calc(100vw - 36px);height:min(520px,calc(100vh - 150px));background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(12,22,17,.28);z-index:251;display:flex;flex-direction:column;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(14px) scale(.97);transition:opacity .24s,transform .24s,visibility .24s}
+.tp-panel.open{opacity:1;visibility:visible;transform:none}
+.tp-head{background:linear-gradient(150deg,#0e7a5b,#0a5f47);color:#fff;padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tp-head svg{width:32px;height:32px;flex-shrink:0}
+.tp-head h4{font-family:var(--fd);font-size:15px;font-weight:800;margin:0;letter-spacing:-.2px}
+.tp-head p{font-size:11px;opacity:.85;margin:2px 0 0;display:flex;align-items:center;gap:5px}
+.tp-head p::before{content:"";width:6px;height:6px;border-radius:50%;background:#d4ff3f}
+.tp-x{margin-left:auto;width:30px;height:30px;border-radius:9px;border:none;background:rgba(255,255,255,.16);color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tp-body{flex:1;overflow-y:auto;padding:14px;background:var(--paper);display:flex;flex-direction:column;gap:9px}
+.tp-msg{max-width:86%;padding:10px 13px;border-radius:15px;font-size:13.5px;line-height:1.5;word-wrap:break-word}
+.tp-msg.bot{background:#fff;color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.tp-msg.me{background:var(--brand);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.tp-act{align-self:flex-start;display:flex;flex-wrap:wrap;gap:6px;max-width:92%}
+.tp-act button{background:#fff;border:1.5px solid var(--brand);color:var(--brand-deep);border-radius:100px;padding:7px 12px;font-family:var(--fb);font-size:12px;font-weight:700;cursor:pointer}
+.tp-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;background:var(--paper);flex-shrink:0}
+.tp-chips button{background:#fff;border:1px solid var(--line2);border-radius:100px;padding:7px 11px;font-family:var(--fb);font-size:11.5px;font-weight:600;color:var(--ink2);cursor:pointer}
+.tp-foot{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:#fff;flex-shrink:0}
+.tp-foot input{flex:1;min-width:0;border:1px solid var(--line2);border-radius:11px;padding:10px 12px;font-family:var(--fb);font-size:15px;outline:none;color:var(--ink)}
+.tp-foot input:focus{border-color:var(--brand)}
+.tp-send{width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;border:none;cursor:pointer;font-size:17px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.tp-typing{align-self:flex-start;background:#fff;border:1px solid var(--line);border-radius:15px;border-bottom-left-radius:5px;display:flex;gap:4px;padding:13px 15px}
+.tp-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:tpBlink 1.2s infinite}
+.tp-typing span:nth-child(2){animation-delay:.2s}
+.tp-typing span:nth-child(3){animation-delay:.4s}
+@keyframes tpBlink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+@keyframes tpBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes tpWink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.12)}}
+@keyframes tpWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+@keyframes tpHop{0%{transform:scale(1)}35%{transform:scale(1.14) translateY(-5px)}70%{transform:scale(.96)}100%{transform:scale(1)}}
+@keyframes tpRing{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.5);opacity:0}}
+.tp-bob{animation:tpBob 2.8s ease-in-out infinite;transform-origin:120px 130px}
+.tp-eyes{animation:tpWink 5.5s ease-in-out infinite;transform-origin:120px 136px}
+.tp-fab::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #d4ff3f;animation:tpRing 2.6s ease-out infinite;pointer-events:none}
+.tp-fab.hop{animation:tpHop .5s ease-out}
+@media(hover:hover) and (pointer:fine){.tp-fab:hover .tp-bob{animation:tpWiggle .5s ease-in-out infinite}}
+@media(prefers-reduced-motion:reduce){.tp-bob,.tp-eyes,.tp-fab::after,.tp-fab.hop{animation:none}}
+body.tp-open .totop-fab{opacity:0;visibility:hidden}
+@media(max-width:560px){
+  .tp-panel{right:10px;left:10px;width:auto;max-width:none;bottom:80px;height:min(68vh,440px)}
+  .tp-fab{width:52px;height:52px;bottom:18px;right:18px}
+  .tp-fab svg{width:31px;height:31px}
+}
+/* ===== FULL-PAGE PRODUCT VIEW (Siraj) — DESKTOP ONLY =====
+   Below 901px the original centred product modal is used instead, so the
+   mobile experience (close button, image framing, scroll reset) is unchanged. */
+.pp-gallery{display:none}
+/* Back bar + Best Offers adopted for phones (Siraj's desktop pattern) */
+@media(max-width:900px){
+  .pp-bar{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:60;padding:11px 14px;margin:0;background:rgba(255,255,255,.94);backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);border-bottom:1px solid var(--line)}
+  .pp-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14.5px;color:var(--ink);padding:0 6px 0 0;min-height:42px;flex-shrink:0}
+  .pp-back i{font-size:19px}
+  .pp-crumb{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .pp-crumb b{color:var(--ink2);font-weight:700}
+  /* the bar replaces the floating X */
+  .media-fabs .modal-close{display:none}
+  .pp-offers{margin:16px 0 4px}
+}
 .pp-offers{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
 .pp-offers h4{font-family:var(--fd);font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;display:flex;align-items:center;gap:7px}
 .pp-offers h4 i{color:var(--brand);font-size:16px}
@@ -1346,14 +1394,26 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .pp-offer:first-of-type{border-top:none}
 .pp-offer i{color:var(--brand-deep);font-size:16px;margin-top:1px;flex-shrink:0}
 .pp-offer b{color:var(--ink)}
-@media(max-width:900px){
-  #modalOv .modal{grid-template-columns:1fr;gap:16px;padding:0 16px 48px}
-  #modalOv .modal-body{position:static;top:auto}
+@media(min-width:901px){
+  /* ===== FULL-PAGE PRODUCT VIEW (converts the product popup into a page) ===== */
+  #modalOv{position:fixed;inset:0;z-index:400;background:var(--bg);display:block;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:none}
+  #modalOv.open{opacity:1;pointer-events:all}
+  #modalOv .modal{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;width:100%;max-width:1180px;margin:0 auto;padding:0 28px 64px;background:transparent;border-radius:0;box-shadow:none;max-height:none;overflow:visible;transform:none}
+  #modalOv .pp-bar{position:sticky;top:0;z-index:25;grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:14px 2px;margin-bottom:6px;background:var(--bg);border-bottom:1px solid var(--line)}
+  #modalOv .pp-back{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14px;color:var(--ink2)}
+  #modalOv .pp-back:hover{color:var(--brand-deep)}
+  #modalOv .pp-crumb{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  #modalOv .pp-crumb b{color:var(--ink);font-weight:700}
+  #modalOv .modal-img{position:static;padding:0;background:transparent;display:block;align-self:start}
+  #modalOv .modal-media,#modalOv .gallery-thumbs{display:none!important}
+  #modalOv .pp-gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #modalOv .pp-gallery .pp-cell{aspect-ratio:3/4;background:#f5f6f5;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in}
+  #modalOv .pp-gallery .pp-cell img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+  #modalOv .pp-gallery .pp-cell:hover img{transform:scale(1.03)}
+  #modalOv .modal-body{max-height:none;overflow:visible;position:sticky;top:66px;align-self:start;padding:0}
+  #modalOv .modal-topbar2{display:none}
+  #modalOv .modal-content{padding:0}
 }
-@media(max-width:560px){
-  #modalOv .pp-gallery{grid-template-columns:1fr}
-}
-  
 </style>
 </head>
 <body>
@@ -1778,8 +1838,20 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   <div class="cmodal-body" id="contentBody"></div>
 </div></div>
 <!-- WHATSAPP FLOATING BUTTON -->
-<a class="wa-fab" id="waFab" href="https://wa.me/918860931112?text=Hi%20twipid!%20I%20have%20a%20question." target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
 <button class="totop-fab" id="toTopFab" onclick="goTop()" aria-label="Back to top"><i class="ti ti-arrow-up"></i></button>
+<button class="tp-fab" id="tpFab" onclick="tpToggle()" aria-label="Ask Tappy"><span class="tp-dot"></span></button>
+<div class="tp-panel" id="tpPanel" role="dialog" aria-label="Ask Tappy">
+  <div class="tp-head" id="tpHead">
+    <div><h4>Tappy</h4><p>Usually replies instantly</p></div>
+    <button class="tp-x" onclick="tpToggle()" aria-label="Close"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="tp-body" id="tpBody"></div>
+  <div class="tp-chips" id="tpChips"></div>
+  <div class="tp-foot">
+    <input type="text" id="tpInput" placeholder="Ask me anything..." autocomplete="off" onkeydown="if(event.key==='Enter')tpSend()">
+    <button class="tp-send" onclick="tpSend()" aria-label="Send"><i class="ti ti-send"></i></button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <script>
 /* ===== SUPABASE ===== */
@@ -1907,11 +1979,11 @@ function render(keep){
     return '<article class="prod-card'+(soldout?' soldout':'')+'" data-i="'+i+'">'
       +'<div class="prod-img" '+bg+'>'+media
       +(function(){ var db=dealBadge(p); if(db) return '<span class="prod-tag '+db.cls+'">'+db.label+'</span>'; return p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':''; })()
+      +(rc2>0?'<span class="prod-rate"><i class="ti ti-star-filled"></i>'+rt.toFixed(1)+'<span class="pr-c">('+rc2+')</span></span>':'')
       +'<div class="prod-actions"><button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
       +'<button class="prod-add" data-add="'+i+'" aria-label="'+(isApparel(p)?'Choose size':'Add to cart')+'"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div>'
       +'<div class="prod-quick"><span><i class="ti ti-eye"></i> Quick View</span></div></div>'
       +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
-      +(rc2>0?'<div class="prod-rating"><span class="prod-stars">'+starString(rt)+'</span><span class="prod-rnum">'+rt.toFixed(1)+' ('+rc2+')</span></div>':'')
       +(stockPill?'<div>'+stockPill+'</div>':'')
       +'<div class="prod-foot"><div class="prod-priceblock"><span class="prod-price">'+inr(p.price)+'</span>'
       +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')
@@ -3756,6 +3828,206 @@ function subscribe(){
 }
 function scrollToId(id){ var e=el(id); if(e && e.scrollIntoView){ try{ e.scrollIntoView({behavior:"smooth"}); }catch(x){} } }
 function goTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+/* ===== FULL-PAGE PRODUCT VIEW ===== */
+function ppRenderGallery(p){
+  var box=el("ppGallery"); if(!box) return;
+  var imgs=(typeof imagesOf==="function")?imagesOf(p):[];
+  window._galleryImgs=imgs;
+  if(imgs.length){
+    box.innerHTML=imgs.map(function(u,i){
+      return '<div class="pp-cell" onclick="openProductZoom('+i+')"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'" loading="lazy" decoding="async"></div>';
+    }).join("");
+  } else {
+    var pair=(typeof catPair==="function")?catPair(p.category):["#eef3f0","#0ca678"];
+    box.innerHTML='<div class="pp-cell" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#fff,'+pair[0]+');cursor:default"><i class="ti '+(p.icon||"ti-box")+'" style="font-size:92px;color:'+pair[1]+'"></i></div>';
+  }
+}
+function ppRenderOffers(p){
+  var box=el("ppOffers"); if(!box) return;
+  var d=(typeof discountPct==="function")?discountPct(p):0;
+  var rows=[];
+  if(d>0) rows.push('<i class="ti ti-discount-2"></i><span><b>'+d+'% OFF</b> — this price already includes the discount.</span>');
+  rows.push('<i class="ti ti-truck-delivery"></i><span><b>Free shipping</b> on orders over ₹999.</span>');
+  rows.push('<i class="ti ti-cash"></i><span><b>Cash on Delivery</b> available.</span>');
+  rows.push('<i class="ti ti-lock"></i><span><b>100% secure</b> payments \u2014 we never store card details.</span>');
+  rows.push('<i class="ti ti-refresh"></i><span><b>15-day</b> easy returns.</span>');
+  box.innerHTML='<h4><i class="ti ti-rosette-discount-check"></i> Best Offers</h4>'+rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("");
+}
+function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
+(function(){
+  if(typeof openModalByProduct!=="function" || typeof closeModal!=="function") return;
+  var _open=openModalByProduct, _close=closeModal;
+  window._ppPushed=false;
+  openModalByProduct=function(p){
+    _open(p);
+    try{ ppRenderGallery(p); }catch(e){}
+    try{ ppRenderOffers(p); }catch(e){}
+    try{ var cr=el("ppCrumb"); if(cr) cr.innerHTML=esc(prettyCat(p.category||""))+' <span style="opacity:.4">/</span> <b>'+esc(p.name)+'</b>'; }catch(e){}
+    try{ var h="#product="+encodeURIComponent(slug(p.name)); if(location.hash!==h){ history.pushState({pp:1},"",h); window._ppPushed=true; } }catch(e){}
+    var ov=el("modalOv"); if(ov) ov.scrollTop=0;
+  };
+  closeModal=function(){
+    var open=el("modalOv")&&el("modalOv").classList.contains("open");
+    _close();
+    try{ if(open && location.hash.indexOf("product=")>-1){ window._ppPushed=false; history.replaceState(null,"",location.pathname+location.search); } }catch(e){}
+  };
+  window.addEventListener("popstate",function(){
+    if(location.hash.indexOf("product=")<0){
+      var ov=el("modalOv");
+      if(ov && ov.classList.contains("open")){ window._ppPushed=false; _close(); }
+    }
+  });
+})();
+
+/* ===== TAPPY ASSISTANT =====================================================
+   Rule-based: every answer below is sourced from twipid's own policy pages,
+   so it can never invent a delivery window or a refund rule. Unmatched
+   questions hand off to a human instead of guessing. */
+function tpFace(){return '<svg viewBox="62 42 116 186" xmlns="http://www.w3.org/2000/svg"><g class="tp-bob">'
+  +'<path d="M120 52 V196 Q120 212 134 214" stroke="#fff" stroke-width="28" fill="none" stroke-linecap="round"/>'
+  +'<path d="M70 86 H170" stroke="#fff" stroke-width="22" fill="none" stroke-linecap="round"/>'
+  +'<g class="tp-eyes"><circle cx="106" cy="136" r="13" fill="#0a5f47"/><circle cx="134" cy="136" r="13" fill="#0a5f47"/>'
+  +'<circle cx="108.5" cy="137" r="6" fill="#fff"/><circle cx="136.5" cy="137" r="6" fill="#fff"/></g>'
+  +'<circle cx="99" cy="157" r="7" fill="#ff8a6a" opacity=".38"/><circle cx="141" cy="157" r="7" fill="#ff8a6a" opacity=".38"/>'
+  +'<path d="M108 162 q12 14 24 0" stroke="#0a5f47" stroke-width="5" fill="none" stroke-linecap="round"/>'
+  +'</g></svg>';}
+
+var TP_KB=[
+ {k:["defect","damaged","broken","wrong item","not as described","faulty"],
+  a:"Sorry about that. If something arrives defective, damaged or not as described, we'll replace it or refund you in full \u2014 just raise a return within 15 days of delivery.",
+  act:[["Start a return","content:returns"],["Talk to a human","wa"]]},
+ {k:["deliver","delivery","how long","dispatch","when will","courier","ship time","shipping charge","free shipping"],
+  a:"Most orders are dispatched within 24 hours and delivered in 2\u20135 business days, depending on your pincode. Shipping is free on orders over \u20b9999.",
+  act:[["Shipping policy","content:shipping"]]},
+ {k:["track","where is my order","order status","tracking"],
+  a:"Let's go find it! Every order lives under My Orders, and we email tracking details the moment your parcel ships.",
+  act:[["Open My Orders","orders"]]},
+ {k:["cancel"],
+  a:"You can cancel from My Orders any time before the order ships (while it's Pending or Processing). Prepaid amounts go back to your original payment method within 5\u20137 business days.",
+  act:[["Open My Orders","orders"]]},
+ {k:["return","refund","exchange","money back","send it back"],
+  a:"Returns are open for 15 days from delivery on most items, unused and in original packaging. It's free if the item is defective, damaged or wrong \u2014 for a change of mind there's a flat \u20b999 pickup fee.",
+  act:[["Returns & refunds","content:returns"]]},
+ {k:["pay","payment","upi","card","cod","cash on delivery","rupay","netbanking","emi"],
+  a:"We're launching with UPI, all major debit and credit cards, RuPay and Cash on Delivery. Online payments are being finalised at the moment.",
+  act:[["More FAQs","content:faq"]]},
+ {k:["safe","secure","trust","genuine","fake","legit","scam","authentic"],
+  a:"Payments run through a secure gateway and we never store your card details. We also curate \u2014 every brand is checked before it goes live, rather than listing everything under the sun.",
+  act:[["Privacy policy","content:privacy"]]},
+ {k:["size","fit","measurement","size guide","which size","sizing"],
+  a:"Sizes live on the product itself \u2014 open any item and pick your size before adding it to the cart. Where the brand supplies one, you'll also see a Size guide button next to the sizes.",
+  act:[]},
+ {k:["discount","offer","sale","coupon","deal","cheaper","price drop"],
+  a:"Discounts show right on the product card. A flame badge means 60% off or more, and everything else shows its exact % off next to the price.",
+  act:[]},
+ {k:["contact","human","talk","speak","call","phone","email","agent","someone"],
+  a:"Of course \u2014 real humans, 7 days a week, 9AM to 9PM IST. They're lovely, promise.",
+  act:[["WhatsApp us","wa"],["Email us","mail"],["Contact page","content:contact"]]},
+ {k:["who are you","what is twipid","about you","about twipid","tappy"],
+  a:"I'm Tappy, the friendly face round here! twipid is an India-focused curated marketplace \u2014 we stock a small number of brands we genuinely rate, instead of an endless catalogue.",
+  act:[]},
+ {k:["hi","hello","hey","yo","namaste","good morning","good evening"],
+  a:"Well hello! Lovely to see you. What can I help you with today?",
+  act:[]},
+ {k:["thank","thanks","great","nice","cool","awesome","perfect"],
+  a:"Anytime \u2014 that's what I'm here for! Shout if you need anything else.",
+  act:[]}
+];
+var TP_CHIPS=[["Delivery time","How long does delivery take?"],["Returns","What is your return policy?"],["Payment options","What payment methods do you accept?"],["Track my order","How do I track my order?"],["Talk to a human","I want to talk to a human"]];
+var tpStarted=false;
+
+function tpMatch(q){
+  q=(q||"").toLowerCase();
+  var best=null,bestScore=0;
+  for(var i=0;i<TP_KB.length;i++){
+    var sc=0;
+    for(var j=0;j<TP_KB[i].k.length;j++){ if(q.indexOf(TP_KB[i].k[j])>-1) sc+=TP_KB[i].k[j].length; }
+    if(sc>bestScore){ bestScore=sc; best=TP_KB[i]; }
+  }
+  return bestScore>0?best:null;
+}
+function tpAddMsg(txt,who){
+  var b=el("tpBody"); if(!b) return;
+  var d=document.createElement("div");
+  d.className="tp-msg "+(who==="me"?"me":"bot");
+  d.textContent=txt;
+  b.appendChild(d); b.scrollTop=b.scrollHeight;
+}
+function tpAddActions(acts){
+  if(!acts||!acts.length) return;
+  var b=el("tpBody");
+  var w=document.createElement("div"); w.className="tp-act";
+  acts.forEach(function(a){
+    var btn=document.createElement("button");
+    btn.textContent=a[0];
+    btn.addEventListener("click",function(){ tpDo(a[1]); });
+    w.appendChild(btn);
+  });
+  b.appendChild(w); b.scrollTop=b.scrollHeight;
+}
+function tpDo(a){
+  if(a==="orders"){ tpToggle(); if(typeof openOrders==="function") openOrders(); }
+  else if(a.indexOf("content:")===0){ tpToggle(); if(typeof openContent==="function") openContent(a.split(":")[1]); }
+  else if(a==="wa"){ window.open("https://wa.me/918860931112?text=Hi%20twipid!%20I%20have%20a%20question.","_blank","noopener"); }
+  else if(a==="mail"){ window.location.href="mailto:contact@twipid.com"; }
+}
+function tpTyping(on){
+  var b=el("tpBody"); if(!b) return;
+  var ex=document.getElementById("tpTyping");
+  if(on){ if(ex) return; var d=document.createElement("div"); d.className="tp-typing"; d.id="tpTyping";
+    d.innerHTML="<span></span><span></span><span></span>"; b.appendChild(d); b.scrollTop=b.scrollHeight; }
+  else if(ex){ ex.remove(); }
+}
+function tpReply(q){
+  tpTyping(true);
+  setTimeout(function(){
+    tpTyping(false);
+    var m=tpMatch(q);
+    if(m){ tpAddMsg(m.a,"bot"); tpAddActions(m.act); }
+    else{
+      tpAddMsg("Ooh, that one's got me stumped! I'd much rather pass you to a real human than guess at it.","bot");
+      tpAddActions([["WhatsApp us","wa"],["Email us","mail"],["Browse FAQs","content:faq"]]);
+    }
+  }, 420+Math.random()*280);
+}
+function tpSend(){
+  var i=el("tpInput"); if(!i) return;
+  var v=i.value.trim(); if(!v) return;
+  tpAddMsg(v,"me"); i.value=""; tpReply(v);
+}
+function tpChips(){
+  var c=el("tpChips"); if(!c) return;
+  c.innerHTML="";
+  TP_CHIPS.forEach(function(x){
+    var b=document.createElement("button");
+    b.textContent=x[0];
+    b.addEventListener("click",function(){ tpAddMsg(x[1],"me"); tpReply(x[1]); });
+    c.appendChild(b);
+  });
+}
+function tpToggle(){
+  var p=el("tpPanel"); if(!p) return;
+  var willOpen=!p.classList.contains("open");
+  p.classList.toggle("open",willOpen);
+  document.body.classList.toggle("tp-open",willOpen);
+  var fb=el("tpFab");
+  if(fb && willOpen){ fb.classList.remove("hop"); void fb.offsetWidth; fb.classList.add("hop"); }
+  if(willOpen){
+    if(!tpStarted){
+      tpStarted=true;
+      tpAddMsg("Hey there! I'm Tappy \u2014 twipid's little helper. Delivery, returns, payments, where your parcel's got to... ask away!","bot");
+      tpChips();
+    }
+    setTimeout(function(){ var i=el("tpInput"); if(i&&window.innerWidth>560){ try{i.focus();}catch(e){} } },260);
+  }
+}
+(function(){
+  var f=document.getElementById("tpFab");
+  if(f && !f.querySelector("svg")) f.insertAdjacentHTML("beforeend",tpFace());
+  var h=document.getElementById("tpHead");
+  if(h && !h.querySelector("svg")) h.insertAdjacentHTML("afterbegin",tpFace());
+})();
+
 /* show/hide the floating back-to-top button after scrolling ~1.2 screens */
 (function(){
   var btn=document.getElementById("toTopFab");
@@ -3854,58 +4126,6 @@ document.addEventListener("click",function(e){
   ["#modalOv .modal-body","#modalOv .modal"].forEach(function(sel){ var e=document.querySelector(sel); if(e) e.addEventListener("scroll",syncTopName,{passive:true}); });
 })();
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModal(); closeCart(); closeWishlist(); closeOrders(); closeFilters(); closeMenu(); closeInfo(); closeAuth(); closeCheckout(); closeAcct(); closeCatMenu(); closeContent(); closePZoom(); closeLightbox(); closeSizeGuide(); closeEnq(); } });
-
-/* ===== FULL-PAGE PRODUCT VIEW ===== */
-function ppRenderGallery(p){
-  var box=el("ppGallery"); if(!box) return;
-  var imgs=(typeof imagesOf==="function")?imagesOf(p):[];
-  window._galleryImgs=imgs;
-  if(imgs.length){
-    box.innerHTML=imgs.map(function(u,i){
-      return '<div class="pp-cell" onclick="openProductZoom('+i+')"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'" loading="lazy" decoding="async"></div>';
-    }).join("");
-  } else {
-    var pair=(typeof catPair==="function")?catPair(p.category):["#eef3f0","#0ca678"];
-    box.innerHTML='<div class="pp-cell" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#fff,'+pair[0]+');cursor:default"><i class="ti '+(p.icon||"ti-box")+'" style="font-size:92px;color:'+pair[1]+'"></i></div>';
-  }
-}
-function ppRenderOffers(p){
-  var box=el("ppOffers"); if(!box) return;
-  var d=(typeof discountPct==="function")?discountPct(p):0;
-  var rows=[];
-  if(d>0) rows.push('<i class="ti ti-discount-2"></i><span><b>'+d+'% OFF</b> — this price already includes the discount.</span>');
-  rows.push('<i class="ti ti-truck-delivery"></i><span><b>Free shipping</b> on orders over ₹999.</span>');
-  rows.push('<i class="ti ti-building-bank"></i><span>Extra <b>10% off</b> on select bank cards, applied at payment.</span>');
-  rows.push('<i class="ti ti-cash"></i><span><b>Cash on Delivery</b> available.</span>');
-  rows.push('<i class="ti ti-refresh"></i><span><b>15-day</b> easy returns.</span>');
-  box.innerHTML='<h4><i class="ti ti-rosette-discount-check"></i> Best Offers</h4>'+rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("");
-}
-function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
-(function(){
-  if(typeof openModalByProduct!=="function" || typeof closeModal!=="function") return;
-  var _open=openModalByProduct, _close=closeModal;
-  window._ppPushed=false;
-  openModalByProduct=function(p){
-    _open(p);
-    try{ ppRenderGallery(p); }catch(e){}
-    try{ ppRenderOffers(p); }catch(e){}
-    try{ var cr=el("ppCrumb"); if(cr) cr.innerHTML=esc(prettyCat(p.category||""))+' <span style="opacity:.4">/</span> <b>'+esc(p.name)+'</b>'; }catch(e){}
-    try{ var h="#product="+encodeURIComponent(slug(p.name)); if(location.hash!==h){ history.pushState({pp:1},"",h); window._ppPushed=true; } }catch(e){}
-    var ov=el("modalOv"); if(ov) ov.scrollTop=0;
-  };
-  closeModal=function(){
-    var open=el("modalOv")&&el("modalOv").classList.contains("open");
-    _close();
-    try{ if(open && location.hash.indexOf("product=")>-1){ window._ppPushed=false; history.replaceState(null,"",location.pathname+location.search); } }catch(e){}
-  };
-  window.addEventListener("popstate",function(){
-    if(location.hash.indexOf("product=")<0){
-      var ov=el("modalOv");
-      if(ov && ov.classList.contains("open")){ window._ppPushed=false; _close(); }
-    }
-  });
-})();
-  
 </script>
 <script>
 /* ===== Hero carousel + Categories dropdown (added) ===== */
