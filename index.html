@@ -1354,6 +1354,17 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .tp-typing span:nth-child(2){animation-delay:.2s}
 .tp-typing span:nth-child(3){animation-delay:.4s}
 @keyframes tpBlink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+@keyframes tpBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes tpWink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.12)}}
+@keyframes tpWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+@keyframes tpHop{0%{transform:scale(1)}35%{transform:scale(1.14) translateY(-5px)}70%{transform:scale(.96)}100%{transform:scale(1)}}
+@keyframes tpRing{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.5);opacity:0}}
+.tp-bob{animation:tpBob 2.8s ease-in-out infinite;transform-origin:120px 130px}
+.tp-eyes{animation:tpWink 5.5s ease-in-out infinite;transform-origin:120px 136px}
+.tp-fab::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #d4ff3f;animation:tpRing 2.6s ease-out infinite;pointer-events:none}
+.tp-fab.hop{animation:tpHop .5s ease-out}
+@media(hover:hover) and (pointer:fine){.tp-fab:hover .tp-bob{animation:tpWiggle .5s ease-in-out infinite}}
+@media(prefers-reduced-motion:reduce){.tp-bob,.tp-eyes,.tp-fab::after,.tp-fab.hop{animation:none}}
 body.tp-open .totop-fab{opacity:0;visibility:hidden}
 @media(max-width:560px){
   .tp-panel{right:10px;left:10px;width:auto;max-width:none;bottom:80px;height:min(68vh,440px)}
@@ -3777,12 +3788,14 @@ function goTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
    Rule-based: every answer below is sourced from twipid's own policy pages,
    so it can never invent a delivery window or a refund rule. Unmatched
    questions hand off to a human instead of guessing. */
-function tpFace(){return '<svg viewBox="62 42 116 186" xmlns="http://www.w3.org/2000/svg">'
+function tpFace(){return '<svg viewBox="62 42 116 186" xmlns="http://www.w3.org/2000/svg"><g class="tp-bob">'
   +'<path d="M120 52 V196 Q120 212 134 214" stroke="#fff" stroke-width="28" fill="none" stroke-linecap="round"/>'
   +'<path d="M70 86 H170" stroke="#fff" stroke-width="22" fill="none" stroke-linecap="round"/>'
-  +'<circle cx="106" cy="138" r="13" fill="#0a5f47"/><circle cx="134" cy="138" r="13" fill="#0a5f47"/>'
-  +'<circle cx="108" cy="139" r="6" fill="#fff"/><circle cx="136" cy="139" r="6" fill="#fff"/>'
-  +'<path d="M111 166 q9 9 18 0" stroke="#0a5f47" stroke-width="4.5" fill="none" stroke-linecap="round"/></svg>';}
+  +'<g class="tp-eyes"><circle cx="106" cy="136" r="13" fill="#0a5f47"/><circle cx="134" cy="136" r="13" fill="#0a5f47"/>'
+  +'<circle cx="108.5" cy="137" r="6" fill="#fff"/><circle cx="136.5" cy="137" r="6" fill="#fff"/></g>'
+  +'<circle cx="99" cy="157" r="7" fill="#ff8a6a" opacity=".38"/><circle cx="141" cy="157" r="7" fill="#ff8a6a" opacity=".38"/>'
+  +'<path d="M108 162 q12 14 24 0" stroke="#0a5f47" stroke-width="5" fill="none" stroke-linecap="round"/>'
+  +'</g></svg>';}
 
 var TP_KB=[
  {k:["defect","damaged","broken","wrong item","not as described","faulty"],
@@ -3792,7 +3805,7 @@ var TP_KB=[
   a:"Most orders are dispatched within 24 hours and delivered in 2\u20135 business days, depending on your pincode. Shipping is free on orders over \u20b9999.",
   act:[["Shipping policy","content:shipping"]]},
  {k:["track","where is my order","order status","tracking"],
-  a:"You can follow every order under My Orders \u2014 and we email tracking details as soon as your parcel ships.",
+  a:"Let's go find it! Every order lives under My Orders, and we email tracking details the moment your parcel ships.",
   act:[["Open My Orders","orders"]]},
  {k:["cancel"],
   a:"You can cancel from My Orders any time before the order ships (while it's Pending or Processing). Prepaid amounts go back to your original payment method within 5\u20137 business days.",
@@ -3813,16 +3826,16 @@ var TP_KB=[
   a:"Discounts show right on the product card. A flame badge means 60% off or more, and everything else shows its exact % off next to the price.",
   act:[]},
  {k:["contact","human","talk","speak","call","phone","email","agent","someone"],
-  a:"Happy to pass you to a human \u2014 we're around 7 days a week, 9AM to 9PM IST.",
+  a:"Of course \u2014 real humans, 7 days a week, 9AM to 9PM IST. They're lovely, promise.",
   act:[["WhatsApp us","wa"],["Email us","mail"],["Contact page","content:contact"]]},
  {k:["who are you","what is twipid","about you","about twipid","tappy"],
-  a:"I'm Tappy, twipid's little helper. twipid is an India-focused curated marketplace \u2014 we stock a small number of brands we actually rate, instead of an endless catalogue.",
+  a:"I'm Tappy, the friendly face round here! twipid is an India-focused curated marketplace \u2014 we stock a small number of brands we genuinely rate, instead of an endless catalogue.",
   act:[]},
  {k:["hi","hello","hey","yo","namaste","good morning","good evening"],
-  a:"Hey! I'm Tappy. Ask me about delivery, returns, payments or tracking an order.",
+  a:"Well hello! Lovely to see you. What can I help you with today?",
   act:[]},
  {k:["thank","thanks","great","nice","cool","awesome","perfect"],
-  a:"Anytime. Shout if you need anything else.",
+  a:"Anytime \u2014 that's what I'm here for! Shout if you need anything else.",
   act:[]}
 ];
 var TP_CHIPS=[["Delivery time","How long does delivery take?"],["Returns","What is your return policy?"],["Payment options","What payment methods do you accept?"],["Track my order","How do I track my order?"],["Talk to a human","I want to talk to a human"]];
@@ -3877,7 +3890,7 @@ function tpReply(q){
     var m=tpMatch(q);
     if(m){ tpAddMsg(m.a,"bot"); tpAddActions(m.act); }
     else{
-      tpAddMsg("I don't have a confident answer for that one \u2014 I'd rather hand you to a human than guess.","bot");
+      tpAddMsg("Ooh, that one's got me stumped! I'd much rather pass you to a real human than guess at it.","bot");
       tpAddActions([["WhatsApp us","wa"],["Email us","mail"],["Browse FAQs","content:faq"]]);
     }
   }, 420+Math.random()*280);
@@ -3902,10 +3915,12 @@ function tpToggle(){
   var willOpen=!p.classList.contains("open");
   p.classList.toggle("open",willOpen);
   document.body.classList.toggle("tp-open",willOpen);
+  var fb=el("tpFab");
+  if(fb && willOpen){ fb.classList.remove("hop"); void fb.offsetWidth; fb.classList.add("hop"); }
   if(willOpen){
     if(!tpStarted){
       tpStarted=true;
-      tpAddMsg("Hi! I'm Tappy. I can help with delivery, returns, payments and tracking \u2014 what do you need?","bot");
+      tpAddMsg("Hey there! I'm Tappy \u2014 twipid's little helper. Delivery, returns, payments, where your parcel's got to... ask away!","bot");
       tpChips();
     }
     setTimeout(function(){ var i=el("tpInput"); if(i&&window.innerWidth>560){ try{i.focus();}catch(e){} } },260);
