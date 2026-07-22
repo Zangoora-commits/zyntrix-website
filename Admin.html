@@ -603,11 +603,19 @@ input,select,textarea,button{font-family:var(--font-body)}
       <!-- ===== CLASSIFICATION (powers smart filters) ===== -->
       <div class="modal-grid full">
         <div style="border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:16px;background:#fafafa">
-          <div style="font-weight:800;font-size:14px;margin-bottom:4px">Classification (optional)</div>
-          <div style="font-size:12.5px;color:#6b7280;margin-bottom:14px">These power the store's smart filters. Type = the product kind (Headphones, T-Shirt, Kurta). Occasion/Style = Casual, Formal, Ethnic, Sports, etc. Leave blank if not relevant.</div>
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px">Classification &amp; search (optional)</div>
+          <div style="font-size:12.5px;color:#6b7280;margin-bottom:14px">These power the store's smart filters <b>and</b> what customers can find by searching. Type = the product kind or cut (Round Neck, Collared, Headphones). Occasion/Style = Casual, Formal, Ethnic, Sports. Leave blank if not relevant.</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div><label class="field-label">Type</label><input class="field-input" type="text" id="pType" placeholder="e.g. Headphones, T-Shirt, Kurta"></div>
+            <div><label class="field-label">Type</label><input class="field-input" type="text" id="pType" placeholder="e.g. Round Neck, Collared, Headphones"></div>
             <div><label class="field-label">Occasion / Style</label><input class="field-input" type="text" id="pOccasion" placeholder="e.g. Casual, Formal, Ethnic"></div>
+            <div><label class="field-label">Fit</label><input class="field-input" type="text" id="pFit" placeholder="e.g. Oversized, Slim, Regular"></div>
+            <div><label class="field-label">Material</label><input class="field-input" type="text" id="pMaterial" placeholder="e.g. Cotton, Linen, Denim"></div>
+            <div><label class="field-label">Pattern</label><input class="field-input" type="text" id="pPattern" placeholder="e.g. Printed, Solid, Striped"></div>
+          </div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px dashed #e5e7eb">
+            <label class="field-label">Search keywords</label>
+            <input class="field-input" type="text" id="pKeywords" placeholder="round neck t shirt casual tee half sleeve streetwear summer">
+            <div style="font-size:12px;color:#6b7280;margin-top:6px">Words a customer might actually type, separated by spaces. Add the phrases your product <b>name doesn't already contain</b> &mdash; this is what makes a search like &ldquo;round neck t shirt&rdquo; find this item. No need to repeat the name, brand or category; those are searched automatically.</div>
           </div>
         </div>
       </div>
@@ -1218,7 +1226,8 @@ function openAddProduct() {
   editingId = null;
   setText("modalTitle","Add New Product");
   ["pName","pBrand","pPrice","pOrigPrice","pStock","pSku","pShortDesc","pDesc","pSpecs","pVideo","pCommission","pSubcat",
-   "pColor","pColorHex","pStyleGroup","pSizeGuide","pWeight","pDimL","pDimB","pDimH","pHsn","pGstRate","pType","pOccasion"].forEach(function(id){
+   "pColor","pColorHex","pStyleGroup","pSizeGuide","pWeight","pDimL","pDimB","pDimH","pHsn","pGstRate","pType","pOccasion",
+   "pFit","pMaterial","pPattern","pKeywords"].forEach(function(id){
     var e=el(id); if(e){ e.value=""; e.style.borderColor=""; }
   });
   setSizeChecks([]); syncSizeStock({});
@@ -1244,7 +1253,8 @@ function editProduct(i) {
     pColor:p.color||"", pColorHex:p.color_hex||"", pStyleGroup:p.style_group||"",
     pSizeGuide:p.size_guide||"", pWeight:p.weight_g||"", pDimL:p.dim_l_cm||"",
     pDimB:p.dim_b_cm||"", pDimH:p.dim_h_cm||"", pHsn:p.hsn||"", pGstRate:p.gst_rate||"",
-    pType:p.type||"", pOccasion:p.occasion||""};
+    pType:p.type||"", pOccasion:p.occasion||"",
+    pFit:p.fit||"", pMaterial:p.material||"", pPattern:p.pattern||"", pKeywords:p.keywords||""};
   Object.keys(fields).forEach(function(fid){
     var e=el(fid); if(e){ var v=fields[fid]; e.value=(v===undefined||v===null)?"":v; e.style.borderColor=""; }
   });
@@ -1376,6 +1386,10 @@ function saveProduct() {
   var gstRate    = val("pGstRate").trim();
   var pType      = val("pType").trim();
   var pOccasion  = val("pOccasion").trim();
+  var pFit       = val("pFit").trim();
+  var pMaterial  = val("pMaterial").trim();
+  var pPattern   = val("pPattern").trim();
+  var pKeywords  = val("pKeywords").trim().replace(/\s+/g," ");
   // Reset borders
   ["pName","pBrand","pPrice","pCategory"].forEach(function(id){
     var e=el(id); if(e) e.style.borderColor="";
@@ -1420,7 +1434,11 @@ function saveProduct() {
     hsn:         hsn || null,
     gst_rate:    gstRate ? Number(gstRate) : null,
     type:        pType || null,
-    occasion:    pOccasion || null
+    occasion:    pOccasion || null,
+    fit:         pFit || null,
+    material:    pMaterial || null,
+    pattern:     pPattern || null,
+    keywords:    pKeywords || null
   };
   // Build the image gallery: newly uploaded images replace the gallery; otherwise keep existing.
   var gallery;
