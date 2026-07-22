@@ -1904,12 +1904,38 @@ function reviewCountOf(p){ var k=keyOf(p); if(reviewCache[k]&&reviewCache[k].cou
 function starString(r){ var full=Math.round(r); return "★★★★★".slice(0,full)+"☆☆☆☆☆".slice(0,5-full); }
 function imagesOf(p){ var arr=[]; if(Array.isArray(p.images)) arr=p.images.slice(); else if(p.images) arr=String(p.images).split("|").map(function(s){return s.trim();}); if(p.image_url) arr.unshift(p.image_url); return arr.filter(Boolean).map(function(u){return String(u).replace(/^http:/i,"https:");}); }
 function stockOf(p){ return (p.stock===undefined||p.stock===null)?null:Number(p.stock); }
+
+/* Review counts live in the reviews table, not on the product row, so the grid
+   had no way to know them. Pull the aggregates once at load for every product. */
+function loadAllReviewStats(){
+  if(!db) return;
+  db.from("reviews").select("product_key,rating,status")
+    .then(function(r){
+      if(r.error || !r.data || !r.data.length) return;
+      var agg={};
+      r.data.forEach(function(x){
+        if(x.status && x.status!=="visible") return;      /* respect moderation */
+        var k=x.product_key; if(!k) return;
+        if(!agg[k]) agg[k]={sum:0,count:0};
+        agg[k].sum+=Number(x.rating)||0; agg[k].count++;
+      });
+      var touched=false;
+      Object.keys(agg).forEach(function(k){
+        var a=agg[k]; if(!a.count) return;
+        var prev=reviewCache[k];
+        /* keep a full list if the modal already fetched one */
+        reviewCache[k]={avg:a.sum/a.count, count:a.count, list:(prev&&prev.list)?prev.list:[]};
+        touched=true;
+      });
+      if(touched) render(true);
+    }).catch(function(){});
+}
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", function(){
   buildCategoryChips(); buildFooterCats(); render(); updateCart(); updateWishBadge(); buildBrandChips(); renderRecent();
   if(db){
     db.from("products").select("*").eq("status","active").order("created_at",{ascending:false})
-      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); buildFooterCats(); render(); buildBrandChips(); if(window.rebuildCatDropdown) window.rebuildCatDropdown(); } handleDeepLink(); }).catch(function(){ handleDeepLink(); });
+      .then(function(r){ if(!r.error && r.data && r.data.length){ products=r.data; buildCategoryChips(); buildFooterCats(); render(); buildBrandChips(); if(window.rebuildCatDropdown) window.rebuildCatDropdown(); } loadAllReviewStats(); handleDeepLink(); }).catch(function(){ handleDeepLink(); });
     db.auth.getSession().then(function(r){ if(r.data&&r.data.session){ setUser(r.data.session.user); } }).catch(function(){});
     db.auth.onAuthStateChange(function(_e,s){ setUser(s?s.user:null); });
   } else { handleDeepLink(); }
@@ -2033,7 +2059,7 @@ function dealBadge(p){
   var d=discountPct(p);
   if(d>=60) return {label:'<i class="ti ti-flame"></i><span class="tag-tx">Hot Deal</span>', cls:"tag-hotdeal"};
   if(d>=40) return {label:'<span class="tag-nm">-'+d+'%</span>', cls:"tag-super"};
-  if(d>=25) return {label:'<span class="tag-nm">-'+d+'%</span>', cls:"tag-bigdeal"};
+  if(d>=1)  return {label:'<span class="tag-nm">-'+d+'%</span>', cls:"tag-bigdeal"};
   return null;
 }
 function render(keep){
