@@ -1874,10 +1874,10 @@ var DEMO = [
   {name:"SnapPro 4K Action Cam",brand:"SnapPro",category:"Cameras",price:8999,orig_price:13500,icon:"ti-camera",tag:"Hot",stock:9,rating:4.7,reviews:96,desc:"Stabilized 4K60 capture, waterproof to 10m without a case, front screen for vlogging.",specs:["4K60","HyperSteady","Waterproof 10m","Front Screen","Wi-Fi"]},
   {name:"KeyForge Mechanical Keyboard",brand:"ForgeTech",category:"Computing",subcategory:"Keyboards",price:5499,orig_price:7999,icon:"ti-keyboard",tag:"New",stock:18,rating:4.8,reviews:142,desc:"75% hot-swappable mechanical keyboard with gasket mount and tri-mode wireless.",specs:["Hot-Swap","Gasket Mount","RGB","Tri-Mode","PBT Keycaps"]},
   {name:"VoltCore 20K Power Bank",brand:"VoltCore",category:"Power",price:2799,orig_price:4000,icon:"ti-battery-charging",tag:"Deal",stock:27,rating:4.4,reviews:69,desc:"20,000mAh with 65W USB-C output that can even charge a laptop. Charges 3 devices at once.",specs:["20000mAh","65W PD","3 Ports","Laptop Charge","LED Display"]},
-  {name:"Lunar Tides Oversized Tee",brand:"SKA Clothing",category:"Apparel",subcategory:"T-Shirts",price:599,orig_price:1799,icon:"ti-shirt",tag:"Deal",rating:4.7,reviews:0,sizes:["S","M","L","XL"],size_stock:{S:6,M:4,L:0,XL:9},desc:"Heavyweight 240 GSM cotton oversized tee with a soft-hand celestial print. Pre-shrunk, unisex fit.",specs:["240 GSM","100% Cotton","Oversized Fit","Screen Print"]},
-  {name:"Space Current Graphic Tee",brand:"SKA Clothing",category:"Apparel",subcategory:"T-Shirts",price:1799,icon:"ti-shirt",tag:"New",rating:4.6,reviews:0,sizes:["S","M","L","XL","XXL"],size_stock:{S:0,M:7,L:5,XL:3,XXL:2},desc:"All-over sublimated nebula print on a breathable poly-cotton blend. Colour-locked, fade-resistant.",specs:["Poly-Cotton","All-Over Print","Regular Fit","Machine Wash"]},
-  {name:"Meridian Linen Shirt",brand:"SKA Clothing",category:"Apparel",subcategory:"Shirts",price:1499,orig_price:2499,icon:"ti-hanger",tag:"New",rating:4.5,reviews:0,sizes:["S","M","L","XL"],size_stock:{S:4,M:6,L:5,XL:0},desc:"Breathable 100% linen half-sleeve shirt with a relaxed collar — made for Indian summers.",specs:["100% Linen","Half Sleeve","Relaxed Fit","Breathable"]},
-  {name:"Trailhead Jogger Trousers",brand:"SKA Clothing",category:"Apparel",subcategory:"Trousers",price:1299,orig_price:2199,icon:"ti-shirt-sport",tag:"Deal",rating:4.4,reviews:0,sizes:["M","L","XL","XXL"],size_stock:{M:8,L:6,XL:4,XXL:5},desc:"Tapered French-terry joggers with zip pockets and an elastic drawcord waist.",specs:["French Terry","Zip Pockets","Tapered","Drawcord Waist"]}
+  {type:"Round Neck",fit:"Oversized",occasion:"Casual",material:"Cotton",pattern:"Printed",keywords:"round neck t shirt casual tee half sleeve streetwear summer",name:"Lunar Tides Oversized Tee",brand:"SKA Clothing",category:"Apparel",subcategory:"T-Shirts",price:599,orig_price:1799,icon:"ti-shirt",tag:"Deal",rating:4.7,reviews:0,sizes:["S","M","L","XL"],size_stock:{S:6,M:4,L:0,XL:9},desc:"Heavyweight 240 GSM cotton oversized tee with a soft-hand celestial print. Pre-shrunk, unisex fit.",specs:["240 GSM","100% Cotton","Oversized Fit","Screen Print"]},
+  {type:"Round Neck",fit:"Regular",occasion:"Casual",material:"Cotton",pattern:"Graphic",keywords:"round neck t shirt casual graphic tee half sleeve printed",name:"Space Current Graphic Tee",brand:"SKA Clothing",category:"Apparel",subcategory:"T-Shirts",price:1799,icon:"ti-shirt",tag:"New",rating:4.6,reviews:0,sizes:["S","M","L","XL","XXL"],size_stock:{S:0,M:7,L:5,XL:3,XXL:2},desc:"All-over sublimated nebula print on a breathable poly-cotton blend. Colour-locked, fade-resistant.",specs:["Poly-Cotton","All-Over Print","Regular Fit","Machine Wash"]},
+  {type:"Collared",fit:"Regular",occasion:"Formal",material:"Linen",pattern:"Solid",keywords:"formal shirt full sleeve collared office linen plain",name:"Meridian Linen Shirt",brand:"SKA Clothing",category:"Apparel",subcategory:"Shirts",price:1499,orig_price:2499,icon:"ti-hanger",tag:"New",rating:4.5,reviews:0,sizes:["S","M","L","XL"],size_stock:{S:4,M:6,L:5,XL:0},desc:"Breathable 100% linen half-sleeve shirt with a relaxed collar — made for Indian summers.",specs:["100% Linen","Half Sleeve","Relaxed Fit","Breathable"]},
+  {type:"Jogger",fit:"Relaxed",occasion:"Casual",material:"Cotton Blend",pattern:"Solid",keywords:"joggers track pants casual bottoms elasticated drawstring",name:"Trailhead Jogger Trousers",brand:"SKA Clothing",category:"Apparel",subcategory:"Trousers",price:1299,orig_price:2199,icon:"ti-shirt-sport",tag:"Deal",rating:4.4,reviews:0,sizes:["M","L","XL","XXL"],size_stock:{M:8,L:6,XL:4,XXL:5},desc:"Tapered French-terry joggers with zip pockets and an elastic drawcord waist.",specs:["French Terry","Zip Pockets","Tapered","Drawcord Waist"]}
 ];
 /* ===== STATE ===== */
 var products = DEMO.slice(), view = [];
@@ -1918,13 +1918,87 @@ function handleDeepLink(){
   var m=(location.hash||"").match(/product=([^&]+)/);
   if(m){ var s=decodeURIComponent(m[1]); var idx=products.findIndex(function(p){return slug(p.name)===s||keyOf(p)===s;}); if(idx>=0){ view=products.slice(); openModalByProduct(products[idx]); } }
 }
+
+/* ===== SEARCH ENGINE ======================================================
+   Works the way large storefronts do:
+   1. HAYSTACK  - every searchable field on the product, not just the name.
+   2. NORMALISE - punctuation and case stripped, so "T-Shirts" == "t shirt".
+   3. TOKENS    - every word in the query must match somewhere (AND, not OR),
+                  which is what makes "round neck t shirt" work.
+   4. SYNONYMS  - tee/t-shirt/tshirt, pants/trousers, earbuds/tws, etc.
+   5. RANKING   - name beats category beats attributes beats description. */
+var SEARCH_SYN={
+  tshirt:["tshirt","tee","tees"], tee:["tee","tshirt"], shirt:["shirt","shirts"],
+  pant:["pant","pants","trouser","trousers","bottoms"], trouser:["trouser","trousers","pant","pants"],
+  jeans:["jeans","denim"], hoodie:["hoodie","sweatshirt"], sweatshirt:["sweatshirt","hoodie"],
+  jacket:["jacket","outerwear","coat"], short:["short","shorts"],
+  joggers:["jogger","joggers","trackpants","track pants"],
+  roundneck:["roundneck","round neck","crew neck","crewneck"], vneck:["vneck","v neck"],
+  fullsleeve:["fullsleeve","full sleeve","long sleeve"], halfsleeve:["halfsleeve","half sleeve","short sleeve"],
+  oversized:["oversized","oversize"], slimfit:["slimfit","slim fit","fitted"],
+  cancelling:["cancelling","cancellation","anc","noise cancelling"], cancellation:["cancellation","cancelling","anc"],
+  earbuds:["earbud","earbuds","tws","earphone","earphones"],
+  headphone:["headphone","headphones","headset"], speaker:["speaker","speakers"],
+  watch:["watch","watches","smartwatch"], smartwatch:["smartwatch","watch"],
+  phone:["phone","smartphone","mobile"], mobile:["mobile","phone","smartphone"],
+  laptop:["laptop","notebook"], charger:["charger","charging","adapter"],
+  powerbank:["powerbank","power bank"], bulb:["bulb","lamp","light"],
+  tracker:["tracker","band","fitness band"]
+};
+function _sN(x){ return " "+String(x==null?"":x).toLowerCase().replace(/[^a-z0-9]+/g," ").replace(/\s+/g," ").trim()+" "; }
+function _sQ(x){ return String(x==null?"":x).toLowerCase().replace(/[^a-z0-9]+/g,""); }
+function searchHay(p){
+  if(p.__hay) return p.__hay;
+  var attrs=[p.subcategory,p.type,p.occasion,p.color,p.material,p.pattern,p.fit,p.tag,p.keywords].filter(Boolean).join(" ");
+  var extra=[];
+  if(p.specs&&p.specs.join) extra.push(p.specs.join(" "));
+  if(p.sizes&&p.sizes.join) extra.push(p.sizes.join(" "));
+  var all=[p.name,p.brand,p.category,attrs,extra.join(" "),p.desc].filter(Boolean).join(" ");
+  var h={ name:_sN(p.name), cat:_sN((p.category||"")+" "+(p.subcategory||"")),
+          attr:_sN(attrs), all:_sN(all), sq:_sQ(all) };
+  try{ Object.defineProperty(p,"__hay",{value:h,enumerable:false,configurable:true}); }catch(e){ p.__hay=h; }
+  return h;
+}
+function _sTok(q){
+  var raw=_sN(q).trim().split(" ").filter(Boolean), out=[];
+  for(var i=0;i<raw.length;i++){
+    /* glue a stray single letter onto the next word so "t shirt" -> "tshirt" */
+    if(raw[i].length===1 && i+1<raw.length){ out.push(raw[i]+raw[i+1]); i++; }
+    else out.push(raw[i]);
+  }
+  return out;
+}
+function _sVar(t){
+  var v=[t];
+  if(SEARCH_SYN[t]) v=v.concat(SEARCH_SYN[t]);
+  if(t.length>3){ if(t.charAt(t.length-1)==="s") v.push(t.slice(0,-1)); else v.push(t+"s"); }
+  return v;
+}
+function searchScore(p,q){
+  var toks=_sTok(q); if(!toks.length) return 1;
+  var h=searchHay(p), total=0;
+  for(var i=0;i<toks.length;i++){
+    var vs=_sVar(toks[i]), best=0;
+    for(var j=0;j<vs.length;j++){
+      var sp=" "+vs[j];
+      if(h.name.indexOf(sp)>-1) best=Math.max(best,8);
+      else if(h.cat.indexOf(sp)>-1) best=Math.max(best,6);
+      else if(h.attr.indexOf(sp)>-1) best=Math.max(best,5);
+      else if(h.all.indexOf(sp)>-1) best=Math.max(best,3);
+      else if(vs[j].length>=5 && h.sq.indexOf(_sQ(vs[j]))>-1) best=Math.max(best,2);
+    }
+    if(!best) return 0;   /* AND: one unmatched word means no result */
+    total+=best;
+  }
+  return total;
+}
 /* ===== PRODUCTS RENDER ===== */
 function currentList(){
   var list = products.filter(function(p){
     var okCat = activeFilter==="all" || slug(p.category)===activeFilter;
     var okSub = !activeSub || slug(subOf(p))===activeSub;
     var okTag = !window._tagFilter || (p.tag||"").toLowerCase()===window._tagFilter;
-    var okSearch = !searchTerm || (p.name+" "+p.brand+" "+(p.category||"")).toLowerCase().includes(searchTerm);
+    var okSearch = !searchTerm || searchScore(p,searchTerm)>0;
     var okMin = priceMin==null || Number(p.price)>=priceMin;
     var okMax = priceMax==null || Number(p.price)<=priceMax;
     var okBrand = !brandFilter.length || brandFilter.indexOf(p.brand)>=0;
@@ -1936,7 +2010,10 @@ function currentList(){
     var okStock = !inStockOnly || (stockOf(p)===null || stockOf(p)>0);
     return okCat && okSub && okTag && okSearch && okMin && okMax && okBrand && okType && okOcc && okSize && okColor && okRating && okStock;
   });
-  if(sortMode==="price-asc") list.sort(function(a,b){return a.price-b.price;});
+  if(searchTerm && sortMode==="featured"){
+    list.sort(function(a,b){ return searchScore(b,searchTerm)-searchScore(a,searchTerm); });
+  }
+  else if(sortMode==="price-asc") list.sort(function(a,b){return a.price-b.price;});
   else if(sortMode==="price-desc") list.sort(function(a,b){return b.price-a.price;});
   else if(sortMode==="rating") list.sort(function(a,b){return ratingOf(b)-ratingOf(a);});
   else if(sortMode==="newest") list.sort(function(a,b){var ta=(a.tag==="New")?1:0,tb=(b.tag==="New")?1:0; if(tb-ta)return tb-ta; return (b.id||0)-(a.id||0);});
