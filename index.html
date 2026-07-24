@@ -664,8 +664,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* mobile: heart on the image (top-left); a small glassy close stays pinned top-right while scrolling */
   .modal-topbar2{display:none}
   .media-fabs{position:static}
-  /* heart sits mid-height on the right — the top corners are a stretch for a thumb */
-  #modalWish{position:absolute;top:50%;right:12px;bottom:auto;left:auto;transform:translateY(-50%);z-index:31}
+  /* heart moved to the sticky buy bar, so the image stays clean */
+  #modalWish{display:none}
   .media-fabs .modal-close{display:none}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
@@ -1454,6 +1454,11 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 @media(prefers-reduced-motion:reduce){#accOffers.open .pp-offer{animation:none}}
 .offers-more{background:none;border:none;color:var(--brand-deep);font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;padding:6px 0 14px;display:inline-flex;align-items:center;gap:3px}
 .offers-more:hover{text-decoration:underline}
+.sticky-buy .sb-wish{flex:0 0 auto;width:44px;align-self:stretch;border-radius:11px;
+  border:1.5px solid var(--line2);background:#fff;color:var(--ink2);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
+.sticky-buy .sb-wish.on{background:var(--brand-soft);border-color:var(--brand);color:#e0245e}
+.sticky-buy .sb-wish:active{transform:scale(.94)}
 </style>
 </head>
 <body>
@@ -1724,6 +1729,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
     <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> <span>Add to Cart</span></button>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
+    <button class="sb-wish" id="sbWish" onclick="modalToggleWish()" aria-label="Save to wishlist"><i class="ti ti-heart"></i></button>
   </div><div class="modal">
   <div class="pp-bar"><div class="pp-crumb" id="ppCrumb"></div></div>
   <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div><div class="pp-gallery" id="ppGallery"></div></div>
@@ -2733,7 +2739,7 @@ function modalToggleWish(){
 function syncModalWish(){
   if(!modalProduct) return;
   var on = wish.some(function(w){ return w.key===keyOf(modalProduct); });
-  [el("modalWish"), el("modalWish2")].forEach(function(b){
+  [el("modalWish"), el("modalWish2"), el("sbWish")].forEach(function(b){
     if(!b) return;
     b.classList.toggle("on", on);
     b.setAttribute("aria-pressed", on ? "true" : "false");
