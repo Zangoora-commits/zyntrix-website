@@ -138,7 +138,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-
 .acct-ava .ava-ini{font-size:18px}
 .acct-menu a.danger:hover{background:var(--orange-soft);color:var(--orange)}
 /* SECTIONS */
-section{max-width:1300px;margin:0 auto;padding:56px 28px}
+section{max-width:1300px;margin:0 auto;padding:34px 28px}
 section.first{padding-top:44px}
 .sec-head{margin-bottom:30px}
 .sec-head-row{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
@@ -702,7 +702,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .drawer{width:100%}.fmodal-pad{padding:26px}
 }
 /* ===== HERO CAROUSEL ===== */
-.hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:6px;max-width:100%}
+.hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:0;max-width:100%}
 .hc-view{overflow:hidden;border-radius:24px;width:100%;max-width:100%}
 .hc-track{display:flex;transition:transform .7s cubic-bezier(.6,.02,.15,1)}
 .hc-slide{flex:0 0 100%;width:100%;min-width:0;height:clamp(300px,40vw,360px);position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
@@ -717,9 +717,9 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .hc-cta{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--ink);border:none;font-family:var(--fb);font-size:15px;font-weight:800;padding:13px 26px;border-radius:13px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 8px 22px rgba(0,0,0,.2)}
 .hc-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
 .hc-cta .ti{transition:transform .2s}.hc-cta:hover .ti{transform:translateX(3px)}
-.hc-art{position:absolute;right:64px;bottom:0;width:300px;height:300px;z-index:2;animation:hcFloat 5.5s ease-in-out infinite}
+.hc-art{position:absolute;right:64px;bottom:0;height:min(300px,84%);width:auto;aspect-ratio:1/1;z-index:2;animation:hcFloat 5.5s ease-in-out infinite}
 .hc-art svg{width:100%;height:100%;filter:drop-shadow(0 20px 32px rgba(0,0,0,.28))}
-.hc-tappy{position:absolute;right:380px;bottom:0;width:240px;height:300px;z-index:3;pointer-events:none}
+.hc-tappy{position:absolute;right:380px;bottom:0;height:min(300px,88%);width:auto;aspect-ratio:4/5;z-index:3;pointer-events:none}
 .hc-tappy svg{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.18))}
 .hc-slide .hc-badge,.hc-slide .hc-title,.hc-slide .hc-sub,.hc-slide .hc-cta{opacity:0}
 .hc-slide.active .hc-badge{animation:hcPop .55s .05s cubic-bezier(.2,1.3,.4,1) forwards}
@@ -1251,7 +1251,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .shopbar{position:sticky;top:72px;z-index:90;background:rgba(255,255,255,.92);
   backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--line);transition:box-shadow .2s}
 .shopbar.stuck{box-shadow:0 6px 20px rgba(12,22,17,.06)}
-.sb-inner{max-width:1300px;margin:0 auto;padding:0 28px;height:60px;display:flex;align-items:center;gap:16px}
+.sb-inner{max-width:1300px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;gap:16px}
 .sb-tools{display:flex;align-items:center;gap:9px;margin-left:auto;flex-shrink:0}
 .rb-lb{display:inline}
 /* mobile search: its own dedicated row, pinned under the nav (mobile only) */
@@ -1275,8 +1275,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .fbtn{flex-shrink:0}
 
 /* compact section head — replaces the big clamp(25px,3vw,35px) title */
-.shop-meta{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.shop-h{font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:-.5px;line-height:1.2}
+.shop-meta{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.shop-h{font-family:var(--fd);font-size:19px;font-weight:800;letter-spacing:-.5px;line-height:1.15}
 #resultCount{font-size:13px;color:var(--muted);font-weight:600}
 #products{padding-top:26px}
 
@@ -1488,6 +1488,26 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
   .prod-body{padding:11px 12px 12px}
   .prod-name{font-size:13.5px}
   .prod-price{font-size:15.5px}
+}
+/* Viewport-height-aware hero: short laptops get the fold back, large
+   monitors keep the full-size banner. */
+@media(min-width:769px) and (max-height:900px){ .hc-slide{height:clamp(260px,32vw,310px)} }
+@media(min-width:769px) and (max-height:800px){ .hc-slide{height:clamp(240px,28vw,275px)} }
+@media(min-width:769px) and (max-height:700px){ .hc-slide{height:clamp(215px,24vw,245px)} }
+/* the same idea applied to spacing: a short screen trades air for product */
+@media(min-width:769px) and (max-height:900px){
+  section{padding:26px 28px}
+  .shop-meta{margin-bottom:9px}
+}
+@media(min-width:769px) and (max-height:800px){
+  section{padding:20px 28px}
+  .nav-inner{height:64px}
+  .shopbar{top:64px}
+}
+@media(min-width:769px) and (max-height:700px){
+  section{padding:15px 28px}
+  .shop-meta{margin-bottom:7px}
+  .sb-inner{height:48px}
 }
 </style>
 </head>
