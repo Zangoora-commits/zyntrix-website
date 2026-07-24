@@ -1459,6 +1459,21 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
   display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
 .sticky-buy .sb-wish.on{background:var(--brand-soft);border-color:var(--brand);color:#e0245e}
 .sticky-buy .sb-wish:active{transform:scale(.94)}
+/* sticky bar: guarantee a single-line row whatever the font does */
+.sticky-buy .sb-add,.sticky-buy .sb-buy,.sticky-buy .sb-wish{
+  height:46px;min-height:46px;align-self:center;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;line-height:1}
+.sticky-buy .sb-add,.sticky-buy .sb-buy{padding-left:8px;padding-right:8px}
+.sticky-buy .sb-add i,.sticky-buy .sb-buy i{flex-shrink:0}
+@media(max-width:430px){
+  /* icons are decoration; the label is the message */
+  .sticky-buy .sb-add i,.sticky-buy .sb-buy i{display:none}
+  .sticky-buy .sb-add,.sticky-buy .sb-buy{gap:0}
+}
+@media(max-width:359px){
+  /* last resort: the price is a repeat of what's on screen above */
+  .sticky-buy>div:first-child{display:none}
+}
 </style>
 </head>
 <body>
