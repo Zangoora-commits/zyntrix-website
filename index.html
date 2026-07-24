@@ -61,6 +61,7 @@
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html{scrollbar-gutter:stable}
 :root{
   --bg:#ffffff;--paper:#f6f9f7;--paper2:#eef3f0;
   --ink:#0c1611;--ink2:#46544c;--muted:#8b968e;--line:#e7ece9;--line2:#dde4e0;
@@ -190,7 +191,7 @@ section.first{padding-top:44px}
 .prod-wish .ti{font-size:18px;line-height:1}
 .prod-body{padding:12px 14px 13px;display:flex;flex-direction:column;flex:1}
 .prod-brand{font-size:10.5px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.prod-name{font-family:var(--fd);font-weight:600;font-size:14px;line-height:1.28;margin-bottom:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.56em}
+.prod-name{font-family:var(--fd);font-weight:600;font-size:14px;line-height:1.35;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prod-rating{display:flex;align-items:center;gap:5px;margin-bottom:12px}
 .prod-stars{color:var(--amber);font-size:12px;letter-spacing:1px}
 .prod-rnum{font-size:11.5px;color:var(--muted);font-weight:500}
@@ -1227,13 +1228,13 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
    is just not painted. The page scrollbar is left alone: on desktop it's an
    expected affordance, and hiding it is disorienting.
    Mobile browsers already overlay-scroll, so this mainly affects desktop. */
-.fd-body, .drawer-body, .modal, .modal-body, .sg-box, .enq-box,
+.fd-body, .drawer-body, .modal, .modal-body, .sg-box, .enq-box, .modal-ov,
 .fmodal, .cmodal-body, .mobile-menu, .rev-list, .fg-b, .acc-b,
 .prod-filters, .strip-h, .size-chips, .fswatches{
   scrollbar-width:none;          /* Firefox */
   -ms-overflow-style:none;       /* old Edge/IE */
 }
-.fd-body::-webkit-scrollbar, .drawer-body::-webkit-scrollbar, .modal::-webkit-scrollbar,
+.fd-body::-webkit-scrollbar, .drawer-body::-webkit-scrollbar, .modal::-webkit-scrollbar, .modal-ov::-webkit-scrollbar,
 .modal-body::-webkit-scrollbar, .sg-box::-webkit-scrollbar, .enq-box::-webkit-scrollbar,
 .fmodal::-webkit-scrollbar, .cmodal-body::-webkit-scrollbar, .mobile-menu::-webkit-scrollbar,
 .rev-list::-webkit-scrollbar, .fg-b::-webkit-scrollbar, .acc-b::-webkit-scrollbar,
@@ -2175,7 +2176,7 @@ function render(keep){
       +'<div class="prod-actions"><button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
       +'</div>'
       +'</div>'
-      +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
+      +'<div class="prod-body"><div class="prod-name" title="'+esc(p.name)+'">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +'<div class="prod-foot"><div class="prod-priceblock"><span class="prod-price">'+inr(p.price)+'</span>'
       +(p.orig_price&&p.orig_price>p.price?'<span class="prod-orig">'+inr(p.orig_price)+'</span>':'')
       +(discountPct(p)>0?'<span class="prod-offpct">'+discountPct(p)+'% off</span>':'')+'</div></div></div></article>';
@@ -4076,6 +4077,20 @@ function subscribe(){
 }
 function scrollToId(id){ var e=el(id); if(e && e.scrollIntoView){ try{ e.scrollIntoView({behavior:"smooth"}); }catch(x){} } }
 function goTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+/* Overlays set overflow:hidden on <body>, but <html> is the scrolling element
+   here, so the page scrollbar stayed visible behind the modal — two bars.
+   Mirror any body lock onto <html>. Covers every overlay, present and future. */
+(function(){
+  var root=document.documentElement;
+  function sync(){
+    var locked = document.body.style.overflow === "hidden";
+    root.style.overflow = locked ? "hidden" : "";
+  }
+  try{
+    new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:["style"]});
+  }catch(e){}
+  sync();
+})();
 /* ===== FULL-PAGE PRODUCT VIEW ===== */
 function ppRenderGallery(p){
   var box=el("ppGallery"); if(!box) return;
