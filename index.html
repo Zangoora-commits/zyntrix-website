@@ -205,9 +205,7 @@ section.first{padding-top:44px}
 .tag-hotdeal{background:linear-gradient(120deg,#f43f5e,#f97316)!important;color:#fff;box-shadow:0 3px 10px rgba(244,63,94,.35)}
 .tag-super{background:linear-gradient(120deg,#f59e0b,#eab308)!important;color:#fff}
 .tag-bigdeal{background:var(--amber)!important;color:#fff}
-.prod-add{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.72);backdrop-filter:blur(8px) saturate(1.3);-webkit-backdrop-filter:blur(8px) saturate(1.3);color:var(--brand-deep);border:1px solid rgba(255,255,255,.55);cursor:pointer;font-size:19px;display:flex;align-items:center;justify-content:center;transition:background .16s,color .16s,transform .16s;flex-shrink:0;box-shadow:0 2px 8px rgba(12,22,17,.12)}
 @media(max-width:480px){.prod-actions{right:7px;top:7px}}
-@media(hover:hover) and (pointer:fine){.prod-add:hover{background:var(--brand);border-color:var(--brand);color:#fff;transform:scale(1.06)}}
 .prod-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
 .prod-empty i{font-size:46px;color:var(--line2);display:block;margin-bottom:14px}
 .prod-empty h4{font-family:var(--fd);font-size:18px;color:var(--ink2);margin-bottom:6px;font-weight:700}
@@ -528,7 +526,6 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .stock-low{background:var(--orange-soft);color:#c2410c}
 .stock-out{background:#f1f1f1;color:#888}
 .prod-card.soldout{opacity:.72}
-.prod-card.soldout .prod-add{background:#eee;color:#bbb;border-color:#e2e2e2;box-shadow:none;cursor:not-allowed}
 .modal-stock{margin-bottom:18px}
 /* GALLERY */
 .gallery-thumbs{display:flex;gap:8px;padding:6px 12px 16px;justify-content:center;flex-wrap:wrap;background:transparent}
@@ -667,8 +664,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* mobile: heart on the image (top-left); a small glassy close stays pinned top-right while scrolling */
   .modal-topbar2{display:none}
   .media-fabs{position:static}
-  /* heart sits mid-height on the right — the top corners are a stretch for a thumb */
-  #modalWish{position:absolute;top:50%;right:12px;bottom:auto;left:auto;transform:translateY(-50%);z-index:31}
+  /* heart moved to the sticky buy bar, so the image stays clean */
+  #modalWish{display:none}
   .media-fabs .modal-close{display:none}
   .about-inner{grid-template-columns:1fr;gap:32px}.about-visual{max-width:360px;margin:0 auto;width:100%}
 }
@@ -860,6 +857,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .sticky-buy button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:760px){
   .modal-ov.open .sticky-buy{display:flex}
+  /* buy controls live in one place on phones: the sticky bar */
+  #modalOv .modal-actions{display:none}
   #modalOv.open .modal-body{padding-bottom:78px}
 }
 /* ===== SIZE SELECTOR ===== */
@@ -1210,13 +1209,15 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* sticky bar */
   .sticky-buy{padding:9px 12px calc(9px + env(safe-area-inset-bottom));gap:8px}
   .sticky-buy .sb-price{font-size:16px}
-  .sticky-buy .sb-buy{padding:13px 8px;font-size:14px;min-width:0}
+  .sticky-buy .sb-add,.sticky-buy .sb-buy{padding:13px 6px;font-size:13.5px;min-width:0}
+  .sticky-buy .sb-price{font-size:15px}
 }
 @media(max-width:360px){
   .modal-ov{padding:8px}
   .modal-qty button{width:40px}
   .modal-wishbtn{padding:0 12px}
-  .sticky-buy .sb-add span,.sticky-buy .sb-add i+span{display:none}
+  .sticky-buy{gap:6px;padding:9px 10px calc(9px + env(safe-area-inset-bottom))}
+  .sticky-buy .sb-price{font-size:14.5px}
 }
 
 /* ===== HIDE SCROLLBARS ON INTERNAL PANELS =====
@@ -1391,7 +1392,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
    Below 901px the original centred product modal is used instead, so the
    mobile experience (close button, image framing, scroll reset) is unchanged. */
 .pp-gallery{display:none}
-/* Back bar + Best Offers adopted for phones (Siraj's desktop pattern) */
+/* Offers panel adopted for phones (from Siraj's desktop pattern) */
 @media(max-width:900px){
   /* the path IS the navigation now: no back arrow, no X — tapping a
      crumb segment takes you back to that level */
@@ -1400,13 +1401,12 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
     backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);
     border-bottom:1px solid var(--line)}
   .pp-crumb{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;width:100%}
-  .pp-offers{margin:16px 0 4px}
 }
-.pp-offers{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
+.pp-offers{padding:0 2px}
 .pp-offers h4{font-family:var(--fd);font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;display:flex;align-items:center;gap:7px}
 .pp-offers h4 i{color:var(--brand);font-size:16px}
 .pp-offer{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--ink2);line-height:1.5;padding:7px 0;border-top:1px dashed var(--line)}
-.pp-offer:first-of-type{border-top:none}
+.pp-offer:first-of-type{border-top:none;padding-top:0}
 .pp-offer i{color:var(--brand-deep);font-size:16px;margin-top:1px;flex-shrink:0}
 .pp-offer b{color:var(--ink)}
 @media(min-width:901px){
@@ -1445,6 +1445,20 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 .pp-crumb .cr-link:active{opacity:.6}
 .pp-crumb .cr-sep{opacity:.4;margin:0 5px}
 .pp-crumb b{color:var(--ink2);font-weight:700}
+/* Offers: collapsed still shows the first line, with a "more" link — same
+   idea as the Description clamp, so the panel never looks empty. */
+#accOffers .acc-b{max-height:none;overflow:visible}
+#accOffers:not(.open) .pp-offer:not(:first-of-type){display:none}
+#accOffers.open .pp-offer{animation:offRow .22s ease both}
+@keyframes offRow{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#accOffers.open .pp-offer{animation:none}}
+.offers-more{background:none;border:none;color:var(--brand-deep);font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;padding:6px 0 14px;display:inline-flex;align-items:center;gap:3px}
+.offers-more:hover{text-decoration:underline}
+.sticky-buy .sb-wish{flex:0 0 auto;width:44px;align-self:stretch;border-radius:11px;
+  border:1.5px solid var(--line2);background:#fff;color:var(--ink2);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .16s;padding:0}
+.sticky-buy .sb-wish.on{background:var(--brand-soft);border-color:var(--brand);color:#e0245e}
+.sticky-buy .sb-wish:active{transform:scale(.94)}
 </style>
 </head>
 <body>
@@ -1713,7 +1727,9 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()">
   <div class="sticky-buy" id="stickyBuy">
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
+    <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> <span>Add to Cart</span></button>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
+    <button class="sb-wish" id="sbWish" onclick="modalToggleWish()" aria-label="Save to wishlist"><i class="ti ti-heart"></i></button>
   </div><div class="modal">
   <div class="pp-bar"><div class="pp-crumb" id="ppCrumb"></div></div>
   <div class="modal-img" id="modalImg"><div class="modal-media" id="modalMedia"><i class="ti ti-box pic" id="modalIcon"></i><div class="media-fabs"><button class="modal-fab" id="modalWish" onclick="modalToggleWish()" aria-label="Add to wishlist"><i class="ti ti-heart"></i></button><button class="modal-fab modal-close" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button></div><div class="media-rating" id="modalRatingChip" style="display:none" onclick="jumpToReviews()" title="See all reviews"><i class="ti ti-star-filled"></i><span id="modalStars" style="display:none"></span><span id="modalRnum"></span></div></div><div class="gallery-thumbs" id="galleryThumbs" style="display:none"></div><div class="pp-gallery" id="ppGallery"></div></div>
@@ -1725,6 +1741,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
     <div class="modal-priceline">
       <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
     </div>
+    <div class="acc" id="accOffers"></div>
     <div class="color-wrap" id="colorWrap">
       <div class="color-head">COLOUR: <span id="colorName"></span></div>
       <div class="color-chips" id="colorChips"></div>
@@ -1752,7 +1769,6 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
       </div>
       <div class="deliv-res" id="delivRes"></div>
     </div>
-    <div class="pp-offers" id="ppOffers"></div>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
       <div class="acc" id="accDesc">
@@ -2122,7 +2138,7 @@ function render(keep){
       +(function(){ var db=dealBadge(p); if(db) return '<span class="prod-tag '+db.cls+'">'+db.label+'</span>'; return p.tag?'<span class="prod-tag '+tagClass+'">'+esc(p.tag)+'</span>':''; })()
       +(rc2>0?'<span class="prod-rate"><i class="ti ti-star-filled"></i>'+rt.toFixed(1)+'</span>':'')
       +'<div class="prod-actions"><button class="prod-wish'+wished+'" data-wish="'+i+'" aria-label="Wishlist"><i class="ti ti-heart"></i></button>'
-      +'<button class="prod-add" data-add="'+i+'" aria-label="'+(isApparel(p)?'Choose size':'Add to cart')+'"'+(soldout?' disabled':'')+'><i class="ti ti-'+(soldout?'ban':'plus')+'"></i></button></div>'
+      +'</div>'
       +'</div>'
       +'<div class="prod-body"><div class="prod-name">'+esc(p.name)+'</div><div class="prod-brand">'+esc(p.brand||"")+'</div>'
       +(stockPill?'<div>'+stockPill+'</div>':'')
@@ -2131,7 +2147,6 @@ function render(keep){
       +(discountPct(p)>0?'<span class="prod-offpct">'+discountPct(p)+'% off</span>':'')+'</div></div></div></article>';
   }).join("");
   grid.querySelectorAll(".prod-card").forEach(function(c){ c.addEventListener("click",function(){ openModal(parseInt(this.dataset.i)); }); });
-  grid.querySelectorAll(".prod-add").forEach(function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); if(this.disabled){return;} var _i=parseInt(this.dataset.add), _p=view[_i]; if(_p && isApparel(_p)){ openModal(_i); showToast("Please pick a size"); return; } addToCart(_i,1); }); });
   grid.querySelectorAll(".prod-wish").forEach(function(b){ b.addEventListener("click",function(e){ e.stopPropagation(); toggleWish(parseInt(this.dataset.wish)); }); });
   renderLoadMore();
   renderActiveFilters();
@@ -2650,6 +2665,8 @@ function syncStickyBuy(){
   if(pr) pr.textContent=inr(modalProduct.price);
   if(wa){ if(modalProduct.orig_price&&modalProduct.orig_price>modalProduct.price){ wa.textContent=inr(modalProduct.orig_price); wa.style.display=""; } else wa.style.display="none"; }
   if(b){ b.disabled=dis; b.innerHTML=dis?"Out of stock":'<i class="ti ti-bolt"></i> Buy Now'; }
+  var a=el("sbAdd");
+  if(a){ a.disabled=dis; a.style.display=dis?"none":""; }
 }
 function fitModalImg(){ /* fixed image frame: keep the CSS aspect-ratio; image is centered via object-fit:contain, small/landscape photos show white above & below. */ var w=el("modalMedia"); if(w) w.style.aspectRatio=""; }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
@@ -2670,6 +2687,14 @@ function paintPZoom(){
 function pzStep(d){ if(!pzList.length)return; pzIdx=(pzIdx+d+pzList.length)%pzList.length; paintPZoom(); }
 function closePZoom(){ var o=el("pzOv"); if(o) o.classList.remove("open"); }
 function toggleDesc(){ var dd=el("modalDesc"), dm=el("descMore"); if(!dd)return; var clamped=dd.classList.toggle("clamp"); if(dm) dm.textContent=clamped?"Read more":"Read less"; }
+function toggleOffers(){
+  var box=el("accOffers"); if(!box) return;
+  var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h"), more=el("offersMore");
+  var open=body.classList.toggle("open");
+  box.classList.toggle("open", open);
+  if(head) head.setAttribute("aria-expanded", open?"true":"false");
+  if(more) more.textContent = open ? "Show less" : ("+"+(box.querySelectorAll(".pp-offer").length-1)+" more offers");
+}
 function toggleAcc(id){
   var box=el(id); if(!box) return;
   var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
@@ -2678,10 +2703,11 @@ function toggleAcc(id){
   if(head) head.setAttribute("aria-expanded", open?"true":"false");
 }
 function resetAccordions(){
-  ["accDesc","accSpecs","accShip"].forEach(function(id,i){
+  ["accDesc","accSpecs","accShip","accOffers"].forEach(function(id,i){
     var box=el(id); if(!box) return;
     var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
     var open=(i===0);
+    if(!body){ box.classList.toggle("open", open); return; }  /* not populated yet */
     body.classList.toggle("open", open);
     box.classList.toggle("open", open);
     if(head) head.setAttribute("aria-expanded", open?"true":"false");
@@ -2713,7 +2739,7 @@ function modalToggleWish(){
 function syncModalWish(){
   if(!modalProduct) return;
   var on = wish.some(function(w){ return w.key===keyOf(modalProduct); });
-  [el("modalWish"), el("modalWish2")].forEach(function(b){
+  [el("modalWish"), el("modalWish2"), el("sbWish")].forEach(function(b){
     if(!b) return;
     b.classList.toggle("on", on);
     b.setAttribute("aria-pressed", on ? "true" : "false");
@@ -4031,7 +4057,7 @@ function ppRenderGallery(p){
   }
 }
 function ppRenderOffers(p){
-  var box=el("ppOffers"); if(!box) return;
+  var box=el("accOffers"); if(!box) return;
   var d=(typeof discountPct==="function")?discountPct(p):0;
   var rows=[];
   if(d>0) rows.push('<i class="ti ti-discount-2"></i><span><b>'+d+'% OFF</b> — this price already includes the discount.</span>');
@@ -4039,7 +4065,14 @@ function ppRenderOffers(p){
   rows.push('<i class="ti ti-cash"></i><span><b>Cash on Delivery</b> available.</span>');
   rows.push('<i class="ti ti-lock"></i><span><b>100% secure</b> payments \u2014 we never store card details.</span>');
   rows.push('<i class="ti ti-refresh"></i><span><b>15-day</b> easy returns.</span>');
-  box.innerHTML='<h4><i class="ti ti-rosette-discount-check"></i> Best Offers</h4>'+rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("");
+  box.classList.remove("open");
+  box.innerHTML='<button class="acc-h" onclick="toggleOffers()" aria-expanded="false">'
+    +'<span><i class="ti ti-rosette-discount-check"></i> Offers</span><i class="ti ti-chevron-down acc-x"></i></button>'
+    +'<div class="acc-b"><div class="pp-offers">'
+    +rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("")
+    +'</div></div>'
+    +(rows.length>1?'<button class="offers-more" id="offersMore" onclick="toggleOffers()">+'+(rows.length-1)+' more offers</button>':'');
+
 }
 function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
 (function(){
