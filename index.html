@@ -1447,9 +1447,11 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 .pp-crumb b{color:var(--ink2);font-weight:700}
 /* Offers: collapsed still shows the first line, with a "more" link — same
    idea as the Description clamp, so the panel never looks empty. */
-#accOffers .acc-b{max-height:42px}
-#accOffers .acc-b.open{max-height:1400px}
-#accOffers .acc-b:not(.open) .pp-offers{-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent);mask-image:linear-gradient(to bottom,#000 55%,transparent)}
+#accOffers .acc-b{max-height:none;overflow:visible}
+#accOffers:not(.open) .pp-offer:not(:first-of-type){display:none}
+#accOffers.open .pp-offer{animation:offRow .22s ease both}
+@keyframes offRow{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#accOffers.open .pp-offer{animation:none}}
 .offers-more{background:none;border:none;color:var(--brand-deep);font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;padding:6px 0 14px;display:inline-flex;align-items:center;gap:3px}
 .offers-more:hover{text-decoration:underline}
 </style>
@@ -4064,6 +4066,7 @@ function ppRenderOffers(p){
     +rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("")
     +'</div></div>'
     +(rows.length>1?'<button class="offers-more" id="offersMore" onclick="toggleOffers()">+'+(rows.length-1)+' more offers</button>':'');
+
 }
 function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
 (function(){
