@@ -139,7 +139,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-
 .acct-menu a.danger:hover{background:var(--orange-soft);color:var(--orange)}
 /* SECTIONS */
 section{max-width:1300px;margin:0 auto;padding:34px 28px}
-section.first{padding-top:44px}
+section.first{padding-top:22px}
 .sec-head{margin-bottom:30px}
 .sec-head-row{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
 .sec-tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--brand);margin-bottom:11px}
@@ -702,10 +702,11 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .drawer{width:100%}.fmodal-pad{padding:26px}
 }
 /* ===== HERO CAROUSEL ===== */
-.hc{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 48px rgba(12,22,17,.14);margin-top:0;max-width:100%}
+.hc{position:relative;border-radius:0;overflow:visible;box-shadow:none;margin-top:0;max-width:100%}
 .hc-view{overflow:hidden;border-radius:24px;width:100%;max-width:100%}
-.hc-track{display:flex;transition:transform .7s cubic-bezier(.6,.02,.15,1)}
-.hc-slide{flex:0 0 100%;width:100%;min-width:0;height:clamp(300px,40vw,360px);position:relative;display:flex;align-items:center;overflow:hidden;cursor:pointer}
+.hc-track{display:flex;gap:16px;transition:transform .6s cubic-bezier(.4,0,.15,1);will-change:transform}
+.hc-slide{flex:0 0 calc((100% - 32px)/3);width:auto;min-width:0;height:clamp(210px,17vw,240px);position:relative;display:flex;align-items:flex-end;overflow:hidden;cursor:pointer;border-radius:18px;box-shadow:0 4px 14px rgba(12,22,17,.09);transition:transform .2s,box-shadow .2s}
+@media(hover:hover) and (pointer:fine){.hc-slide:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(12,22,17,.15)}}
 .hc-slide::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.4px);background-size:22px 22px;opacity:.5;pointer-events:none;z-index:3}
 .hc-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,20,14,.26),rgba(2,20,14,0) 55%);pointer-events:none;z-index:1}
 .hc-deco{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
@@ -752,35 +753,15 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   .hc-dots{left:28px;bottom:16px}
 }
 
-/* ===== HERO — PHONE (≤480px) =====
-   Badge pinned to the top of the slide, headline + sub sit at the bottom.
-   Pager dots are hidden on phones, so that strip becomes copy space. */
-@media(max-width:480px){
-  .hc-slide{height:clamp(178px,45vw,215px);display:block;padding:0}
-  .hc-slide::before{background:linear-gradient(to top,rgba(2,20,14,.84) 0%,rgba(2,20,14,.38) 46%,rgba(2,20,14,0) 74%)}
-  .hc-text{position:absolute;inset:0;max-width:none;width:100%;padding:13px 16px 14px;z-index:4;display:flex;flex-direction:column;align-items:flex-start}
-  .hc-badge{margin-bottom:auto;font-size:9.5px;letter-spacing:.3px;padding:4px 10px;gap:4px}
-  .hc-text>:last-child{margin-bottom:auto}
-  .hc-badge i{font-size:12px}
-  .hc-title{font-size:clamp(21px,6.2vw,26px);letter-spacing:-.7px;line-height:1.08;margin-bottom:4px;max-width:64%}
-  .hc-sub{font-size:12px;line-height:1.4;margin-bottom:0;max-width:64%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;opacity:.92}
-  .hc-cta{font-size:12.5px;padding:10px 16px;width:auto;margin-top:10px}
-  .hc-art{right:12px;left:auto;top:50%;bottom:auto;width:min(30%,110px);height:auto;aspect-ratio:1/1;opacity:.94;animation:hcFloatCtr 7s ease-in-out infinite}
-  .hc-tappy{display:none}
-  /* arrows off — swipe instead */
-  .hc-arrow{display:none}
-  /* pager dots off on phones — the strip is used for copy */
-  .hc-dots{display:none}
-}
+/* phone hero styling now lives with the rail rules below */
 @keyframes hcFloatSm{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes hcFloatCtr{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 6px))}}
 @media(max-width:360px){
-  .hc-slide{height:172px}
-  .hc-art{width:min(30%,96px);right:10px}
-  .hc-title{font-size:20px}
-  .hc-sub{font-size:11.5px;max-width:62%}
-  .hc-title{max-width:62%}
-  .hc-text{padding:12px 14px 12px}
+  .hc-slide{flex:0 0 86%;height:168px}
+  .hc-art{height:min(70px,34%);right:9px;top:8px}
+  .hc-title{font-size:19px}
+  .hc-sub{font-size:11.5px}
+  .hc-text{padding:0 13px 12px}
 }
 /* ===== NAV CATEGORIES DROPDOWN ===== */
 .cat-li{position:relative}
@@ -824,7 +805,7 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 @keyframes htblink{0%,90%,100%{transform:scaleY(1)}94%,96%{transform:scaleY(.08)}}
 @keyframes htglance{0%,18%{transform:translateX(0)}28%,44%{transform:translateX(4.5px)}54%,70%{transform:translateX(-4.5px)}82%,100%{transform:translateX(0)}}
 .hc:hover .ht-bob,.hc:hover .ht-eyes,.hc:hover .ht-pupils{animation-play-state:paused}
-@media(min-width:769px) and (max-width:1200px){.hc-slide{height:clamp(260px,38vw,320px)}.hc-text{max-width:36%;padding:0 30px}.hc-tappy{right:250px;width:210px;height:285px}.hc-art{right:40px;width:228px;height:228px;bottom:18px}.hc-arrow{top:16px;bottom:auto;transform:none}.hc-arrow.left{left:auto;right:64px}.hc-arrow.right{right:16px}}
+
 @media(max-width:600px){.hc-deco{display:none}}
 /* ===== DELIVERY ESTIMATE ===== */
 .deliv-box{border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin:12px 0 4px;background:var(--paper)}
@@ -1491,9 +1472,6 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 }
 /* Viewport-height-aware hero: short laptops get the fold back, large
    monitors keep the full-size banner. */
-@media(min-width:769px) and (max-height:900px){ .hc-slide{height:clamp(260px,32vw,310px)} }
-@media(min-width:769px) and (max-height:800px){ .hc-slide{height:clamp(240px,28vw,275px)} }
-@media(min-width:769px) and (max-height:700px){ .hc-slide{height:clamp(215px,24vw,245px)} }
 /* the same idea applied to spacing: a short screen trades air for product */
 @media(min-width:769px) and (max-height:900px){
   section{padding:26px 28px}
@@ -1508,6 +1486,35 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
   section{padding:15px 28px}
   .shop-meta{margin-bottom:7px}
   .sb-inner{height:48px}
+}
+/* ===== HERO RAIL — frame sizing ===== */
+.hc-text{position:relative;z-index:4;max-width:none;width:100%;padding:0 18px 16px}
+.hc-badge{font-size:10px;letter-spacing:.3px;padding:4px 10px;margin-bottom:8px;gap:5px}
+.hc-badge i{font-size:12px}
+.hc-title{font-size:clamp(20px,1.7vw,25px);line-height:1.1;letter-spacing:-.6px;margin-bottom:4px;max-width:100%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hc-sub{font-size:12.5px;line-height:1.4;max-width:80%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;opacity:.92;margin-bottom:0}
+.hc-art{right:12px;top:10px;bottom:auto;transform:none;height:min(118px,48%);width:auto;aspect-ratio:1/1;opacity:.95;animation:hcFloatRail 6s ease-in-out infinite}
+@keyframes hcFloatRail{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hc-tappy{display:none}
+.hc-progress{display:none}
+.hc-deco{display:none}
+/* scrim so copy stays readable over the artwork */
+.hc-slide::before{background:linear-gradient(to top,rgba(2,20,14,.72) 0%,rgba(2,20,14,.22) 52%,rgba(2,20,14,0) 82%)}
+/* no arrows — the rail advances itself and can be swiped */
+.hc-arrow{display:none!important}
+.hc-dots{position:static;margin-top:12px;left:auto;bottom:auto;justify-content:center;display:flex;gap:7px}
+.hc-dot{width:7px;height:7px;border-radius:100px;border:none;background:var(--line2);cursor:pointer;transition:all .25s;padding:0}
+.hc-dot.on{width:22px;background:var(--brand)}
+/* content is always visible now that three frames share the view */
+.hc-slide .hc-badge,.hc-slide .hc-title,.hc-slide .hc-sub{opacity:1;animation:none!important}
+@media(max-width:1100px){ .hc-slide{flex:0 0 calc((100% - 16px)/2)} }
+@media(max-width:768px){
+  .hc-track{gap:12px}
+  .hc-slide{flex:0 0 82%;height:clamp(180px,42vw,205px);border-radius:16px}
+  .hc-title{font-size:clamp(19px,5.4vw,23px)}
+  .hc-sub{font-size:12px;max-width:74%}
+  .hc-art{height:min(100px,44%);right:10px;top:9px}
+  .hc-text{padding:0 15px 14px}
 }
 </style>
 </head>
@@ -1629,8 +1636,6 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 <section id="categories" class="first">
   <div class="hc" id="hc">
     <div class="hc-view"><div class="hc-track" id="hcTrack"></div></div>
-    <button class="hc-arrow left" onclick="hcPrev()" aria-label="Previous"><i class="ti ti-chevron-left"></i></button>
-    <button class="hc-arrow right" onclick="hcNext()" aria-label="Next"><i class="ti ti-chevron-right"></i></button>
     <div class="hc-dots" id="hcDots"></div>
   </div>
 </section>
@@ -4489,7 +4494,26 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     }).join("");
     dotsBox.innerHTML=HC_SLIDES.map(function(_,i){return '<button class="hc-dot'+(i===0?' on':'')+'" data-i="'+i+'" aria-label="Slide '+(i+1)+'"></button>';}).join("");
     var slides=track.children;
-    window.hcShow=function(i){ idx=(i+HC_SLIDES.length)%HC_SLIDES.length; track.style.transform="translateX(-"+(idx*100)+"%)"; Array.prototype.forEach.call(slides,function(sl,si){sl.classList.toggle("active",si===idx);}); Array.prototype.forEach.call(dotsBox.children,function(d,di){d.classList.toggle("on",di===idx);}); };
+    /* how many frames fit right now, and how far one step moves the track */
+    function perView(){
+      var view=track.parentNode.getBoundingClientRect().width;
+      var one=slides[0]?slides[0].getBoundingClientRect().width:view;
+      return Math.max(1, Math.round(view/(one+16)));
+    }
+    function stepPx(){
+      var one=slides[0]?slides[0].getBoundingClientRect().width:0;
+      var gap=parseFloat(getComputedStyle(track).gap)||0;
+      return one+gap;
+    }
+    function maxIdx(){ return Math.max(0, HC_SLIDES.length - perView()); }
+    window.hcShow=function(i){
+      var m=maxIdx();
+      idx = i<0 ? m : (i>m ? 0 : i);
+      track.style.transform="translateX(-"+(idx*stepPx())+"px)";
+      Array.prototype.forEach.call(slides,function(sl,si){ sl.classList.toggle("active", si>=idx && si<idx+perView()); });
+      Array.prototype.forEach.call(dotsBox.children,function(d,di){ d.classList.toggle("on", di===idx); d.style.display = di<=m ? "" : "none"; });
+    };
+    window.addEventListener("resize",function(){ window.hcShow(Math.min(idx,maxIdx())); },{passive:true});
     window.hcNext=function(){ window.hcShow(idx+1); };
 
     /* ---- swipe / drag ---- */
@@ -4531,7 +4555,7 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     window.hcPrev=function(){ window.hcShow(idx-1); };
     Array.prototype.forEach.call(slides,function(sl){
       var bar=sl.querySelector(".hc-progress");
-      bar.addEventListener("animationend",function(){ if(sl.classList.contains("active")) window.hcNext(); });
+      /* auto-advance now runs on a timer (see below), not the progress bar */
       sl.addEventListener("click",function(){ go(sl.getAttribute("data-cat")); });
     });
     Array.prototype.forEach.call(dotsBox.children,function(d){ d.addEventListener("click",function(e){ e.stopPropagation(); window.hcShow(parseInt(d.getAttribute("data-i"),10)); }); });
@@ -4539,6 +4563,14 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     hc.addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
     hc.addEventListener("touchend",function(e){ if(x0===null)return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){dx<0?window.hcNext():window.hcPrev();} x0=null; },{passive:true});
     window.hcShow(0);
+    /* gentle auto-advance; pauses while the pointer is over the rail */
+    var hcTimer=null, hcPaused=false;
+    function hcStart(){ if(hcTimer) clearInterval(hcTimer);
+      hcTimer=setInterval(function(){ if(!hcPaused && !document.hidden) window.hcNext(); }, 4200); }
+    hc.addEventListener("mouseenter",function(){ hcPaused=true; });
+    hc.addEventListener("mouseleave",function(){ hcPaused=false; });
+    document.addEventListener("visibilitychange",function(){ if(!document.hidden) hcStart(); });
+    hcStart();
   }
   // ---- Categories dropdown ----
   var ddGrid=document.getElementById("catGridDD"), panel=document.getElementById("catPanel"), trigger=document.getElementById("catTrigger"), detail=document.getElementById("catSubPanel");
