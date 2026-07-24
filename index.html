@@ -857,6 +857,8 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
 .sticky-buy button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:760px){
   .modal-ov.open .sticky-buy{display:flex}
+  /* buy controls live in one place on phones: the sticky bar */
+  #modalOv .modal-actions{display:none}
   #modalOv.open .modal-body{padding-bottom:78px}
 }
 /* ===== SIZE SELECTOR ===== */
@@ -1207,13 +1209,15 @@ footer{background:var(--ink);color:#fff;margin-top:64px}
   /* sticky bar */
   .sticky-buy{padding:9px 12px calc(9px + env(safe-area-inset-bottom));gap:8px}
   .sticky-buy .sb-price{font-size:16px}
-  .sticky-buy .sb-buy{padding:13px 8px;font-size:14px;min-width:0}
+  .sticky-buy .sb-add,.sticky-buy .sb-buy{padding:13px 6px;font-size:13.5px;min-width:0}
+  .sticky-buy .sb-price{font-size:15px}
 }
 @media(max-width:360px){
   .modal-ov{padding:8px}
   .modal-qty button{width:40px}
   .modal-wishbtn{padding:0 12px}
-  .sticky-buy .sb-add span,.sticky-buy .sb-add i+span{display:none}
+  .sticky-buy{gap:6px;padding:9px 10px calc(9px + env(safe-area-inset-bottom))}
+  .sticky-buy .sb-price{font-size:14.5px}
 }
 
 /* ===== HIDE SCROLLBARS ON INTERNAL PANELS =====
@@ -1710,6 +1714,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()">
   <div class="sticky-buy" id="stickyBuy">
     <div><span class="sb-was" id="sbWas"></span><span class="sb-price" id="sbPrice">₹0</span></div>
+    <button class="sb-add" id="sbAdd" onclick="modalAdd()"><i class="ti ti-shopping-bag-plus"></i> <span>Add to Cart</span></button>
     <button class="sb-buy" id="sbBuy" onclick="modalBuyNow()"><i class="ti ti-bolt"></i> Buy Now</button>
   </div><div class="modal">
   <div class="pp-bar"><div class="pp-crumb" id="ppCrumb"></div></div>
@@ -2646,6 +2651,8 @@ function syncStickyBuy(){
   if(pr) pr.textContent=inr(modalProduct.price);
   if(wa){ if(modalProduct.orig_price&&modalProduct.orig_price>modalProduct.price){ wa.textContent=inr(modalProduct.orig_price); wa.style.display=""; } else wa.style.display="none"; }
   if(b){ b.disabled=dis; b.innerHTML=dis?"Out of stock":'<i class="ti ti-bolt"></i> Buy Now'; }
+  var a=el("sbAdd");
+  if(a){ a.disabled=dis; a.style.display=dis?"none":""; }
 }
 function fitModalImg(){ /* fixed image frame: keep the CSS aspect-ratio; image is centered via object-fit:contain, small/landscape photos show white above & below. */ var w=el("modalMedia"); if(w) w.style.aspectRatio=""; }
 function setGalleryImg(gi){ var imgs=window._galleryImgs||[]; if(!imgs[gi])return; var m=el("modalMainImg"); if(m){ m.onload=fitModalImg; m.src=imgs[gi]; if(m.complete)fitModalImg(); } window._galIdx=gi; document.querySelectorAll("#galleryThumbs .gthumb").forEach(function(t,k){t.classList.toggle("on",k===gi);}); }
