@@ -1392,7 +1392,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
    Below 901px the original centred product modal is used instead, so the
    mobile experience (close button, image framing, scroll reset) is unchanged. */
 .pp-gallery{display:none}
-/* Back bar + Best Offers adopted for phones (Siraj's desktop pattern) */
+/* Offers panel adopted for phones (from Siraj's desktop pattern) */
 @media(max-width:900px){
   /* the path IS the navigation now: no back arrow, no X — tapping a
      crumb segment takes you back to that level */
@@ -1401,13 +1401,12 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
     backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);
     border-bottom:1px solid var(--line)}
   .pp-crumb{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;width:100%}
-  .pp-offers{margin:16px 0 4px}
 }
-.pp-offers{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
+.pp-offers{padding:0 2px}
 .pp-offers h4{font-family:var(--fd);font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;display:flex;align-items:center;gap:7px}
 .pp-offers h4 i{color:var(--brand);font-size:16px}
 .pp-offer{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--ink2);line-height:1.5;padding:7px 0;border-top:1px dashed var(--line)}
-.pp-offer:first-of-type{border-top:none}
+.pp-offer:first-of-type{border-top:none;padding-top:0}
 .pp-offer i{color:var(--brand-deep);font-size:16px;margin-top:1px;flex-shrink:0}
 .pp-offer b{color:var(--ink)}
 @media(min-width:901px){
@@ -1754,7 +1753,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
       </div>
       <div class="deliv-res" id="delivRes"></div>
     </div>
-    <div class="pp-offers" id="ppOffers"></div>
+    <div class="acc" id="accOffers"></div>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
       <div class="acc" id="accDesc">
@@ -2681,10 +2680,11 @@ function toggleAcc(id){
   if(head) head.setAttribute("aria-expanded", open?"true":"false");
 }
 function resetAccordions(){
-  ["accDesc","accSpecs","accShip"].forEach(function(id,i){
+  ["accDesc","accSpecs","accShip","accOffers"].forEach(function(id,i){
     var box=el(id); if(!box) return;
     var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
     var open=(i===0);
+    if(!body){ box.classList.toggle("open", open); return; }  /* not populated yet */
     body.classList.toggle("open", open);
     box.classList.toggle("open", open);
     if(head) head.setAttribute("aria-expanded", open?"true":"false");
@@ -4034,7 +4034,7 @@ function ppRenderGallery(p){
   }
 }
 function ppRenderOffers(p){
-  var box=el("ppOffers"); if(!box) return;
+  var box=el("accOffers"); if(!box) return;
   var d=(typeof discountPct==="function")?discountPct(p):0;
   var rows=[];
   if(d>0) rows.push('<i class="ti ti-discount-2"></i><span><b>'+d+'% OFF</b> — this price already includes the discount.</span>');
@@ -4042,7 +4042,12 @@ function ppRenderOffers(p){
   rows.push('<i class="ti ti-cash"></i><span><b>Cash on Delivery</b> available.</span>');
   rows.push('<i class="ti ti-lock"></i><span><b>100% secure</b> payments \u2014 we never store card details.</span>');
   rows.push('<i class="ti ti-refresh"></i><span><b>15-day</b> easy returns.</span>');
-  box.innerHTML='<h4><i class="ti ti-rosette-discount-check"></i> Best Offers</h4>'+rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("");
+  var wasOpen=box.classList.contains("open");
+  box.innerHTML='<button class="acc-h" onclick="toggleAcc(\'accOffers\')" aria-expanded="'+(wasOpen?"true":"false")+'">'
+    +'<span><i class="ti ti-rosette-discount-check"></i> Offers</span><i class="ti ti-chevron-down acc-x"></i></button>'
+    +'<div class="acc-b'+(wasOpen?" open":"")+'"><div class="pp-offers">'
+    +rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("")
+    +'</div></div>';
 }
 function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
 (function(){
