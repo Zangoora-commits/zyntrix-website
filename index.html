@@ -1508,17 +1508,50 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 /* content is always visible now that three frames share the view */
 .hc-slide .hc-badge,.hc-slide .hc-title,.hc-slide .hc-sub{opacity:1;animation:none!important}
 @media(max-width:1100px){ .hc-slide{flex:0 0 calc((100% - 16px)/2)} }
-@media(max-width:768px){
+@media(max-width:900px){
   .hc-track{gap:12px}
-  .hc-slide{flex:0 0 82%;height:clamp(180px,42vw,205px);border-radius:16px}
-  .hc-title{font-size:clamp(19px,5.4vw,23px)}
-  .hc-sub{font-size:12px;max-width:74%}
-  .hc-art{height:min(100px,44%);right:10px;top:9px}
-  .hc-text{padding:0 15px 14px}
+  .hc-title{font-size:clamp(19px,2.6vw,23px)}
+}
+@media(min-width:561px) and (max-width:900px){
+  .hc-slide{height:210px;border-radius:16px}
+}
+@media(max-width:560px){
+  .hc-slide{flex:0 0 84%;height:270px;border-radius:16px}
 }
 @media(min-width:769px){
   #products{padding-top:14px}
   .shop-meta{margin-bottom:8px}
+}
+/* ===== HERO — real-product shelf ===== */
+.hc-slide{align-items:stretch!important}
+.hc-text{display:flex;flex-direction:column;justify-content:center;flex:1 1 52%;min-width:0;padding:0 0 0 26px!important;position:relative;z-index:4}
+.hc-cta{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;margin-top:14px;background:var(--lime);color:#04372a;font-family:var(--fb);font-weight:800;font-size:13px;padding:10px 18px;border:none;border-radius:100px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.hc-cta:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.hc-shelf{flex:0 0 44%;display:flex;align-items:stretch;justify-content:flex-end;gap:10px;padding:26px 22px 26px 0;z-index:3}
+.hero-mini{flex:1 1 0;max-width:118px;min-width:0;max-height:100%;background:rgba(255,255,255,.94);border:none;border-radius:14px;padding:8px;cursor:pointer;display:flex;flex-direction:column;gap:5px;transition:transform .18s,box-shadow .18s;box-shadow:0 4px 14px rgba(0,0,0,.14);overflow:hidden}
+.hero-mini:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(0,0,0,.22)}
+.hm-img{position:relative;width:100%;flex:1 1 auto;min-height:0;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#fff,var(--mb,#eef3f0));font-size:30px}
+.hm-img img{width:100%;height:100%;object-fit:cover;display:block}
+.hm-off{position:absolute;top:5px;left:5px;background:#ff5d73;color:#fff;font-family:var(--fb);font-size:10px;font-weight:800;padding:2px 6px;border-radius:100px}
+.hm-price{font-family:var(--fd);font-weight:800;font-size:13.5px;color:var(--ink);text-align:center}
+.hc-promo{flex:0 0 44%;display:flex;align-items:center;justify-content:center;font-size:96px;color:rgba(255,255,255,.9);z-index:3}
+/* medium desktop: two minis */
+@media(min-width:769px) and (max-width:1150px){ .hero-mini:nth-child(3){display:none} .hc-text{flex-basis:56%} .hc-shelf{flex-basis:42%} }
+/* tablet (2 frames across): keep one mini so it reads */
+@media(min-width:561px) and (max-width:900px){ .hero-mini:nth-child(n+3){display:none} .hc-shelf{justify-content:center;padding:20px 20px 20px 0} }
+/* phones: shelf under the text, horizontally */
+@media(max-width:560px){
+  .hc-slide{flex-direction:column;align-items:flex-start!important}
+  .hc-text{flex:0 0 auto;width:100%;padding:13px 14px 2px!important;justify-content:flex-start}
+  .hc-title{font-size:clamp(18px,5.2vw,22px);margin-bottom:2px}
+  .hc-sub{-webkit-line-clamp:1;font-size:11.5px}
+  .hc-badge{margin-bottom:6px}
+  .hc-cta{margin-top:8px;padding:8px 15px;font-size:12px}
+  .hc-shelf{flex:1 1 auto;width:100%;padding:8px 14px 12px;gap:8px;justify-content:flex-start;align-items:stretch}
+  .hero-mini{max-width:none;max-height:none;flex-direction:row;align-items:center;gap:8px;padding:6px}
+  .hm-img{width:52px;height:52px;flex:0 0 52px;aspect-ratio:auto;font-size:24px}
+  .hm-price{text-align:left;font-size:13px}
+  .hc-promo{flex:1 1 auto;width:100%;font-size:64px}
 }
 </style>
 </head>
@@ -4105,6 +4138,23 @@ function subscribe(){
     .catch(function(err){ console.warn("subscribe failed:", err); done(); });
 }
 function scrollToId(id){ var e=el(id); if(e && e.scrollIntoView){ try{ e.scrollIntoView({behavior:"smooth"}); }catch(x){} } }
+/* hero CTA helpers: apply a filter/sort, then drop the user at the grid */
+function pickFilterProgrammatic(cat, sortKey){
+  if(typeof pickCategory==="function") pickCategory(cat);
+  if(sortKey==="discount"){ if(typeof discountMin!=="undefined"){ discountMin=25; } if(typeof buildFilters==="function") buildFilters(); }
+  if(typeof render==="function") render(true);
+  scrollToId("products");
+}
+function setSortProgrammatic(mode){
+  var sel=el("sortSel"); if(sel){ sel.value=mode; }
+  if(typeof sortMode!=="undefined") sortMode=mode;
+  if(typeof render==="function") render(true);
+  scrollToId("products");
+}
+function heroOpenProduct(sl){
+  var idx=products.findIndex(function(p){ return slug(p.name)===sl; });
+  if(idx>=0){ if(typeof view!=="undefined"){ view=products.slice(); } openModalByProduct(products[idx]); }
+}
 function goTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
 /* Overlays set overflow:hidden on <body>, but <html> is the scrolling element
    here, so the page scrollbar stayed visible behind the modal — two bars.
@@ -4446,6 +4496,7 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
    smartphones:'<svg viewBox="0 0 260 260"><defs><linearGradient id="frmP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3a33"/><stop offset="1" stop-color="#0a0f0c"/></linearGradient><linearGradient id="wallP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0ca678"/><stop offset=".5" stop-color="#12b3a6"/><stop offset="1" stop-color="#ff7a3d"/></linearGradient></defs><rect x="82" y="32" width="96" height="196" rx="27" fill="url(#frmP)"/><rect x="89" y="39" width="82" height="182" rx="21" fill="url(#wallP)"/><circle cx="130" cy="51" r="4" fill="#0a0f0c"/><text x="130" y="102" text-anchor="middle" font-family="Sora,sans-serif" font-size="26" font-weight="800" fill="#fff" opacity=".95">9:41</text><g fill="#fff"><rect x="100" y="122" width="22" height="22" rx="7"/><rect x="138" y="122" width="22" height="22" rx="7" opacity=".92"/><rect x="100" y="152" width="22" height="22" rx="7" opacity=".82"/><rect x="138" y="152" width="22" height="22" rx="7" opacity=".82"/></g><rect x="98" y="188" width="64" height="22" rx="11" fill="#fff" opacity=".22"/></svg>',
    power:'<svg viewBox="0 0 260 260"><defs><linearGradient id="bdyP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a5d53"/><stop offset=".5" stop-color="#1d2a24"/><stop offset="1" stop-color="#3a4c43"/></linearGradient></defs><rect x="86" y="44" width="88" height="172" rx="22" fill="url(#bdyP)"/><rect x="100" y="60" width="60" height="46" rx="10" fill="#0a0f0c"/><text x="130" y="92" text-anchor="middle" font-family="Sora,sans-serif" font-size="21" font-weight="800" fill="#d4ff3f">87%</text><path d="M137 118 l-23 36 h15 l-9 32 28 -44 h-16 z" fill="#d4ff3f"/><g fill="#5ee3b6"><rect x="104" y="198" width="15" height="6" rx="3"/><rect x="122" y="198" width="15" height="6" rx="3"/><rect x="140" y="198" width="15" height="6" rx="3" opacity=".4"/></g><rect x="170" y="120" width="10" height="15" rx="2" fill="#0a0f0c"/><rect x="170" y="144" width="10" height="11" rx="3" fill="#0a0f0c"/></svg>'
   };
+  var HC_FRAMES=[];
   var HC_SLIDES=[
    {cat:"audio",badge:"Up to 40% OFF",title:"Audio",sub:"Immersive sound and all-day comfort, from earbuds to studio cans.",bg:"radial-gradient(circle at 16% 22%,rgba(94,227,182,.6),transparent 46%),radial-gradient(circle at 90% 88%,rgba(212,255,63,.18),transparent 44%),linear-gradient(125deg,#0ca678,#04543d)"},
    {cat:"wearables",badge:"Up to 35% OFF",title:"Wearables",sub:"Smartwatches and bands that track every move.",bg:"radial-gradient(circle at 18% 20%,rgba(255,180,120,.55),transparent 46%),radial-gradient(circle at 88% 85%,rgba(255,93,115,.3),transparent 46%),linear-gradient(125deg,#ff7a3d,#cf3f17)"},
@@ -4485,18 +4536,75 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
   // ---- Carousel ----
   var track=document.getElementById("hcTrack"), dotsBox=document.getElementById("hcDots"), hc=document.getElementById("hc"), idx=0;
   if(track){
-    track.innerHTML=HC_SLIDES.map(function(s,i){
-      var art=HC_ART[s.art||s.cat]||"";
-      return '<div class="hc-slide" style="background:'+s.bg+'" data-cat="'+s.cat+'">'
-        +'<div class="hc-deco" style="width:300px;height:300px;right:-40px;top:-110px;background:rgba(255,255,255,.10)"></div>'
-        +'<div class="hc-deco" style="width:180px;height:180px;right:230px;bottom:-110px;background:rgba(212,255,63,.10)"></div>'
-        +'<div class="hc-art">'+art+'</div>'
-        +'<div class="hc-tappy">'+tappySVG(i)+'</div>'
-        +'<div class="hc-text"><span class="hc-badge"><i class="ti ti-discount-2"></i> '+s.badge+'</span>'
-        +'<div class="hc-title">'+s.title+'</div><div class="hc-sub">'+s.sub+'</div></div>'
-        +'<div class="hc-progress"></div></div>';
+    /* ---- pick real products for each themed frame ---- */
+    function inStock(p){ var st=(typeof stockOf==="function")?stockOf(p):(p.stock==null?null:p.stock); return st===null||st>0; }
+    function topBy(scoreFn, n, filterFn){
+      return products.filter(function(p){ return inStock(p) && (!filterFn||filterFn(p)); })
+        .map(function(p){ return {p:p, s:scoreFn(p)}; })
+        .filter(function(x){ return x.s>0; })
+        .sort(function(a,b){ return b.s-a.s; })
+        .slice(0,n).map(function(x){ return x.p; });
+    }
+    function lovedScore(p){
+      /* prefer a real wishlist tally if the column exists; else use review
+         volume as an honest proxy for "most loved" until it does */
+      if(p.wishlist_count!=null) return Number(p.wishlist_count)||0;
+      if(p.loves!=null) return Number(p.loves)||0;
+      return reviewCountOf(p);
+    }
+    var HERO_FRAMES=[
+      { key:"savings", badge:"Great savings", badgeIcon:"ti-discount-2",
+        title:"Up to "+ (products.length? Math.max.apply(null,products.map(function(p){return discountPct(p);}).concat(0)) : 0) +"% off",
+        sub:"The season's deepest cuts on curated pieces.",
+        cta:"Shop deals", act:function(){ pickFilterProgrammatic("all","discount"); },
+        bg:"radial-gradient(circle at 12% 20%,rgba(94,227,182,.5),transparent 48%),radial-gradient(circle at 92% 90%,rgba(212,255,63,.16),transparent 46%),linear-gradient(125deg,#0ca678,#04543d)",
+        items: topBy(function(p){return discountPct(p);}, 3) },
+      { key:"rated", badge:"Top rated", badgeIcon:"ti-star",
+        title:"Loved by reviewers",
+        sub:"Our highest-rated products, straight from real reviews.",
+        cta:"Shop top rated", act:function(){ setSortProgrammatic("rating"); },
+        bg:"radial-gradient(circle at 14% 22%,rgba(120,220,255,.4),transparent 48%),radial-gradient(circle at 90% 86%,rgba(94,227,182,.22),transparent 46%),linear-gradient(125deg,#12b3a6,#0a6f67)",
+        items: topBy(function(p){ return reviewCountOf(p)>0 ? ratingOf(p) : 0; }, 3) },
+      { key:"loved", badge:"Most loved", badgeIcon:"ti-heart",
+        title:"Customer favourites",
+        sub:"The pieces shoppers keep coming back to.",
+        cta:"Shop favourites", act:function(){ setSortProgrammatic("rating"); },
+        bg:"radial-gradient(circle at 16% 20%,rgba(255,150,170,.45),transparent 48%),radial-gradient(circle at 90% 88%,rgba(212,255,63,.14),transparent 46%),linear-gradient(125deg,#e05a86,#8f2b52)",
+        items: topBy(lovedScore, 3) },
+      { key:"shipping", badge:"Free shipping", badgeIcon:"ti-truck-delivery",
+        title:"Free shipping over ₹999",
+        sub:"Fast, tracked delivery across India on every order above ₹999.",
+        cta:"Start shopping", act:function(){ scrollToId("products"); },
+        bg:"radial-gradient(circle at 14% 22%,rgba(94,227,182,.5),transparent 48%),radial-gradient(circle at 88% 88%,rgba(212,255,63,.2),transparent 46%),linear-gradient(125deg,#0b8f66,#045c43)",
+        items: [], promoIcon:"ti-truck-delivery" }
+    ];
+    /* drop any product frame that found nothing (e.g. no reviews yet) */
+    HC_FRAMES = HERO_FRAMES.filter(function(f){ return f.key==="shipping" || f.items.length>0; });
+
+    function heroMini(p){
+      var pair=(typeof catPair==="function")?catPair(p.category):["#eef3f0","#0ca678"];
+      var imgs=(typeof imagesOf==="function")?imagesOf(p):[];
+      var media = imgs.length
+        ? '<img src="'+esc(imgs[0])+'" alt="'+esc(p.name)+'" loading="lazy" decoding="async">'
+        : '<i class="ti '+(p.icon||"ti-box")+'" style="color:'+pair[1]+'"></i>';
+      var d=discountPct(p);
+      var tag = d>0 ? '<span class="hm-off">-'+d+'%</span>' : '';
+      return '<button class="hero-mini" data-slug="'+esc(slug(p.name))+'" style="--mb:'+pair[0]+'">'
+        +'<span class="hm-img">'+media+tag+'</span>'
+        +'<span class="hm-price">₹'+Number(p.price).toLocaleString("en-IN")+'</span></button>';
+    }
+
+    track.innerHTML=HC_FRAMES.map(function(s){
+      var right = s.items.length
+        ? '<div class="hc-shelf">'+s.items.map(heroMini).join("")+'</div>'
+        : '<div class="hc-promo"><i class="ti '+(s.promoIcon||"ti-gift")+'"></i></div>';
+      return '<div class="hc-slide" style="background:'+s.bg+'" data-key="'+s.key+'">'
+        +'<div class="hc-text"><span class="hc-badge"><i class="ti '+s.badgeIcon+'"></i> '+s.badge+'</span>'
+        +'<div class="hc-title">'+s.title+'</div><div class="hc-sub">'+s.sub+'</div>'
+        +'<button class="hc-cta" data-i="'+HC_FRAMES.indexOf(s)+'">'+s.cta+' <i class="ti ti-arrow-right"></i></button></div>'
+        +right+'</div>';
     }).join("");
-    dotsBox.innerHTML=HC_SLIDES.map(function(_,i){return '<button class="hc-dot'+(i===0?' on':'')+'" data-i="'+i+'" aria-label="Slide '+(i+1)+'"></button>';}).join("");
+    dotsBox.innerHTML=HC_FRAMES.map(function(_,i){return '<button class="hc-dot'+(i===0?' on':'')+'" data-i="'+i+'" aria-label="Slide '+(i+1)+'"></button>';}).join("");
     var slides=track.children;
     /* how many frames fit right now, and how far one step moves the track */
     function perView(){
@@ -4509,7 +4617,7 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
       var gap=parseFloat(getComputedStyle(track).gap)||0;
       return one+gap;
     }
-    function maxIdx(){ return Math.max(0, HC_SLIDES.length - perView()); }
+    function maxIdx(){ return Math.max(0, HC_FRAMES.length - perView()); }
     window.hcShow=function(i){
       var m=maxIdx();
       idx = i<0 ? m : (i>m ? 0 : i);
@@ -4566,6 +4674,13 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closeModa
     var x0=null;
     hc.addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
     hc.addEventListener("touchend",function(e){ if(x0===null)return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){dx<0?window.hcNext():window.hcPrev();} x0=null; },{passive:true});
+    /* clicks: mini opens the product, CTA runs the frame's action */
+    track.addEventListener("click",function(e){
+      var mini=e.target.closest(".hero-mini");
+      if(mini){ e.stopPropagation(); heroOpenProduct(mini.getAttribute("data-slug")); return; }
+      var cta=e.target.closest(".hc-cta");
+      if(cta){ e.stopPropagation(); var f=HC_FRAMES[parseInt(cta.getAttribute("data-i"),10)]; if(f&&f.act) f.act(); return; }
+    });
     window.hcShow(0);
     /* gentle auto-advance; pauses while the pointer is over the rail */
     var hcTimer=null, hcPaused=false;
