@@ -1445,6 +1445,13 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
 .pp-crumb .cr-link:active{opacity:.6}
 .pp-crumb .cr-sep{opacity:.4;margin:0 5px}
 .pp-crumb b{color:var(--ink2);font-weight:700}
+/* Offers: collapsed still shows the first line, with a "more" link — same
+   idea as the Description clamp, so the panel never looks empty. */
+#accOffers .acc-b{max-height:42px}
+#accOffers .acc-b.open{max-height:1400px}
+#accOffers .acc-b:not(.open) .pp-offers{-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent);mask-image:linear-gradient(to bottom,#000 55%,transparent)}
+.offers-more{background:none;border:none;color:var(--brand-deep);font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;padding:6px 0 14px;display:inline-flex;align-items:center;gap:3px}
+.offers-more:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1726,6 +1733,7 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
     <div class="modal-priceline">
       <div class="modal-price"><span class="now" id="modalNow">₹0</span><span class="was" id="modalWas"></span><span class="off" id="modalOff"></span></div>
     </div>
+    <div class="acc" id="accOffers"></div>
     <div class="color-wrap" id="colorWrap">
       <div class="color-head">COLOUR: <span id="colorName"></span></div>
       <div class="color-chips" id="colorChips"></div>
@@ -1753,7 +1761,6 @@ body.tp-open .totop-fab{opacity:0;visibility:hidden}
       </div>
       <div class="deliv-res" id="delivRes"></div>
     </div>
-    <div class="acc" id="accOffers"></div>
     <div class="modal-tabs"><div class="mtab active" id="tabDetails" onclick="switchModalTab('details')">Details</div><div class="mtab" id="tabReviews" onclick="switchModalTab('reviews')">Reviews <span id="tabRevCount"></span></div></div>
     <div class="mpane active" id="paneDetails">
       <div class="acc" id="accDesc">
@@ -2672,6 +2679,14 @@ function paintPZoom(){
 function pzStep(d){ if(!pzList.length)return; pzIdx=(pzIdx+d+pzList.length)%pzList.length; paintPZoom(); }
 function closePZoom(){ var o=el("pzOv"); if(o) o.classList.remove("open"); }
 function toggleDesc(){ var dd=el("modalDesc"), dm=el("descMore"); if(!dd)return; var clamped=dd.classList.toggle("clamp"); if(dm) dm.textContent=clamped?"Read more":"Read less"; }
+function toggleOffers(){
+  var box=el("accOffers"); if(!box) return;
+  var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h"), more=el("offersMore");
+  var open=body.classList.toggle("open");
+  box.classList.toggle("open", open);
+  if(head) head.setAttribute("aria-expanded", open?"true":"false");
+  if(more) more.textContent = open ? "Show less" : ("+"+(box.querySelectorAll(".pp-offer").length-1)+" more offers");
+}
 function toggleAcc(id){
   var box=el(id); if(!box) return;
   var body=box.querySelector(".acc-b"), head=box.querySelector(".acc-h");
@@ -4042,12 +4057,13 @@ function ppRenderOffers(p){
   rows.push('<i class="ti ti-cash"></i><span><b>Cash on Delivery</b> available.</span>');
   rows.push('<i class="ti ti-lock"></i><span><b>100% secure</b> payments \u2014 we never store card details.</span>');
   rows.push('<i class="ti ti-refresh"></i><span><b>15-day</b> easy returns.</span>');
-  var wasOpen=box.classList.contains("open");
-  box.innerHTML='<button class="acc-h" onclick="toggleAcc(\'accOffers\')" aria-expanded="'+(wasOpen?"true":"false")+'">'
+  box.classList.remove("open");
+  box.innerHTML='<button class="acc-h" onclick="toggleOffers()" aria-expanded="false">'
     +'<span><i class="ti ti-rosette-discount-check"></i> Offers</span><i class="ti ti-chevron-down acc-x"></i></button>'
-    +'<div class="acc-b'+(wasOpen?" open":"")+'"><div class="pp-offers">'
+    +'<div class="acc-b"><div class="pp-offers">'
     +rows.map(function(r){return '<div class="pp-offer">'+r+'</div>';}).join("")
-    +'</div></div>';
+    +'</div></div>'
+    +(rows.length>1?'<button class="offers-more" id="offersMore" onclick="toggleOffers()">+'+(rows.length-1)+' more offers</button>':'');
 }
 function closeProductPage(){ if(window._ppPushed){ history.back(); } else { if(typeof closeModal==="function") closeModal(); } }
 (function(){
